@@ -5,19 +5,10 @@
 
 <th:block layout:fragment="content">
     <style>
-        .main-box {
-            padding: 80px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-
         .image-style {
             width: 300px; /* 원하는 너비로 조절 */
             height: auto; /* 높이는 자동으로 조절됨 */
-            margin-top: 50px;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
 
         .custom-input-box {
@@ -61,14 +52,12 @@
 
 
     <div class="main-box bg-dark">
-        <div class="container-fluid d-flex align-items-center justify-content-center flex-column">
             <img class="image-style" src="assets/img/ashe.png" alt="..." />
 
-
-            <label class="custom-input-box">
-                <input type="text" id="inputValue" class="input-field" placeholder="소환사 이름을 입력해주세요." onclick="highlightInput()">
-                <button onclick="callApi()" class="api-button" style=""></button>
-            </label>
+        <label class="custom-input-box">
+            <input type="text" id="inputValue" class="input-field" placeholder="소환사 이름을 입력해주세요." onkeydown="handleEnterKey(event)" onclick="highlightInput()">
+            <button onclick="callApi()" class="api-button" style=""></button>
+        </label>
 
             <div class="divider-custom divider-light">
                 <div class="divider-custom-line"></div>
@@ -76,7 +65,6 @@
                 <div class="divider-custom-line"></div>
             </div>
             <p class="masthead-subheading font-weight-light mb-0">League of Legends match analysis</p>
-        </div>
     </div>
 
     <script>
@@ -85,12 +73,41 @@
             inputLabel.style.borderColor = '#007bff';
         }
 
+        function handleEnterKey(event) {
+            if (event.key === 'Enter') {
+                callApi();
+            }
+        }
+
         document.addEventListener('click', function(event) {
             const inputLabel = document.querySelector('.custom-input-box');
             if (!inputLabel.contains(event.target)) {
                 inputLabel.style.borderColor = '#ccc';
             }
         });
+
+        function callApi() {
+            const inputValue = document.getElementById('inputValue').value;
+
+            if (inputValue) {
+                fetch('/search', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ summonerName: inputValue })
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        // 여기서 API 응답 데이터(data)를 처리하거나 표시합니다.
+                        console.log(data);
+                    })
+                    .catch(error => {
+                        // 에러 처리
+                        console.error('Error:', error);
+                    });
+            }
+        }
     </script>
 
 </th:block>

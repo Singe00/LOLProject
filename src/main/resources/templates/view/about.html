@@ -5,21 +5,51 @@
 
 <th:block layout:fragment="content">
   <style>
-    .main-box {
-      padding: 80px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-    }
+      table {
+          margin: 50px;
+          text-align: center;
+          color: white;
+          width: 50%;
+          height: 80%;
+          font-size: 35px;
+          font-family: 'Gasoek One', sans-serif;
+      }
+
+      tr {
+          height: 100px;
+      }
+
+      caption {
+          caption-side: top;
+          text-align: center;
+          color: white;
+          font-size: 45px
+      }
+
 
   </style>
 
 
   <div class="main-box bg-dark">
-    <div class="container-fluid d-flex align-items-center justify-content-center flex-column">
+      <table>
+          <caption class="cpt">도움을 주신 분들</caption>
+          <tr>
+              <td><I>K . G</I></td>
+              <td><I>K . N . R</I></td>
+              <td><I>K . J . W</I></td>
+          </tr>
+          <tr>
+              <td><I>S . Y . H</I></td>
+              <td><I>L . D . H</I></td>
+              <td><I>L . S . H</I></td>
+          </tr>
+          <tr>
+              <td><I>L . J . H</I></td>
+              <td><I>H . G . W</I></td>
+              <td><I></I></td>
+          </tr>
+      </table>
 
-    </div>
   </div>
 
 
