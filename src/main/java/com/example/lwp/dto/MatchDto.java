@@ -25,6 +25,7 @@ public class MatchDto {
     public static class Info {
         private long gameCreation;
         private int gameDuration;
+        private String gameMode;
         private List<Participant> participants;
         private List<Teams> teams;
     }
@@ -33,6 +34,7 @@ public class MatchDto {
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Participant {
         private String summonerName;
+        private int profileIcon;
         private int summonerLevel;
         private int teamId;
         private int assists;
