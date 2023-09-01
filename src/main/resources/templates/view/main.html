@@ -52,12 +52,13 @@
 
 
     <div class="main-box bg-dark">
+        <main class="main-box2">
             <img class="image-style" src="assets/img/ashe.png" alt="..." />
 
-        <label class="custom-input-box">
-            <input type="text" id="inputValue" class="input-field" placeholder="소환사 이름을 입력해주세요." onkeydown="handleEnterKey(event)" onclick="highlightInput()">
-            <button onclick="callApi()" class="api-button" style=""></button>
-        </label>
+            <label class="custom-input-box">
+                <input type="text" id="inputValue" class="input-field" placeholder="소환사 이름을 입력해주세요." onkeydown="handleEnterKey(event)" onclick="highlightInput()">
+                <button onclick="callApi()" class="api-button" style=""></button>
+            </label>
 
             <div class="divider-custom divider-light">
                 <div class="divider-custom-line"></div>
@@ -65,6 +66,9 @@
                 <div class="divider-custom-line"></div>
             </div>
             <p class="masthead-subheading font-weight-light mb-0">League of Legends match analysis</p>
+
+        </main>
+
     </div>
 
     <script>

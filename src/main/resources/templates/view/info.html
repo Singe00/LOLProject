@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/default_layout}">
+
+<th:block layout:fragment="content">
+  <style>
+    div{
+      color: white;
+    }
+
+    .font-bold{
+      font-weight: 700;
+    }
+
+    .row-lo{
+      display: flex;
+      flex-direction: row;
+    }
+
+    .column-lo{
+      display: flex;
+      flex-direction: column;
+    }
+
+    #profileIcon {
+      width: 125px;
+      height: 125px;
+      margin: 5px;
+    }
+
+    #emblem{
+      width: 125px;
+      height: auto;
+      margin: 5px;
+    }
+    #summonerName{
+      font-size: 35px;
+      margin: 5px;
+    }
+
+    #summonerLevel{
+      font-size: 25px;
+      margin: 5px;
+    }
+
+    #rank, #tier{
+      margin: 5px;
+      font-size: 25px;
+    }
+
+    #wins{
+      margin: 5px;
+      font-size: 20px;
+    }
+
+    #losses{
+      margin: 5px;
+      font-size: 20px;
+    }
+
+  </style>
+
+
+  <div class="main-box bg-dark">
+    <main class="main-box2">
+      <div></div>
+      <h1>Info 페이지</h1>
+      <div>
+        <div class="row-lo">
+          <div class="row-lo">
+            <div id="profileIcon"></div>
+            <div>
+              <div class="font-bold" id="summonerName"></div>
+              <div class="font-bold" id="summonerLevel"></div>
+            </div>
+          </div>
+          <div style="height: 5px; margin: 200px"></div>
+          <div class="row-lo">
+            <div style="height: 100%;">
+              <div class="row-lo" id="emblem"></div>
+            </div>
+            <div class="column-lo">
+              <div class="row-lo">
+                <div id="rank"></div>
+                <div id="tier"></div>
+              </div>
+              <div class="row-lo">
+                <div id="wins"></div>
+                <div id="losses"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+
+
+  </div>
+
+  <script>
+
+    // API 공통 URL 설정
+    var apiUrl = "/api";
+
+    // 페이지가 로드되면 실행되는 함수
+    document.addEventListener("DOMContentLoaded", function() {
+
+      // URL에서 summonerName 쿼리 파라미터 값을 가져옴
+      var summonerNameParam = new URLSearchParams(window.location.search).get("summonerName");
+
+      // summonerName 요소가 존재하는지 확인
+      if (summonerNameParam) {
+
+        console.log(summonerNameParam)
+        var userApiUrl = apiUrl + "/user"; // URL 파라미터를 제외한 URL
+
+        fetch(userApiUrl, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ summonerName: summonerNameParam }) // 요청 데이터를 JSON 형식으로 전달
+        })
+                .then(response => response.json())
+                .then(data => {
+
+                  // API 응답을 처리하는 코드
+                  console.log("API Response:", data);
+
+                  // 응답 데이터를 화면에 출력
+                  const summonerNameElement = document.getElementById("summonerName");
+                  const profileIconElement = document.getElementById("profileIcon");
+                  const summonerLevelElement = document.getElementById("summonerLevel");
+                  const rankElement = document.getElementById("rank");
+                  const tierElement = document.getElementById("tier");
+                  const winsElement = document.getElementById("wins");
+                  const lossesElement = document.getElementById("losses");
+                  const emblemElement = document.getElementById("emblem")
+
+                  summonerNameElement.textContent = data.summonerName;
+                  profileIconElement.innerHTML = "<img src='http://ddragon.leagueoflegends.com/cdn/13.17.1/img/profileicon/" + data.profileIcon + ".png' alt='Profile Icon' style='width: 100%; height: 100%; object-fit: cover; border-radius: 10px;'>";
+                  summonerLevelElement.textContent = data.summonerLevel;
+
+                  emblemElement.innerHTML = "<img src=\"assets/img/ashe.png\" style='width: 100%; height: auto; object-fit: cover; border-radius: 10px;'>";
+                  rankElement.textContent = data.ranks[0].rank;
+                  tierElement.textContent = data.ranks[0].tier;
+                  winsElement.textContent = data.ranks[0].wins+"승 ";
+                  lossesElement.textContent = data.ranks[0].losses+"패";
+                })
+                .catch(error => {
+                  console.error("API Error:", error);
+                });
+      }
+    });
+
+  </script>
+
+</th:block>
+
+
+</html>
