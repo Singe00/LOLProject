@@ -3,16 +3,18 @@ package com.example.lwp.service;
 import com.example.lwp.config.RiotConstant;
 import com.example.lwp.dto.MatchDto;
 import com.example.lwp.dto.SummonerDto;
+import com.example.lwp.dto.SummonerInfoDto;
+import com.example.lwp.dto.SummonerRankInfoDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.json.simple.parser.JSONParser;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -20,6 +22,60 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 public class ApiService {
+
+
+    public SummonerInfoDto FindSummonerInfo(String sn){
+
+        SummonerInfoDto summonerInfoDto = new SummonerInfoDto();
+
+        List<SummonerRankInfoDto> summonerRankInfoDtos = new ArrayList<>();
+        // 첫 번째 빈 객체 초기화 및 추가
+        SummonerRankInfoDto dto1 = new SummonerRankInfoDto();
+        summonerRankInfoDtos.add(dto1);
+
+        // 두 번째 빈 객체 초기화 및 추가
+        SummonerRankInfoDto dto2 = new SummonerRankInfoDto();
+        summonerRankInfoDtos.add(dto2);
+
+        //User Info
+        String apiUrl1 = "https://kr.api.riotgames.com/lol/summoner/v4/summoners/by-name/"+sn+"?api_key="+RiotConstant.API_KEY;
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<SummonerDto> response1= restTemplate.getForEntity(apiUrl1, SummonerDto.class);
+
+
+
+        //User Rank Info
+        String apiUrl2 = "https://kr.api.riotgames.com/lol/league/v4/entries/by-summoner/"+response1.getBody().getId()+"?api_key="+RiotConstant.API_KEY;
+        RestTemplate restTemplate2 = new RestTemplate();
+        ResponseEntity<SummonerRankInfoDto[]> response2 = restTemplate2.getForEntity(apiUrl2, SummonerRankInfoDto[].class);
+
+        SummonerRankInfoDto[] summonerRankInfoDto = response2.getBody();
+
+
+        if (summonerRankInfoDto != null && summonerRankInfoDto.length > 0) {
+            for (SummonerRankInfoDto s :summonerRankInfoDto){
+                if ("RANKED_SOLO_5x5".equals(s.getQueueType())){
+                    summonerRankInfoDtos.get(0).setRank(s.getRank());
+                    summonerRankInfoDtos.get(0).setTier(s.getTier());
+                    summonerRankInfoDtos.get(0).setWins(s.getWins());
+                    summonerRankInfoDtos.get(0).setLosses(s.getLosses());
+                } else if ("RANKED_FLEX_SR".equals(s.getQueueType())) {
+                    summonerRankInfoDtos.get(1).setRank(s.getRank());
+                    summonerRankInfoDtos.get(1).setTier(s.getTier());
+                    summonerRankInfoDtos.get(1).setWins(s.getWins());
+                    summonerRankInfoDtos.get(1).setLosses(s.getLosses());
+                }
+            }
+        }
+
+        summonerInfoDto.setSummonerName(response1.getBody().getName());
+        summonerInfoDto.setProfileIcon(response1.getBody().getProfileIconId());
+        summonerInfoDto.setSummonerLevel(response1.getBody().getSummonerLevel());
+        summonerInfoDto.setRanks(summonerRankInfoDtos);
+
+        System.out.println(summonerInfoDto.getRanks());
+        return summonerInfoDto;
+    }
 
     public MatchDto FindMatchWithSummonerName(String sn){
 
