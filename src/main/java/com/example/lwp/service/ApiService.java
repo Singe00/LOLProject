@@ -14,8 +14,10 @@ import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -77,7 +79,7 @@ public class ApiService {
         return summonerInfoDto;
     }
 
-    public MatchDto FindMatchWithSummonerName(String sn){
+    public List<MatchDto> FindMatch(String sn){
 
         //puuid 가져오기
         String apiUrl1 = "https://kr.api.riotgames.com/lol/summoner/v4/summoners/by-name/"+sn+"?api_key="+RiotConstant.API_KEY;
@@ -86,63 +88,61 @@ public class ApiService {
         String puuid = response1.getBody().getPuuid();
 
         //matchid 가져오기
-        String apiUrl2 = "https://asia.api.riotgames.com/lol/match/v5/matches/by-puuid/"+puuid+"/ids?start=0&count=100&api_key="+RiotConstant.API_KEY;
+        String apiUrl2 = "https://asia.api.riotgames.com/lol/match/v5/matches/by-puuid/"+puuid+"/ids?start=0&count=5&api_key="+RiotConstant.API_KEY;
         restTemplate = new RestTemplate();
         ResponseEntity<String[]> response2= restTemplate.getForEntity(apiUrl2, String[].class);
         String[] matchIds = response2.getBody();
+
         List<String> matchIdsList = Arrays.asList(matchIds);
+        List<MatchDto> matchDtoList = new ArrayList<>();
 
-/*
-            String apiUrl3 = "https://asia.api.riotgames.com/lol/match/v5/matches/"+row+"?api_key="+apiKey;
-            restTemplate = new RestTemplate();
-            ResponseEntity<SummonerDto> response3= restTemplate.getForEntity(apiUrl3, SummonerDto.class);
-            String puuid = response1.getBody().getPuuid();
-*/
+        for(String mi : matchIdsList){
+            MatchDto matchDto = new MatchDto();
 
-        MatchDto matchDto = new MatchDto();
             try {
-                String apiUrl3 = "https://asia.api.riotgames.com/lol/match/v5/matches/"+matchIdsList.get(0)+"?api_key="+RiotConstant.API_KEY;
+                String apiUrl3 = "https://asia.api.riotgames.com/lol/match/v5/matches/"+mi+"?api_key="+RiotConstant.API_KEY;
                 ObjectMapper objectMapper = new ObjectMapper();
                 matchDto = objectMapper.readValue(new URL(apiUrl3), MatchDto.class);
 
-                System.out.println("Match ID: " + matchDto.getMetadata().getMatchId());
-                System.out.println("Game Creation: " + matchDto.getInfo().getGameCreation());
-                System.out.println("Game Duration: " + matchDto.getInfo().getGameDuration());
-
-                System.out.println(matchDto.getInfo().getParticipants().get(0));
+                /*
+                * 1 Cleanse (정화)
+                * 3 Exhaust (탈진)
+                * 4 Flash (점멸)
+                * 6 Ghost (유령)
+                * 7 Heal (회복)
+                * 11 Smite (강타)
+                * 12 Teleport (순간이동)
+                * 13 Clarity (총명)
+                * 14 Ignite (점화)
+                * 21 Barrier (방어막)
+                * 32 Mark (표식)
+                * */
+                if (matchDto.getInfo().getGameMode().equals("CLASSIC")){
+                    if (matchDto.getInfo().getQueueId()==420){
+                        matchDto.getInfo().setGameMode("솔로 랭크");
+                    }else if (matchDto.getInfo().getQueueId()==430){
+                        matchDto.getInfo().setGameMode("일반 게임");
+                    }else if (matchDto.getInfo().getQueueId()==440){
+                        matchDto.getInfo().setGameMode("자유 랭크");
+                    }
+                } else if (matchDto.getInfo().getGameMode().equals("ARAM")) {
+                    matchDto.getInfo().setGameMode("칼바람 나락");
+                } else if (matchDto.getInfo().getGameMode().equals("CHERRY")) {
+                    matchDto.getInfo().setGameMode("아레나");
+                } else {
+                    matchDto.getInfo().setGameMode("특별 모드");
+                }
+                matchDtoList.add(matchDto);
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
 
-/*        if response.json()["gameMode"] =="CLASSIC":
-        gamemode = "소환사의 협곡"
-        elif response.json()["gameMode"] =="ARAM":
-        gamemode = "칼바람 나락"
-        elif response.json()["gameMode"] =="CHERRY":
-        gamemode = "아레나"
-        elif response.json()["gameMode"] =="URF":
-        gamemode = "우르프"
-        elif response.json()["gameMode"] =="SIEGE":
-        gamemode = "돌격 넥서스"
-        elif response.json()["gameMode"] == "ONEFORALL":
-        gamemode = "단일챔피언"
-        elif response.json()["gameMode"] == "ARSR":
-        gamemode = "All Random Summoner's Rift games"
-            else:
-        gamemode = response.json()["gameMode"]*/
+        System.out.println(matchDtoList.get(0));
+        System.out.println(matchDtoList.get(1));
 
-/*        if response.json()["gameType"] == "MATCHED_GAME":
-        if response.json()["gameQueueConfigId"] == 420:
-        gametype = "솔로 랭크"
-        elif response.json()["gameQueueConfigId"] == 430:
-        gametype = "일반 게임"
-        elif response.json()["gameQueueConfigId"] == 100:
-        gametype = "칼바람 나락"
-        elif response.json()["gameQueueConfigId"] in(1090, 1100, 1110):
-        gametype = "롤토체스"
-                else:
-        gametype = "자유 랭크"*/
 
-        return matchDto;
+        return matchDtoList;
     }
 }
+

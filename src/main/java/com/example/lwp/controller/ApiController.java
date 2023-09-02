@@ -7,9 +7,9 @@ import com.example.lwp.service.ApiService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @Slf4j
@@ -29,11 +29,11 @@ public class ApiController {
         return sid;
     }
 
-    @PostMapping("/search")
+    @PostMapping("/match")
     @ResponseBody
-    public String search(@RequestParam SearchDto request) {
-        MatchDto m = apiService.FindMatchWithSummonerName(request.getSummonerName());
-        return "ok";
+    public List<MatchDto> search(@RequestBody SearchDto request) {
+        List<MatchDto> m = apiService.FindMatch(request.getSummonerName());
+        return m;
 
     }
 

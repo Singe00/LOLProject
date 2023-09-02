@@ -11,8 +11,8 @@ import lombok.Setter;
 @AllArgsConstructor
 public class SummonerRankInfoDto {
     private String queueType = "";
-    private String tier ="";
-    private String rank ="Unranked";
+    private String tier ="Unranked";
+    private String rank ="";
     private int wins = 0;
     private int losses = 0;
 }

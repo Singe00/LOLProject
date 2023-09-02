@@ -25,7 +25,9 @@ public class MatchDto {
     public static class Info {
         private long gameCreation;
         private int gameDuration;
+        private long gameEndTimestamp;
         private String gameMode;
+        private int queueId;
         private List<Participant> participants;
         private List<Teams> teams;
     }
@@ -42,8 +44,8 @@ public class MatchDto {
         private int kills;
         private int summoner1Id;
         private int summoner2Id;
-        private int totalDamageDealtToChampions;
-        private int totalDamageShieldedOnTeammates;
+        private int totalDamageDealt;
+        private int totalDamageTaken;
         private int item0;
         private int item1;
         private int item2;
@@ -54,7 +56,17 @@ public class MatchDto {
         private int goldEarned;
         private int visionScore;
         private int wardsPlaced;
-        // 필요한 필드만 선언
+        private int visionWardsBoughtInGame;
+        private int detectorWardsPlaced;
+        private int doubleKills;
+        private int tripleKills;
+        private int quadraKills;
+        private int pentaKills;
+        private int champLevel;
+        private int championId;
+        private String championName;
+        private int totalMinionsKilled;
+        private boolean win;
     }
 
     @Data
