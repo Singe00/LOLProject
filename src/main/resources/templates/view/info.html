@@ -270,11 +270,34 @@
             var summonerNameParam = new URLSearchParams(window.location.search).get("summonerName");
 
 
+            const summonerSpells = {
+                1: "SummonerBoost",
+                3: "SummonerExhaust",
+                4: "SummonerFlash",
+                6: "SummonerHaste",
+                7: "SummonerHeal",
+                11: "SummonerSmite",
+                12: "SummonerTeleport",
+                13: "SummonerMana",
+                14: "SummonerDot",
+                21: "SummonerBarrier",
+                32: "SummonerSnowURFSnowball_Mark",
+                2201: "SummonerCherryHold",
+                2202: "SummonerCherryFlash"
+            };
+
+
             // 특정 닉네임의 win 값을 가져오기
             const targetParticipant = findParticipantBySummonerName(summonerNameParam, match.info.participants);
             const targetWin = targetParticipant
                 ? match.info.teams[targetParticipant.teamId === 100 ? 0 : 1].win ? '승리' : '패배'
                 : null;
+
+            const summoner1Id = targetParticipant.summoner1Id;
+            const summoner1Name = summonerSpells[summoner1Id] || "Unknown Spell";
+
+            const summoner2Id = targetParticipant.summoner2Id;
+            const summoner2Name = summonerSpells[summoner2Id] || "Unknown Spell";
 
             matchElement.innerHTML = `
         <li style="list-style: none; width: 100%;">
@@ -296,8 +319,8 @@
                         </div>
                     <div class="row-lo" style="margin: 5px;">
                       <div class="column-lo" style="margin: 5px;">
-                        <div><img src='http://ddragon.leagueoflegends.com/cdn/${version}/img/spell/${targetParticipant.summoner1Id}.png' style='width: 35px; height: 35px; overflow: hidden; border-radius: 50%;'></div>
-                        <div><img src='http://ddragon.leagueoflegends.com/cdn/${version}/img/spell/${targetParticipant.summoner2Id}.png' style='width: 35px; height: 35px; overflow: hidden; border-radius: 50%;'></div>
+                        <div><img src='http://ddragon.leagueoflegends.com/cdn/${version}/img/spell/${summoner1Name}.png' style='width: 25px; height: 25px; overflow: hidden; border-radius: 50%;'></div>
+                        <div><img src='http://ddragon.leagueoflegends.com/cdn/${version}/img/spell/${summoner2Name}.png' style='width: 25px; height: 25px; overflow: hidden; border-radius: 50%;'></div>
                       </div>
                       <div class="column-lo" style="margin: 5px;">
                         <div>룬1</div>
