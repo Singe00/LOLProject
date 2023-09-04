@@ -64,9 +64,11 @@ public class MatchDto {
         private int pentaKills;
         private int champLevel;
         private int championId;
+        private String summonerId;
         private String championName;
         private int totalMinionsKilled;
         private boolean win;
+        private Perks perks;
     }
 
     @Data
@@ -94,4 +96,24 @@ public class MatchDto {
     public static class ObjectiveType {
         private int kills;
     }
+
+    @Data
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class Perks {
+        private List<Style> styles;
+    }
+
+    @Data
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class Style {
+        private String description;
+        private List<Selections> selections;
+    }
+
+    @Data
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class Selections {
+        private int perk;
+    }
+
 }

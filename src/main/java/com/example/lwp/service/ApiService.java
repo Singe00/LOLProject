@@ -70,6 +70,7 @@ public class ApiService {
             }
         }
 
+        summonerInfoDto.setId((response1.getBody().getId()));
         summonerInfoDto.setSummonerName(response1.getBody().getName());
         summonerInfoDto.setProfileIcon(response1.getBody().getProfileIconId());
         summonerInfoDto.setSummonerLevel(response1.getBody().getSummonerLevel());
@@ -88,7 +89,7 @@ public class ApiService {
         String puuid = response1.getBody().getPuuid();
 
         //matchid 가져오기
-        String apiUrl2 = "https://asia.api.riotgames.com/lol/match/v5/matches/by-puuid/"+puuid+"/ids?start=0&count=10&api_key="+RiotConstant.API_KEY;
+        String apiUrl2 = "https://asia.api.riotgames.com/lol/match/v5/matches/by-puuid/"+puuid+"/ids?start=0&count=1&api_key="+RiotConstant.API_KEY;
         restTemplate = new RestTemplate();
         ResponseEntity<String[]> response2= restTemplate.getForEntity(apiUrl2, String[].class);
         String[] matchIds = response2.getBody();
@@ -104,21 +105,6 @@ public class ApiService {
                 ObjectMapper objectMapper = new ObjectMapper();
                 matchDto = objectMapper.readValue(new URL(apiUrl3), MatchDto.class);
 
-                /*
-                * 1 SummonerCleanse (정화)
-                * 3 SummonerExhaust (탈진)
-                * 4 SummonerFlash (점멸)
-                * 6 SummonerGhost (유령)
-                * 7 SummonerHeal (회복)
-                * 11 SummonerSmite (강타)
-                * 12 SummonerTeleport (순간이동)
-                * 13 SummonerClarity (총명)
-                * 14 SummonerIgnite (점화)
-                * 21 SummonerBarrier (방어막)
-                * 32 SummonerMark (표식)
-                * 2201 SummonerCherryHold
-                * 2202 SummonerCherryFlash
-                * */
 
                 if (matchDto.getInfo().getGameMode().equals("CLASSIC")){
                     if (matchDto.getInfo().getQueueId()==420){
@@ -140,11 +126,6 @@ public class ApiService {
                 e.printStackTrace();
             }
         }
-
-        System.out.println(matchDtoList.get(0));
-        System.out.println(matchDtoList.get(1));
-
-
         return matchDtoList;
     }
 }

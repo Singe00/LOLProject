@@ -79,6 +79,41 @@
       margin: 6px;
     }
 
+    .winBox{
+        background: rgba(49, 142, 239, 0.1);
+        border-radius: 4px;
+        display: flex;
+        position: relative;
+        padding: 10px 18px 10px 18px;
+        margin-top: 5px;
+        margin-bottom: 5px;
+    }
+
+    .lossBox {
+        background: rgba(244, 88, 78, 0.1);
+        border-radius: 4px;
+        display: flex;
+        position: relative;
+        padding: 10px 18px 10px 18px;
+        margin-top: 5px;
+        margin-bottom: 5px;
+    }
+
+    .champImgS{
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;
+    }
+
+    .custom-link {
+        text-decoration: none; /* 밑줄 제거 */
+        color: white; /* 링크 색상 설정 */
+        cursor: pointer; /* 커서 스타일 변경 (선택 사항) */
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap
+    }
+
   </style>
 
 
@@ -126,6 +161,8 @@
 
     // API 공통 URL 설정
     var apiUrl = "/api";
+
+    var ddragon = "http://ddragon.leagueoflegends.com/cdn/"
     // Version
     var version = "13.17.1";
 
@@ -154,6 +191,8 @@
         // 여기에 JSON 데이터 추가
     ];
 
+    const userId = [];
+
     // 페이지가 로드되면 실행되는 함수
     document.addEventListener("DOMContentLoaded", function() {
 
@@ -177,7 +216,7 @@
 
                     // API 응답을 처리하는 코드
                     console.log("API Response:", data);
-
+                    userId.push(data.id);
                     summonerNameElement.textContent = data.summonerName;
                     profileIconElement.innerHTML = "<img src='http://ddragon.leagueoflegends.com/cdn/"+version+"/img/profileicon/" + data.profileIcon + ".png' alt='Profile Icon' style='width: 100%; height: 100%; object-fit: cover; border-radius: 10px;'>";
                     summonerLevelElement.textContent = data.summonerLevel;
@@ -269,7 +308,6 @@
             const sec = match.info.gameDuration % 60;
             var summonerNameParam = new URLSearchParams(window.location.search).get("summonerName");
 
-
             const summonerSpells = {
                 1: "SummonerBoost",
                 3: "SummonerExhaust",
@@ -286,9 +324,8 @@
                 2202: "SummonerCherryFlash"
             };
 
-
             // 특정 닉네임의 win 값을 가져오기
-            const targetParticipant = findParticipantBySummonerName(summonerNameParam, match.info.participants);
+            const targetParticipant = findParticipantBySummonerId(userId[0], match.info.participants);
             const targetWin = targetParticipant
                 ? match.info.teams[targetParticipant.teamId === 100 ? 0 : 1].win ? '승리' : '패배'
                 : null;
@@ -300,32 +337,37 @@
             const summoner2Name = summonerSpells[summoner2Id] || "Unknown Spell";
 
             matchElement.innerHTML = `
-        <li style="list-style: none; width: 100%;">
+        <li style="list-style: none; width: 100%;" class="${targetWin === '승리' ? 'winBox' : 'lossBox'}">
           <div class="row-lo" style="width: 100%; justify-content: space-between;">
               <div class="row-lo">
-                <div class="column-lo">
-                  <div>${match.info.gameMode}</div>
-                  <div>${month}월 ${day}일</div>
-                  <div>${targetWin}</div>
-                  <div>${min}분 ${sec}초</div>
+                <!--게임 정보-->
+                <div class="column-lo" style="margin: 5px; margin-right: 15px">
+                  <div style="font-weight: bold">${match.info.gameMode}</div>
+                  <div style="color: lightgray">${month}월 ${day}일</div>
+                  <div style="margin-top: 20px; font-weight: bold; color: ${targetWin === '승리' ? 'red' : 'skyblue'}">${targetWin}</div>
+                  <div style="color: lightgray">${min}분 ${sec}초</div>
                 </div>
-                <div class="column-lo">
+                <div class="column-lo" style="margin-right: 15px;">
                   <div class="row-lo">
-                        <div class="row-lo" style="position: relative">
+                    <!--챔피언 초상화/레벨 부분-->
+                    <div class="row-lo" style="position: relative">
                           <div style="position: absolute; right: 0; bottom: 0; z-index: 1;">
-                            <div style="display: inline-block; background-color: black; border-radius: 50%; padding: 5px; font-size: 13px; font-weight: bold">${targetParticipant.champLevel}</div>
+                            <div style="display: inline-block; background-color: black; border-radius: 50%; padding: 5px; width: 25px; height: 25px; font-size: 13px; font-weight: bold;">${targetParticipant.champLevel}</div>
                           </div>
-                          <img src='http://ddragon.leagueoflegends.com/cdn/${version}/img/champion/${targetParticipant.championName}.png' style='width: 65px; height: 65px; overflow: hidden; border-radius: 50%;'>
+                          <img src='${ddragon}${version}/img/champion/${targetParticipant.championName}.png' style='width: 65px; height: 65px; overflow: hidden; border-radius: 50%;'>
                         </div>
                     <div class="row-lo" style="margin: 5px;">
+                      <!--스펠 부분-->
                       <div class="column-lo" style="margin: 5px;">
-                        <div><img src='http://ddragon.leagueoflegends.com/cdn/${version}/img/spell/${summoner1Name}.png' style='width: 25px; height: 25px; overflow: hidden; border-radius: 50%;'></div>
-                        <div><img src='http://ddragon.leagueoflegends.com/cdn/${version}/img/spell/${summoner2Name}.png' style='width: 25px; height: 25px; overflow: hidden; border-radius: 50%;'></div>
+                        <div><img src='${ddragon}${version}/img/spell/${summoner1Name}.png' style='width: 25px; height: 25px; overflow: hidden; border-radius: 50%;'></div>
+                        <div><img src='${ddragon}${version}/img/spell/${summoner2Name}.png' style='width: 25px; height: 25px; overflow: hidden; border-radius: 50%;'></div>
                       </div>
+                      <!--룬 부분-->
                       <div class="column-lo" style="margin: 5px;">
                         <div>룬1</div>
                         <div>룬2</div>
                       </div>
+                      <!--KDA 부분-->
                       <div class="column-lo">
                         <div class="row-lo">
                           <div>${targetParticipant.kills}</div>
@@ -334,73 +376,37 @@
                         </div>
                         <div class="row-lo">
                           <div>${((targetParticipant.kills + targetParticipant.assists) / Math.max(targetParticipant.deaths, 1)).toFixed(2)}</div>
-
                         </div>
                       </div>
                     </div>
                   </div>
-                  <div class="row-lo" style="margin: 5px;">
-                    <div><img src='http://ddragon.leagueoflegends.com/cdn/${version}/img/item/${targetParticipant.item0}.png' style='width: 30px; height: 30px; overflow: hidden; border-radius: 50%;'></div>
-                    <div><img src='http://ddragon.leagueoflegends.com/cdn/${version}/img/item/${targetParticipant.item1}.png' style='width: 30px; height: 30px; overflow: hidden; border-radius: 50%;'></div>
-                    <div><img src='http://ddragon.leagueoflegends.com/cdn/${version}/img/item/${targetParticipant.item2}.png' style='width: 30px; height: 30px; overflow: hidden; border-radius: 50%;'></div>
-                    <div><img src='http://ddragon.leagueoflegends.com/cdn/${version}/img/item/${targetParticipant.item3}.png' style='width: 30px; height: 30px; overflow: hidden; border-radius: 50%;'></div>
-                    <div><img src='http://ddragon.leagueoflegends.com/cdn/${version}/img/item/${targetParticipant.item4}.png' style='width: 30px; height: 30px; overflow: hidden; border-radius: 50%;'></div>
-                    <div><img src='http://ddragon.leagueoflegends.com/cdn/${version}/img/item/${targetParticipant.item5}.png' style='width: 30px; height: 30px; overflow: hidden; border-radius: 50%;'></div>
-                    <div><img src='http://ddragon.leagueoflegends.com/cdn/${version}/img/item/${targetParticipant.item6}.png' style='width: 30px; height: 30px; overflow: hidden; border-radius: 50%;'></div>
+                  <!--아이템 부분-->
+                  <div class="row-lo" style="margin: 5px; margin-top: 15px">
+                    ${generateItemInfo(targetParticipant)}
                   </div>
-
-
                 </div>
-                <div class="column-lo" margin: 5px;>
-                  <div>제어와드 : ${targetParticipant.visionWardsBoughtInGame}</div>
-                  <div>시야점수 : ${targetParticipant.visionScore}</div>
-                  <div>cs ${targetParticipant.totalMinionsKilled} (${(targetParticipant.totalMinionsKilled / min).toFixed(1)})</div>
+                <div class="column-lo">
+                    <!--기타 정보 와드/시야점수/cs-->
+                    <div class="column-lo" margin: 5px;>
+                      <div>제어와드 : ${targetParticipant.visionWardsBoughtInGame}</div>
+                      <div>시야점수 : ${targetParticipant.visionScore}</div>
+                      <div>cs ${targetParticipant.totalMinionsKilled} (${(targetParticipant.totalMinionsKilled / min).toFixed(1)})</div>
+                    </div>
+                    <div>
+                    dasdasd
+                    </div>
                 </div>
+
               </div>
+              <!--플레이어 정보-->
               <div class="row-lo">
-                    <div class="column-lo" style="margin: 5px;">
-                      <div class="row-lo">
-                        <div>초상화</div>
-                        <div>닉네임</div>
-                      </div>
-                      <div class="row-lo">
-                        <div>초상화</div>
-                        <div>닉네임</div>
-                      </div>
-                      <div class="row-lo">
-                        <div>초상화</div>
-                        <div>닉네임</div>
-                      </div>
-                      <div class="row-lo">
-                        <div>초상화</div>
-                        <div>닉네임</div>
-                      </div>
-                      <div class="row-lo">
-                        <div>초상화</div>
-                        <div>닉네임</div>
-                      </div>
-                </div>
-                    <div class="column-lo" style="margin: 5px;">
-                      <div class="row-lo">
-                        <div>초상화</div>
-                        <div>닉네임</div>
-                      </div>
-                      <div class="row-lo">
-                        <div>초상화</div>
-                        <div>닉네임</div>
-                      </div>
-                      <div class="row-lo">
-                        <div>초상화</div>
-                        <div>닉네임</div>
-                      </div>
-                      <div class="row-lo">
-                        <div>초상화</div>
-                        <div>닉네임</div>
-                      </div>
-                      <div class="row-lo">
-                        <div>초상화</div>
-                        <div>닉네임</div>
-                      </div>
+                <div class="row-lo" style="justify-content: space-between; min-width:180px;">
+                    <div class="column-lo" style="margin: 5px; font-size: 12px; max-width: 83px;">
+                        ${generatePlayerInfo1(match)}
+                    </div>
+                    <div class="column-lo" style="margin: 5px; font-size: 12px; max-width: 83px;">
+                        ${generatePlayerInfo2(match)}
+                    </div>
                 </div>
                 <div>버튼</div>
                 </div>
@@ -411,11 +417,97 @@
         });
     }
 
-    // participants 배열 내에서 특정 닉네임을 찾아 해당 객체를 반환하는 함수
-    function findParticipantBySummonerName(summonerName, participants) {
-        return participants.find(participant => participant.summonerName === summonerName);
+    // participants 배열 내에서 특정 아이디을 찾아 해당 객체를 반환하는 함수
+    function findParticipantBySummonerId(summonerId, participants) {
+        return participants.find(participant => participant.summonerId === summonerId);
     }
+    //블루팀 플레이어 리스트 생성
+    function generatePlayerInfo1(match) {
+        const playerInfoHtml = [];
+        const maxPlayers = match.info.gameMode === "아레나" ? 4 : 5;
 
+        // 플레이어 정보를 생성하고 배열에 추가 (인덱스 0부터 maxPlayers-1까지)
+        for (let i = 0; i < maxPlayers; i++) {
+            const participant = match.info.participants[i];
+            const participantChampionName = participant.championName;
+            const participantSummonerName = participant.summonerName;
+
+            // 특정 닉네임과 같은 플레이어 정보인 경우에만 추가
+            playerInfoHtml.push(`
+            <div class="row-lo">
+                <img src='${ddragon}${version}/img/champion/${participantChampionName}.png' class="champImgS">
+                <a class="custom-link" href="http://192.168.0.72:8050/info?summonerName=${participantSummonerName}">
+                    ${participantSummonerName}
+                </a>
+            </div>
+        `);
+
+            // i가 1이고 아레나 모드인 경우 1개 크기의 빈 공간 추가
+            if (i === 1 && match.info.gameMode === "아레나") {
+                playerInfoHtml.push('<div style="width: 30px; height: 30px;"></div>');
+            }
+        }
+
+        // 배열에 있는 플레이어 정보를 문자열로 변환하여 반환
+        return playerInfoHtml.join('');
+    }
+    //레드팀 플레이어 리스트 생성
+    function generatePlayerInfo2(match) {
+        const playerInfoHtml = [];
+        const startIndex = match.info.gameMode === "아레나" ? 4 : 5;
+        const maxPlayers = match.info.gameMode === "아레나" ? 8 : 10;
+
+        // 플레이어 정보를 생성하고 배열에 추가 (인덱스 0부터 maxPlayers-1까지)
+        for (let i = startIndex; i < maxPlayers; i++) {
+            const participant = match.info.participants[i];
+            const participantChampionName = participant.championName;
+            const participantSummonerName = participant.summonerName;
+
+            // 특정 닉네임과 같은 플레이어 정보인 경우에만 추가
+            playerInfoHtml.push(`
+            <div class="row-lo">
+                <img src='${ddragon}${version}/img/champion/${participantChampionName}.png' class="champImgS">
+                <a class="custom-link" href="http://192.168.0.72:8050/info?summonerName=${participantSummonerName}">
+                    ${participantSummonerName}
+                </a>
+            </div>
+        `);
+
+            // i가 1이고 아레나 모드인 경우 1개 크기의 빈 공간 추가
+            if (i === 5 && match.info.gameMode === "아레나") {
+                playerInfoHtml.push('<div style="width: 30px; height: 30px;"></div>');
+            }
+        }
+
+        // 배열에 있는 플레이어 정보를 문자열로 변환하여 반환
+        return playerInfoHtml.join('');
+    }
+    //플레이어 아이템 리스트 생성
+    function generateItemInfo(targetParticipant) {
+        const itemInfoHtml = [];
+
+        // 아이템 정보를 생성하고 배열에 추가
+        for (let i = 0; i < 7; i++) {
+            const itemImageId = targetParticipant[`item${i}`];
+
+            // 아이템 ID가 0인 경우에는 빈 칸으로 처리
+            if (itemImageId !== 0) {
+                const itemImageSrc = `${ddragon}${version}/img/item/${itemImageId}.png`;
+                itemInfoHtml.push(`
+                <img src='${itemImageSrc}' style='width: 30px; height: 30px; overflow: hidden; border-radius: 50%;'>
+            `);
+            } else {
+                // 아이템 ID가 0인 경우, 빈 칸 추가
+                const backgroundColor = targetParticipant.win ? 'rgba(49, 142, 239, 0.2)' : 'rgba(244, 88, 78, 0.2)';
+                itemInfoHtml.push(`
+                <div style='width: 30px; height: 30px; border-radius: 50%; background:${backgroundColor};'></div>
+            `);
+            }
+        }
+
+        // 배열에 있는 아이템 정보를 문자열로 변환하여 반환
+        return itemInfoHtml.join('');
+    }
 
   </script>
 
