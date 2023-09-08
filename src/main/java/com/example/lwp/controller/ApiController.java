@@ -25,7 +25,6 @@ public class ApiController {
     @ResponseBody
     public SummonerInfoDto user(@RequestBody SearchDto request) {
         SummonerInfoDto sid = apiService.FindSummonerInfo(request.getSummonerName());
-        System.out.println(sid);
         return sid;
     }
 

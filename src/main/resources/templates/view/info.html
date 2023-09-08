@@ -114,6 +114,28 @@
         white-space: nowrap
     }
 
+    .rune-img {
+        width: 25px;
+        height: 25px;
+        overflow: hidden;
+        border-radius: 50%;
+        margin-right: 15px;
+    }
+
+    .ka-st{
+        font-size: 18px;
+    }
+
+    .d-st{
+        font-size: 18px;
+        color: crimson;
+    }
+
+    .kda-st{
+        font-size: 15px;
+        color: gray;
+    }
+
   </style>
 
 
@@ -170,6 +192,79 @@
       { rank: ".", tier: ".", wins: 0, losses: 0 },
       { rank: ".", tier: ".", wins: 0, losses: 0 }
     ];
+
+    const iconData = [
+        {"id": 8000, "icon": "perk-images/Styles/7201_Precision.png"},
+        {"id": 9101, "icon": "perk-images/Styles/Precision/Overheal.png"},
+        {"id": 9111, "icon": "perk-images/Styles/Precision/Triumph.png"},
+        {"id": 8009, "icon": "perk-images/Styles/Precision/PresenceOfMind/PresenceOfMind.png"},
+        {"id": 9101, "icon": "perk-images/Styles/Precision/LegendAlacrity/LegendAlacrity.png"},
+        {"id": 9105, "icon": "perk-images/Styles/Precision/LegendTenacity/LegendTenacity.png"},
+        {"id": 8005, "icon": "perk-images/Styles/Precision/PressTheAttack/PressTheAttack.png"},
+        {"id": 8008, "icon": "perk-images/Styles/Precision/LethalTempo/LethalTempoTemp.png"},
+        {"id": 8021, "icon": "perk-images/Styles/Precision/FleetFootwork/FleetFootwork.png"},
+        {"id": 8010, "icon": "perk-images/Styles/Precision/Conqueror/Conqueror.png"},
+        {"id": 8100, "icon": "perk-images/Styles/7200_Domination.png"},
+        {"id": 8200, "icon": "perk-images/Styles/7202_Sorcery.png"},
+        {"id": 8112, "icon": "perk-images/Styles/Domination/Electrocute/Electrocute.png"},
+        {"id": 8124, "icon": "perk-images/Styles/Domination/Predator/Predator.png"},
+        {"id": 8128, "icon": "perk-images/Styles/Domination/DarkHarvest/DarkHarvest.png"},
+        {"id": 9923, "icon": "perk-images/Styles/Domination/HailOfBlades/HailOfBlades.png"},
+        {"id": 8126, "icon": "perk-images/Styles/Domination/CheapShot/CheapShot.png"},
+        {"id": 8139, "icon": "perk-images/Styles/Domination/TasteOfBlood/GreenTerror_TasteOfBlood.png"},
+        {"id": 8143, "icon": "perk-images/Styles/Domination/SuddenImpact/SuddenImpact.png"},
+        {"id": 8136, "icon": "perk-images/Styles/Domination/ZombieWard/ZombieWard.png"},
+        {"id": 8120, "icon": "perk-images/Styles/Domination/GhostPoro/GhostPoro.png"},
+        {"id": 8138, "icon": "perk-images/Styles/Domination/EyeballCollection/EyeballCollection.png"},
+        {"id": 8135, "icon": "perk-images/Styles/Domination/RavenousHunter/RavenousHunter.png"},
+        {"id": 8134, "icon": "perk-images/Styles/Domination/IngeniousHunter/IngeniousHunter.png"},
+        {"id": 8105, "icon": "perk-images/Styles/Domination/RelentlessHunter/RelentlessHunter.png"},
+        {"id": 8106, "icon": "perk-images/Styles/Domination/UltimateHunter/UltimateHunter.png"},
+        {"id": 8300, "icon": "perk-images/Styles/7203_Whimsy.png"},
+        {"id": 8351, "icon": "perk-images/Styles/Inspiration/GlacialAugment/GlacialAugment.png"},
+        {"id": 8360, "icon": "perk-images/Styles/Inspiration/UnsealedSpellbook/UnsealedSpellbook.png"},
+        {"id": 8358, "icon": "perk-images/Styles/Inspiration/MasterKey/MasterKey.png"},
+        {"id": 8306, "icon": "perk-images/Styles/Inspiration/HextechFlashtraption/HextechFlashtraption.png"},
+        {"id": 8304, "icon": "perk-images/Styles/Inspiration/MagicalFootwear/MagicalFootwear.png"},
+        {"id": 8313, "icon": "perk-images/Styles/Inspiration/PerfectTiming/PerfectTiming.png"},
+        {"id": 8321, "icon": "perk-images/Styles/Inspiration/TimeWarpTonic/TimeWarpTonic.png"},
+        {"id": 8306, "icon": "perk-images/Styles/Inspiration/HextechFlashtraption/HextechFlashtraption.png"},
+        {"id": 8304, "icon": "perk-images/Styles/Inspiration/MagicalFootwear/MagicalFootwear.png"},
+        {"id": 8313, "icon": "perk-images/Styles/Inspiration/PerfectTiming/PerfectTiming.png"},
+        {"id": 8321, "icon": "perk-images/Styles/Inspiration/TimeWarpTonic/TimeWarpTonic.png"},
+        {"id": 8321, "icon": "perk-images/Styles/Inspiration/TimeWarpTonic/TimeWarpTonic.png"},
+        {"id": 8321, "icon": "perk-images/Styles/Inspiration/TimeWarpTonic/TimeWarpTonic.png"},
+        {"id": 8321, "icon": "perk-images/Styles/Inspiration/TimeWarpTonic/TimeWarpTonic.png"},
+        {"id": 8321, "icon": "perk-images/Styles/Inspiration/TimeWarpTonic/TimeWarpTonic.png"},
+        {"id": 8321, "icon": "perk-images/Styles/Inspiration/TimeWarpTonic/TimeWarpTonic.png"},
+        {"id": 8321, "icon": "perk-images/Styles/Inspiration/TimeWarpTonic/TimeWarpTonic.png"},
+        {"id": 8400, "icon": "perk-images/Styles/7204_Resolve.png"},
+        {"id": 8437, "icon": "perk-images/Styles/Resolve/GraspOfTheUndying/GraspOfTheUndying.png"},
+        {"id": 8439, "icon": "perk-images/Styles/Resolve/VeteranAftershock/VeteranAftershock.png"},
+        {"id": 8465, "icon": "perk-images/Styles/Resolve/Guardian/Guardian.png"},
+        {"id": 8446, "icon": "perk-images/Styles/Resolve/Demolish/Demolish.png"},
+        {"id": 8463, "icon": "perk-images/Styles/Resolve/FontOfLife/FontOfLife.png"},
+        {"id": 8401, "icon": "perk-images/Styles/Resolve/MirrorShell/MirrorShell.png"},
+        {"id": 8429, "icon": "perk-images/Styles/Resolve/Conditioning/Conditioning.png"},
+        {"id": 8444, "icon": "perk-images/Styles/Resolve/SecondWind/SecondWind.png"},
+        {"id": 8473, "icon": "perk-images/Styles/Resolve/BonePlating/BonePlating.png"},
+        {"id": 8451, "icon": "perk-images/Styles/Resolve/Overgrowth/Overgrowth.png"},
+        {"id": 8453, "icon": "perk-images/Styles/Resolve/Revitalize/Revitalize.png"},
+        {"id": 8242, "icon": "perk-images/Styles/Sorcery/Unflinching/Unflinching.png"},
+        {"id": 8214, "icon": "perk-images/Styles/Sorcery/SummonAery/SummonAery.png"},
+        {"id": 8229, "icon": "perk-images/Styles/Sorcery/ArcaneComet/ArcaneComet.png"},
+        {"id": 8230, "icon": "perk-images/Styles/Sorcery/PhaseRush/PhaseRush.png"},
+        {"id": 8224, "icon": "perk-images/Styles/Sorcery/NullifyingOrb/Pokeshield.png"},
+        {"id": 8226, "icon": "perk-images/Styles/Sorcery/ManaflowBand/ManaflowBand.png"},
+        {"id": 8275, "icon": "perk-images/Styles/Sorcery/NimbusCloak/6361.png"},
+        {"id": 8210, "icon": "perk-images/Styles/Sorcery/Transcendence/Transcendence.png"},
+        {"id": 8234, "icon": "perk-images/Styles/Sorcery/Celerity/CelerityTemp.png"},
+        {"id": 8233, "icon": "perk-images/Styles/Sorcery/AbsoluteFocus/AbsoluteFocus.png"},
+        {"id": 8237, "icon": "perk-images/Styles/Sorcery/Scorch/Scorch.png"},
+        {"id": 8232, "icon": "perk-images/Styles/Sorcery/Waterwalking/Waterwalking.png"},
+        {"id": 8236, "icon": "perk-images/Styles/Sorcery/GatheringStorm/GatheringStorm.png"}
+    ]
+
 
     // 응답 데이터를 화면에 출력
     const summonerNameElement = document.getElementById("summonerName");
@@ -287,6 +382,7 @@
       soloRank.classList.remove("selected");
     });
 
+    //솔로,자유랭크 생성
     function updateRankDisplay(rankData) {
       emblemElement.innerHTML = `<img src="assets/img/emblem/${rankData.tier}.png" style='width: 100%; height: auto; object-fit: cover; border-radius: 10px;'>`;
       rankElement.textContent = rankData.rank;
@@ -294,8 +390,7 @@
       winsElement.textContent = `${rankData.wins}승 `;
       lossesElement.textContent = `${rankData.losses}패`;
     }
-
-
+    //전적 리스트 생성
     function generateMatchHistory() {
         // JSON 데이터를 기반으로 동적으로 레이아웃 생성
         matchData.forEach(match => {
@@ -364,18 +459,18 @@
                       </div>
                       <!--룬 부분-->
                       <div class="column-lo" style="margin: 5px;">
-                        <div>룬1</div>
-                        <div>룬2</div>
+                        <div><img src='${getIconUrl(targetParticipant.perks.styles[0].selections[0].perk)}' class="rune-img"></div>
+                        <div><img src='${getIconUrl(targetParticipant.perks.styles[1].style)}' class="rune-img"></div>
                       </div>
                       <!--KDA 부분-->
                       <div class="column-lo">
                         <div class="row-lo">
-                          <div>${targetParticipant.kills}</div>
-                          <div>/${targetParticipant.deaths}/</div>
-                          <div>${targetParticipant.assists}</div>
+                          <div class="ka-st">${targetParticipant.kills}&nbsp;/&nbsp;</div>
+                          <div class="d-st">${targetParticipant.deaths}</div>
+                          <div class="ka-st">&nbsp;/&nbsp;${targetParticipant.assists}</div>
                         </div>
                         <div class="row-lo">
-                          <div>${((targetParticipant.kills + targetParticipant.assists) / Math.max(targetParticipant.deaths, 1)).toFixed(2)}</div>
+                          <div class="kda-st">${((targetParticipant.kills + targetParticipant.assists) / Math.max(targetParticipant.deaths, 1)).toFixed(2)}&nbsp;평점</div>
                         </div>
                       </div>
                     </div>
@@ -416,7 +511,6 @@
             matchHistoryContainer.appendChild(matchElement);
         });
     }
-
     // participants 배열 내에서 특정 아이디을 찾아 해당 객체를 반환하는 함수
     function findParticipantBySummonerId(summonerId, participants) {
         return participants.find(participant => participant.summonerId === summonerId);
@@ -508,12 +602,20 @@
         // 배열에 있는 아이템 정보를 문자열로 변환하여 반환
         return itemInfoHtml.join('');
     }
+    // id에 해당하는 아이콘 URL 생성
+    function getIconUrl(id) {
+        const iconInfo = iconData.find(icon => icon.id === id);
+        if (iconInfo) {
+            return `https://ddragon.leagueoflegends.com/cdn/img/${iconInfo.icon}`;
+        } else {
+            return '아이콘을 찾을 수 없습니다.';
+        }
+    }
 
   </script>
 
 </th:block>
 
-<!--<li>
 
-</li>-->
+
 </html>

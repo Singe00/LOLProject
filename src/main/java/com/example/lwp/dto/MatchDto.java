@@ -108,6 +108,7 @@ public class MatchDto {
     public static class Style {
         private String description;
         private List<Selections> selections;
+        private int style;
     }
 
     @Data
