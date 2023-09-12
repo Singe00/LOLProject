@@ -5,10 +5,9 @@
 
 <h1>Develope</h1>
 > 풀 스택 개발
-
-<p>Front  : HTML (SSR)</p>
-<p>Back   : Java, Spring Boot</p>
-<p>DB     : H2 DB</p>
+  <p>Front  : HTML (SSR)</p>
+  <p>Back   : Java, Spring Boot</p>
+  <p>DB     : H2 DB</p>
 
 <br/>
 
@@ -22,3 +21,6 @@
   </p>
 
 <br/>
+
+<h1>AI Develope</h1>
+> https://github.com/Singe00/LOL-Winning-Predict
