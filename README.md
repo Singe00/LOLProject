@@ -3,14 +3,13 @@
 
 <br/>
 
-<h1Develope</h1>
+<h1>Develope</h1>
 - 풀 스택 개발
 
 <br/>
-
-> Front  - HTML (SSR)
-> Back   - Java, Spring Boot
-> DB     - H2 DB
+Front  - HTML (SSR)
+Back   - Java, Spring Boot
+DB     - H2 DB
 
 <br/>
 
