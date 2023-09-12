@@ -14,11 +14,11 @@
 
 > 주요 기능
   <p align="left">
-    <img src="https://github.com/Min-su-Jeong/Capstone_Design_Project/assets/74342121/270dac61-f24d-46e3-baf0-1ca337518df0" width="650" height="350">
+    <img src="https://user-images.githubusercontent.com/103260185/267306986-ed169ea7-97fe-4407-ae8f-d5234e198e1d.png" width="650" height="350">
   </p>
   <br/>
   <p align="left">
-    <img src="https://github.com/Min-su-Jeong/Capstone_Design_Project/assets/74342121/3b971bea-d3c5-4b7d-81ec-41f9b4fd32c6" width="650" height="350">
+    <img src="https://user-images.githubusercontent.com/103260185/267307069-60ce8519-4740-4db1-b8cf-4ad0e61cf1ee.png" width="650" height="350">
   </p>
 
 <br/>
