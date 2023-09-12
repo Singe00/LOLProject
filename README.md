@@ -4,18 +4,14 @@
 <br/>
 
 <h1>Develope</h1>
-풀 스택 개발
-<br/>
-Front  : HTML (SSR)
-<br/>
-Back   : Java, Spring Boot
-<br/>
-DB     : H2 DB
+> 풀 스택 개발
 
+<p>Front  : HTML (SSR)</p>
+<p>Back   : Java, Spring Boot</p>
+<p>DB     : H2 DB</p>
 
 <br/>
 
-<h1>Develope</h1>
 > 주요 기능
   <p align="left">
     <img src="https://github.com/Min-su-Jeong/Capstone_Design_Project/assets/74342121/270dac61-f24d-46e3-baf0-1ca337518df0" width="650" height="350">
