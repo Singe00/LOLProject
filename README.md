@@ -1,21 +1,16 @@
-# LOLProject
+# LOL Project
 리그 오브 레전드 api를 활용한 승률 예측 딥러닝 모델 활용 웹 서비스
 
 <br/>
 
 <h1>Develope</h1>
-- 풀 스택 개발
-
+풀 스택 개발
 <br/>
-Front  - HTML (SSR)
-Back   - Java, Spring Boot
-DB     - H2 DB
-
+Front  : HTML (SSR)
 <br/>
-
-
+Back   : Java, Spring Boot
 <br/>
-
+DB     : H2 DB
 
 <br/>
 
