@@ -88,7 +88,7 @@ public class ApiService {
         String puuid = response1.getBody().getPuuid();
 
         //matchid 가져오기
-        String apiUrl2 = "https://asia.api.riotgames.com/lol/match/v5/matches/by-puuid/"+puuid+"/ids?start=0&count=20&api_key="+RiotConstant.API_KEY;
+        String apiUrl2 = "https://asia.api.riotgames.com/lol/match/v5/matches/by-puuid/"+puuid+"/ids?start=0&count=10&api_key="+RiotConstant.API_KEY;
         restTemplate = new RestTemplate();
         ResponseEntity<String[]> response2= restTemplate.getForEntity(apiUrl2, String[].class);
         String[] matchIds = response2.getBody();

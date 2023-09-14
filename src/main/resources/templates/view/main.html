@@ -96,7 +96,7 @@
 
             if (inputValue) {
                 // 입력값을 컨트롤러로 전달하고 페이지 이동
-                window.location.href = `http://192.168.0.72:8050/info?summonerName=${encodeURIComponent(inputValue)}`;
+                window.location.href = `http://${ip}:8080/info?summonerName=${encodeURIComponent(inputValue)}`;
             }
         }
 
