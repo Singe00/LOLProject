@@ -138,7 +138,6 @@
 
   </style>
 
-
   <div class="main-box bg-dark">
     <main class="main-box2">
       <div class="row-lo" style="display:flex; justify-content: space-between; width: 100%; margin-top: 20px">
@@ -183,16 +182,17 @@
 
     // API 공통 URL 설정
     var apiUrl = "/api";
-
+    // 링크 설정
     var ddragon = "http://ddragon.leagueoflegends.com/cdn/"
     // Version
     var version = "13.17.1";
 
+    //솔로, 자유 랭크 리스트
     const ranks = [
       { rank: ".", tier: ".", wins: 0, losses: 0 },
       { rank: ".", tier: ".", wins: 0, losses: 0 }
     ];
-
+    //룬특 ID, Icon링크
     const iconData = [
         {"id": 8000, "icon": "perk-images/Styles/7201_Precision.png"},
         {"id": 9101, "icon": "perk-images/Styles/Precision/Overheal.png"},
@@ -265,7 +265,6 @@
         {"id": 8236, "icon": "perk-images/Styles/Sorcery/GatheringStorm/GatheringStorm.png"}
     ]
 
-
     // 응답 데이터를 화면에 출력
     const summonerNameElement = document.getElementById("summonerName");
     const profileIconElement = document.getElementById("profileIcon");
@@ -291,7 +290,7 @@
     // 페이지가 로드되면 실행되는 함수
     document.addEventListener("DOMContentLoaded", function() {
 
-      // 첫 번째 함수 실행
+      // 첫 번째 함수 실행, 소환사 기본 정보 생성
       function firstFunction() {
         // URL에서 summonerName 쿼리 파라미터 값을 가져옴
         var summonerNameParam = new URLSearchParams(window.location.search).get("summonerName");
@@ -339,7 +338,7 @@
       }
       firstFunction();
 
-      // 두 번째 함수 실행
+      // 두 번째 함수 실행, 전적 리스트 생성
       function secondFunction() {
           // URL에서 summonerName 쿼리 파라미터 값을 가져옴
           var summonerNameParam = new URLSearchParams(window.location.search).get("summonerName");
