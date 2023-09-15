@@ -479,62 +479,61 @@
           <div class="row-lo" style="width: 100%; justify-content: space-between;">
               <div class="row-lo">
                 <!--게임 정보-->
-                <div class="column-lo" style="margin: 5px; margin-right: 15px">
+                <div class="column-lo" style="margin: 5px; margin-right: 15px; min-width: 70px;">
                   <div style="font-weight: bold">${match.info.gameMode}</div>
-                  <div style="color: lightgray">${month}월 ${day}일</div>
-                  <div style="margin-top: 20px; font-weight: bold; color: ${targetWin === '승리' ? 'skyblue' : 'red'}">${targetWin}</div>
-                  <div style="color: lightgray">${min}분 ${sec}초</div>
+                  <div style="color: lightgray; font-size: 13px">${month}월 ${day}일</div>
+                  <div style="margin-top: 20px; font-weight: bold; color: ${targetWin === '승리' ? 'skyblue' : 'orangered'}">${targetWin}</div>
+                  <div style="color: lightgray; font-size: 13px;">${min}분 ${sec}초</div>
                 </div>
-                <div class="column-lo" style="margin-right: 15px;">
-                   <div class="row-lo">
-                        <div class="row-lo" style="margin-right: 15px">
-                    <!--챔피언 초상화/레벨 부분-->
-                    <div class="row-lo" style="position: relative">
-                          <div style="position: absolute; right: 0; bottom: 0; z-index: 1;">
-                            <div style="display: inline-block; background-color: black; border-radius: 50%; padding: 5px; width: 25px; height: 25px; font-size: 13px; font-weight: bold;">${targetParticipant.champLevel}</div>
+                <div class="column-lo" style="margin-right: 15px; min-width:380px">
+                  <div class="row-lo" style="min-width: 350px; display: flex; justify-content: space-between;">
+                        <div class="row-lo" style="max-width: 220px;">
+                            <!--챔피언 초상화/레벨 부분-->
+                            <div class="row-lo" style="position: relative">
+                                  <div style="position: absolute; right: 0; bottom: 0; z-index: 1;">
+                                    <div style="display: inline-block; background-color: black; border-radius: 50%; padding: 5px; width: 25px; height: 25px; font-size: 13px; font-weight: bold;">${targetParticipant.champLevel}</div>
+                                  </div>
+                                  <img src='${ddragon}${version}/img/champion/${targetParticipant.championName}.png' style='width: 65px; height: 65px; overflow: hidden; border-radius: 50%;'>
+                                </div>
+                            <div class="row-lo" style="margin: 5px;">
+                              <!--스펠 부분-->
+                              <div class="column-lo" style="margin: 5px; max-width: 30px">
+                                <div><img src='${ddragon}${version}/img/spell/${summoner1Name}.png' style='width: 25px; height: 25px; overflow: hidden; border-radius: 50%;'></div>
+                                <div><img src='${ddragon}${version}/img/spell/${summoner2Name}.png' style='width: 25px; height: 25px; overflow: hidden; border-radius: 50%;'></div>
+                              </div>
+                              <!--룬 부분-->
+                              <div class="column-lo" style="margin: 5px; max-width: 30px">
+                                ${generateRuneInfo(match.info.gameMode,targetParticipant)}
+                              </div>
+                              <!--KDA 부분-->
+                              <div class="column-lo" style="min-width: 80px">
+                                <div class="row-lo">
+                                  <div class="ka-st">${targetParticipant.kills}&nbsp;/&nbsp;</div>
+                                  <div class="d-st">${targetParticipant.deaths}</div>
+                                  <div class="ka-st">&nbsp;/&nbsp;${targetParticipant.assists}</div>
+                                </div>
+                                <div class="row-lo">
+                                  <div class="kda-st">${((targetParticipant.kills + targetParticipant.assists) / Math.max(targetParticipant.deaths, 1)).toFixed(2)}&nbsp;평점</div>
+                                </div>
+                              </div>
+                            </div>
                           </div>
-                          <img src='${ddragon}${version}/img/champion/${targetParticipant.championName}.png' style='width: 65px; height: 65px; overflow: hidden; border-radius: 50%;'>
-                        </div>
-                    <div class="row-lo" style="margin: 5px;">
-                      <!--스펠 부분-->
-                      <div class="column-lo" style="margin: 5px;">
-                        <div><img src='${ddragon}${version}/img/spell/${summoner1Name}.png' style='width: 25px; height: 25px; overflow: hidden; border-radius: 50%;'></div>
-                        <div><img src='${ddragon}${version}/img/spell/${summoner2Name}.png' style='width: 25px; height: 25px; overflow: hidden; border-radius: 50%;'></div>
-                      </div>
-                      <!--룬 부분-->
-                      <div class="column-lo" style="margin: 5px;">
-                        <div><img src='${getIconUrl(targetParticipant.perks.styles[0].selections[0].perk)}' class="rune-img"></div>
-                        <div><img src='${getIconUrl(targetParticipant.perks.styles[1].style)}' class="rune-img"></div>
-                      </div>
-                      <!--KDA 부분-->
-                      <div class="column-lo">
                         <div class="row-lo">
-                          <div class="ka-st">${targetParticipant.kills}&nbsp;/&nbsp;</div>
-                          <div class="d-st">${targetParticipant.deaths}</div>
-                          <div class="ka-st">&nbsp;/&nbsp;${targetParticipant.assists}</div>
+                             ${generateLine(targetParticipant)}
+                            <!--기타 정보 와드/시야점수/cs-->
+                            <div class="column-lo" style="min-width: 90px">
+                              <div>제어와드 : ${targetParticipant.visionWardsBoughtInGame}</div>
+                              <div>시야점수 : ${targetParticipant.visionScore}</div>
+                              <div>cs ${targetParticipant.totalMinionsKilled} (${(targetParticipant.totalMinionsKilled / min).toFixed(1)})</div>
+                            </div>
                         </div>
-                        <div class="row-lo">
-                          <div class="kda-st">${((targetParticipant.kills + targetParticipant.assists) / Math.max(targetParticipant.deaths, 1)).toFixed(2)}&nbsp;평점</div>
-                        </div>
-                      </div>
-                    </div>
                   </div>
-                        <div class="column-lo">
-                    <!--기타 정보 와드/시야점수/cs-->
-                    <div class="column-lo" margin: 5px;>
-                      <div>제어와드 : ${targetParticipant.visionWardsBoughtInGame}</div>
-                      <div>시야점수 : ${targetParticipant.visionScore}</div>
-                      <div>cs ${targetParticipant.totalMinionsKilled} (${(targetParticipant.totalMinionsKilled / min).toFixed(1)})</div>
-                    </div>
-                </div>
-                    </div>
                   <!--아이템 부분-->
-                  <div class="row-lo" style="margin: 5px; margin-top: 15px">
-                    ${generateItemInfo(targetParticipant)}
-                    ${generateSlayer(targetParticipant)}
+                  <div class="row-lo" style="margin: 5px; margin-top: 15px; width: 100%; min-width: 350px">
+                    <div class="row-lo" style="max-width: 220px;">${generateItemInfo(targetParticipant)}</div>
+                    <div>${generateSlayer(targetParticipant)}</div>
                   </div>
                 </div>
-
 
               </div>
               <!--플레이어 정보-->
@@ -620,7 +619,7 @@
         // 배열에 있는 플레이어 정보를 문자열로 변환하여 반환
         return playerInfoHtml.join('');
     }
-    //레드팀 플레이어 리스트 생성
+    //플레이어 킬 리스트 생성
     function generateSlayer(targetParticipant) {
         const playerSlayer = [];
 
@@ -671,6 +670,42 @@
 
         // 배열에 있는 아이템 정보를 문자열로 변환하여 반환
         return itemInfoHtml.join('');
+    }
+    //플레이어 룬 정보 리스트 생성
+    function generateRuneInfo(gameMode, targetParticipant) {
+        const runeInfoHtml = [];
+
+
+            if (gameMode != "아레나") {
+                runeInfoHtml.push(`
+                <div><img src='${getIconUrl(targetParticipant.perks.styles[0].selections[0].perk)}' style="width: 25px; height: 25px; overflow: hidden; border-radius: 50%; margin-right: 15px;"></div>
+                <div><img src='${getIconUrl(targetParticipant.perks.styles[1].style)}' style="width: 25px; height: 25px; overflow: hidden; border-radius: 50%; margin-right: 15px;"></div>
+            `);
+            } else {
+                // 아이템 ID가 0인 경우, 빈 칸 추가
+                const backgroundColor = targetParticipant.win ? 'rgba(49, 142, 239, 0.2)' : 'rgba(244, 88, 78, 0.2)';
+                runeInfoHtml.push(`
+                <div style='width: 25px; height: 25px; border-radius: 50%; background:${backgroundColor}; margin-right: 15px;'></div>
+                <div style='width: 25px; height: 25px; border-radius: 50%; background:${backgroundColor}; margin-right: 15px;'></div>
+            `);
+            }
+
+
+        // 배열에 있는 아이템 정보를 문자열로 변환하여 반환
+        return runeInfoHtml.join('');
+    }
+    //격자 생성
+    function generateLine(targetParticipant) {
+        const lineHtml = [];
+
+            // 아이템 ID가 0인 경우, 빈 칸 추가
+            const backgroundColor = targetParticipant.win ? 'rgba(49, 142, 239, 0.2)' : 'rgba(244, 88, 78, 0.2)';
+        lineHtml.push(`
+                <div style='width: 1px; height: 75px; background:${backgroundColor}; margin-right: 10px;'></div>
+            `);
+
+        // 배열에 있는 아이템 정보를 문자열로 변환하여 반환
+        return lineHtml.join('');
     }
     // id에 해당하는 아이콘 URL 생성
     function getIconUrl(id) {
