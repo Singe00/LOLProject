@@ -114,7 +114,7 @@ public class ApiService {
                         matchDto.getInfo().setGameMode("자유 랭크");
                     }
                 } else if (matchDto.getInfo().getGameMode().equals("ARAM")) {
-                    matchDto.getInfo().setGameMode("칼바람 나락");
+                    matchDto.getInfo().setGameMode("칼바람");
                 } else if (matchDto.getInfo().getGameMode().equals("CHERRY")) {
                     matchDto.getInfo().setGameMode("아레나");
                 } else {
