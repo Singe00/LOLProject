@@ -28,6 +28,11 @@ public class MainController {
     public String about(){
         return "view/about";
     }
+
+    @GetMapping("/riot.txt")
+    public String riot(){
+        return "view/riot";
+    }
     @GetMapping("/info")
     public String info(@RequestParam(name = "summonerName") String summonerName, Model model) {
         model.addAttribute("summonerName", summonerName);

@@ -9,6 +9,46 @@
       color: white;
     }
 
+    .custom-input-box {
+        background-color: #f5f5f5;
+        border: none;
+        border-radius: 13px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        display: flex;
+        align-items: center;
+        width: 850px;
+        height: 35px;
+        padding: 10px;
+        border: 3px solid #ccc;
+        transition: border-color 0.3s;
+        margin: 20px;
+    }
+
+    .input-field {
+        flex: 1;
+        padding: 8px;
+        border: none;
+        border-radius: 5px;
+        background-color: #f5f5f5;
+        outline: none;
+        width: 100%;
+        height: 95%;
+        font-size: 15px;
+    }
+
+    .api-button {
+        background-image: url('/assets/img/icon/icon-search.png');
+        background-position: center;
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-color: transparent;
+        background-size: 25px auto;
+        padding: 15px 15px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
     .font-bold{
       font-weight: 700;
     }
@@ -140,6 +180,12 @@
 
   <div class="main-box bg-dark">
     <main class="main-box2">
+        <div>
+            <label class="custom-input-box">
+                <input type="text" id="inputValue" class="input-field" placeholder="소환사 이름을 입력해주세요." onkeydown="handleEnterKey(event)" onclick="highlightInput()">
+                <button onclick="callApi()" class="api-button" style=""></button>
+            </label>
+        </div>
       <div class="row-lo" style="display:flex; justify-content: space-between; width: 100%; margin-top: 20px">
           <div class="row-lo">
             <div id="profileIcon"></div>
@@ -274,11 +320,9 @@
     const winsElement = document.getElementById("wins");
     const lossesElement = document.getElementById("losses");
     const emblemElement = document.getElementById("emblem")
-
     const rankOptions = document.getElementById("rankOptions");
     const soloRank = document.getElementById("soloRank");
     const flexRank = document.getElementById("flexRank");
-
     const matchHistoryContainer = document.getElementById('match-history');
 
     const matchData = [
@@ -438,11 +482,12 @@
                 <div class="column-lo" style="margin: 5px; margin-right: 15px">
                   <div style="font-weight: bold">${match.info.gameMode}</div>
                   <div style="color: lightgray">${month}월 ${day}일</div>
-                  <div style="margin-top: 20px; font-weight: bold; color: ${targetWin === '승리' ? 'red' : 'skyblue'}">${targetWin}</div>
+                  <div style="margin-top: 20px; font-weight: bold; color: ${targetWin === '승리' ? 'skyblue' : 'red'}">${targetWin}</div>
                   <div style="color: lightgray">${min}분 ${sec}초</div>
                 </div>
                 <div class="column-lo" style="margin-right: 15px;">
-                  <div class="row-lo">
+                   <div class="row-lo">
+                        <div class="row-lo" style="margin-right: 15px">
                     <!--챔피언 초상화/레벨 부분-->
                     <div class="row-lo" style="position: relative">
                           <div style="position: absolute; right: 0; bottom: 0; z-index: 1;">
@@ -474,22 +519,22 @@
                       </div>
                     </div>
                   </div>
-                  <!--아이템 부분-->
-                  <div class="row-lo" style="margin: 5px; margin-top: 15px">
-                    ${generateItemInfo(targetParticipant)}
-                  </div>
-                </div>
-                <div class="column-lo">
+                        <div class="column-lo">
                     <!--기타 정보 와드/시야점수/cs-->
                     <div class="column-lo" margin: 5px;>
                       <div>제어와드 : ${targetParticipant.visionWardsBoughtInGame}</div>
                       <div>시야점수 : ${targetParticipant.visionScore}</div>
                       <div>cs ${targetParticipant.totalMinionsKilled} (${(targetParticipant.totalMinionsKilled / min).toFixed(1)})</div>
                     </div>
-                    <div>
-                    dasdasd
-                    </div>
                 </div>
+                    </div>
+                  <!--아이템 부분-->
+                  <div class="row-lo" style="margin: 5px; margin-top: 15px">
+                    ${generateItemInfo(targetParticipant)}
+                    ${generateSlayer(targetParticipant)}
+                  </div>
+                </div>
+
 
               </div>
               <!--플레이어 정보-->
@@ -575,6 +620,32 @@
         // 배열에 있는 플레이어 정보를 문자열로 변환하여 반환
         return playerInfoHtml.join('');
     }
+    //레드팀 플레이어 리스트 생성
+    function generateSlayer(targetParticipant) {
+        const playerSlayer = [];
+
+        const slayerList = [];
+        slayerList.push(targetParticipant.pentaKills)
+        slayerList.push(targetParticipant.quadraKills)
+        slayerList.push(targetParticipant.tripleKills)
+        slayerList.push(targetParticipant.doubleKills)
+        const slayerList2 = ["펜타킬", "쿼드라킬", "트리플킬", "더블킬"];
+
+        for (let i = 0; i < 4; i++) {
+            if (slayerList[i] > 0){
+                playerSlayer.push(`
+                    <div style="height: 25px; background-color: #b02a37; border-radius: 15px; text-align: center; margin-left: 20px;">
+                        &nbsp;&nbsp;${slayerList2[i]}&nbsp;&nbsp;
+                    </div>
+                `);
+                break
+            }
+        }
+
+
+        // 배열에 있는 플레이어 정보를 문자열로 변환하여 반환
+        return playerSlayer.join('');
+    }
     //플레이어 아이템 리스트 생성
     function generateItemInfo(targetParticipant) {
         const itemInfoHtml = [];
@@ -611,6 +682,30 @@
         }
     }
 
+    //소환사 검색 함수
+    function highlightInput() {
+        const inputLabel = document.querySelector('.custom-input-box');
+        inputLabel.style.borderColor = '#007bff';
+    }
+    function handleEnterKey(event) {
+        if (event.key === 'Enter') {
+            callApi();
+        }
+    }
+    document.addEventListener('click', function(event) {
+        const inputLabel = document.querySelector('.custom-input-box');
+        if (!inputLabel.contains(event.target)) {
+            inputLabel.style.borderColor = '#ccc';
+        }
+    });
+    function callApi() {
+        const inputValue = document.getElementById('inputValue').value;
+
+        if (inputValue) {
+            // 입력값을 컨트롤러로 전달하고 페이지 이동
+            window.location.href = `http://${ip}:8080/info?summonerName=${encodeURIComponent(inputValue)}`;
+        }
+    }
   </script>
 
 </th:block>
