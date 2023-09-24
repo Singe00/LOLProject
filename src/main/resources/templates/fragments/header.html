@@ -1,30 +1,43 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <div th:fragment="headerF">
-<nav class="navbar navbar-expand-lg bg-secondary text-uppercase fixed-top" id="mainNav">
-    <div class="container">
-        <a class="navbar-brand" th:href="@{/}">LMA.GG</a>
-        <button class="navbar-toggler text-uppercase font-weight-bold bg-primary text-white rounded" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-            Menu
-            <i class="fas fa-bars"></i>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarResponsive">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" th:href="@{/login}">Login</a></li>
-                <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" th:href="@{/about}">About</a></li>
-                <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" th:href="@{/contact}">Contact</a></li>
-            </ul>
+
+    <style>
+        .linkBtn:hover{
+            color: #1ABC9C;
+        }
+    </style>
+    <nav class="navbar navbar-expand-lg bg-secondary text-uppercase fixed-top" id="mainNav" style="max-height: 50px;">
+
+        <div class="container">
+            <div>
+                <a class="navbar-brand" th:href="@{/}">LP.GG</a>
+            </div>
+            <div class="row-lo">
+                <div class="linkBtn" style="margin-right: 25px;"><a class="nav-link rounded" th:href="@{/champion}">챔피언</a></div>
+                <div class="linkBtn" style="margin-right: 25px;"><a class="nav-link rounded" th:href="@{/statistics}">통계</a></div>
+                <div class="linkBtn" style="margin-right: 25px;"><a class="nav-link rounded" th:href="@{/ranking}">랭킹</a></div>
+                <div class="linkBtn"><a class="nav-link rounded" th:href="@{/community}">커뮤니티</a></div>
+            </div>
+            <div class="row-lo" style="">
+                <div class="linkBtn" style="margin-right: 20px;">
+                    <a class="nav-link rounded" th:href="@{/login}">Login</a>
+                </div>
+                <div class="linkBtn">
+                    <a class="nav-link rounded" th:href="@{/about}">About</a>
+                </div>
+            </div>
         </div>
-    </div>
 
-    <!-- jQuery -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <!-- Popper.js -->
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@2.11.6/dist/umd/popper.min.js"></script>
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.5.0/dist/js/bootstrap.min.js"></script>
 
-</nav>
+        <!-- jQuery -->
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <!-- Popper.js -->
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@2.11.6/dist/umd/popper.min.js"></script>
+        <!-- Bootstrap JS -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.5.0/dist/js/bootstrap.min.js"></script>
+
+    </nav>
 
 </div>
 

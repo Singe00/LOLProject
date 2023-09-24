@@ -5,9 +5,24 @@
 
 <th:block layout:fragment="content">
   <style>
-    div{
-      color: white;
-    }
+
+      .arrow {
+          position: relative;
+      }
+
+      .arrow::after {
+          position: absolute;
+          margin-top: auto;
+          left: 0;
+          top: 90%;
+          content: '';
+          width: 10px; /* 사이즈 */
+          height: 10px; /* 사이즈 */
+          border-top: 2px solid #000; /* 선 두께 */
+          border-right: 2px solid #000; /* 선 두께 */
+          border-color: inherit;
+          transform: rotate(135deg); /* 각도 */
+      }
 
     .custom-input-box {
         background-color: #f5f5f5;
@@ -51,16 +66,6 @@
 
     .font-bold{
       font-weight: 700;
-    }
-
-    .row-lo{
-      display: flex;
-      flex-direction: row;
-    }
-
-    .column-lo{
-      display: flex;
-      flex-direction: column;
     }
 
     .us{
@@ -121,6 +126,7 @@
 
     .winBox{
         background: rgba(49, 142, 239, 0.1);
+        border-left: 5px solid rgba(49, 142, 239, 0.6); /* Adjust the width as needed */
         border-radius: 4px;
         display: flex;
         position: relative;
@@ -131,6 +137,7 @@
 
     .lossBox {
         background: rgba(244, 88, 78, 0.1);
+        border-left: 5px solid rgba(244, 88, 78, 0.6); /* Adjust the width as needed */
         border-radius: 4px;
         display: flex;
         position: relative;
@@ -231,7 +238,9 @@
     // 링크 설정
     var ddragon = "http://ddragon.leagueoflegends.com/cdn/"
     // Version
-    var version = "13.17.1";
+    var version = "13.18.1";
+
+    const jsonUrl = 'https://ddragon.leagueoflegends.com/cdn/'+version+'/data/ko_KR/runesReforged.json';
 
     //솔로, 자유 랭크 리스트
     const ranks = [
@@ -240,75 +249,74 @@
     ];
     //룬특 ID, Icon링크
     const iconData = [
-        {"id": 8000, "icon": "perk-images/Styles/7201_Precision.png"},
-        {"id": 9101, "icon": "perk-images/Styles/Precision/Overheal.png"},
-        {"id": 9111, "icon": "perk-images/Styles/Precision/Triumph.png"},
-        {"id": 8009, "icon": "perk-images/Styles/Precision/PresenceOfMind/PresenceOfMind.png"},
-        {"id": 9101, "icon": "perk-images/Styles/Precision/LegendAlacrity/LegendAlacrity.png"},
-        {"id": 9105, "icon": "perk-images/Styles/Precision/LegendTenacity/LegendTenacity.png"},
-        {"id": 8005, "icon": "perk-images/Styles/Precision/PressTheAttack/PressTheAttack.png"},
-        {"id": 8008, "icon": "perk-images/Styles/Precision/LethalTempo/LethalTempoTemp.png"},
-        {"id": 8021, "icon": "perk-images/Styles/Precision/FleetFootwork/FleetFootwork.png"},
-        {"id": 8010, "icon": "perk-images/Styles/Precision/Conqueror/Conqueror.png"},
-        {"id": 8100, "icon": "perk-images/Styles/7200_Domination.png"},
-        {"id": 8200, "icon": "perk-images/Styles/7202_Sorcery.png"},
-        {"id": 8112, "icon": "perk-images/Styles/Domination/Electrocute/Electrocute.png"},
-        {"id": 8124, "icon": "perk-images/Styles/Domination/Predator/Predator.png"},
-        {"id": 8128, "icon": "perk-images/Styles/Domination/DarkHarvest/DarkHarvest.png"},
-        {"id": 9923, "icon": "perk-images/Styles/Domination/HailOfBlades/HailOfBlades.png"},
-        {"id": 8126, "icon": "perk-images/Styles/Domination/CheapShot/CheapShot.png"},
-        {"id": 8139, "icon": "perk-images/Styles/Domination/TasteOfBlood/GreenTerror_TasteOfBlood.png"},
-        {"id": 8143, "icon": "perk-images/Styles/Domination/SuddenImpact/SuddenImpact.png"},
-        {"id": 8136, "icon": "perk-images/Styles/Domination/ZombieWard/ZombieWard.png"},
-        {"id": 8120, "icon": "perk-images/Styles/Domination/GhostPoro/GhostPoro.png"},
-        {"id": 8138, "icon": "perk-images/Styles/Domination/EyeballCollection/EyeballCollection.png"},
-        {"id": 8135, "icon": "perk-images/Styles/Domination/RavenousHunter/RavenousHunter.png"},
-        {"id": 8134, "icon": "perk-images/Styles/Domination/IngeniousHunter/IngeniousHunter.png"},
-        {"id": 8105, "icon": "perk-images/Styles/Domination/RelentlessHunter/RelentlessHunter.png"},
-        {"id": 8106, "icon": "perk-images/Styles/Domination/UltimateHunter/UltimateHunter.png"},
-        {"id": 8300, "icon": "perk-images/Styles/7203_Whimsy.png"},
-        {"id": 8351, "icon": "perk-images/Styles/Inspiration/GlacialAugment/GlacialAugment.png"},
-        {"id": 8360, "icon": "perk-images/Styles/Inspiration/UnsealedSpellbook/UnsealedSpellbook.png"},
-        {"id": 8358, "icon": "perk-images/Styles/Inspiration/MasterKey/MasterKey.png"},
-        {"id": 8306, "icon": "perk-images/Styles/Inspiration/HextechFlashtraption/HextechFlashtraption.png"},
-        {"id": 8304, "icon": "perk-images/Styles/Inspiration/MagicalFootwear/MagicalFootwear.png"},
-        {"id": 8313, "icon": "perk-images/Styles/Inspiration/PerfectTiming/PerfectTiming.png"},
-        {"id": 8321, "icon": "perk-images/Styles/Inspiration/TimeWarpTonic/TimeWarpTonic.png"},
-        {"id": 8306, "icon": "perk-images/Styles/Inspiration/HextechFlashtraption/HextechFlashtraption.png"},
-        {"id": 8304, "icon": "perk-images/Styles/Inspiration/MagicalFootwear/MagicalFootwear.png"},
-        {"id": 8313, "icon": "perk-images/Styles/Inspiration/PerfectTiming/PerfectTiming.png"},
-        {"id": 8321, "icon": "perk-images/Styles/Inspiration/TimeWarpTonic/TimeWarpTonic.png"},
-        {"id": 8321, "icon": "perk-images/Styles/Inspiration/TimeWarpTonic/TimeWarpTonic.png"},
-        {"id": 8321, "icon": "perk-images/Styles/Inspiration/TimeWarpTonic/TimeWarpTonic.png"},
-        {"id": 8321, "icon": "perk-images/Styles/Inspiration/TimeWarpTonic/TimeWarpTonic.png"},
-        {"id": 8321, "icon": "perk-images/Styles/Inspiration/TimeWarpTonic/TimeWarpTonic.png"},
-        {"id": 8321, "icon": "perk-images/Styles/Inspiration/TimeWarpTonic/TimeWarpTonic.png"},
-        {"id": 8321, "icon": "perk-images/Styles/Inspiration/TimeWarpTonic/TimeWarpTonic.png"},
-        {"id": 8400, "icon": "perk-images/Styles/7204_Resolve.png"},
-        {"id": 8437, "icon": "perk-images/Styles/Resolve/GraspOfTheUndying/GraspOfTheUndying.png"},
-        {"id": 8439, "icon": "perk-images/Styles/Resolve/VeteranAftershock/VeteranAftershock.png"},
-        {"id": 8465, "icon": "perk-images/Styles/Resolve/Guardian/Guardian.png"},
-        {"id": 8446, "icon": "perk-images/Styles/Resolve/Demolish/Demolish.png"},
-        {"id": 8463, "icon": "perk-images/Styles/Resolve/FontOfLife/FontOfLife.png"},
-        {"id": 8401, "icon": "perk-images/Styles/Resolve/MirrorShell/MirrorShell.png"},
-        {"id": 8429, "icon": "perk-images/Styles/Resolve/Conditioning/Conditioning.png"},
-        {"id": 8444, "icon": "perk-images/Styles/Resolve/SecondWind/SecondWind.png"},
-        {"id": 8473, "icon": "perk-images/Styles/Resolve/BonePlating/BonePlating.png"},
-        {"id": 8451, "icon": "perk-images/Styles/Resolve/Overgrowth/Overgrowth.png"},
-        {"id": 8453, "icon": "perk-images/Styles/Resolve/Revitalize/Revitalize.png"},
-        {"id": 8242, "icon": "perk-images/Styles/Sorcery/Unflinching/Unflinching.png"},
-        {"id": 8214, "icon": "perk-images/Styles/Sorcery/SummonAery/SummonAery.png"},
-        {"id": 8229, "icon": "perk-images/Styles/Sorcery/ArcaneComet/ArcaneComet.png"},
-        {"id": 8230, "icon": "perk-images/Styles/Sorcery/PhaseRush/PhaseRush.png"},
-        {"id": 8224, "icon": "perk-images/Styles/Sorcery/NullifyingOrb/Pokeshield.png"},
-        {"id": 8226, "icon": "perk-images/Styles/Sorcery/ManaflowBand/ManaflowBand.png"},
-        {"id": 8275, "icon": "perk-images/Styles/Sorcery/NimbusCloak/6361.png"},
-        {"id": 8210, "icon": "perk-images/Styles/Sorcery/Transcendence/Transcendence.png"},
-        {"id": 8234, "icon": "perk-images/Styles/Sorcery/Celerity/CelerityTemp.png"},
-        {"id": 8233, "icon": "perk-images/Styles/Sorcery/AbsoluteFocus/AbsoluteFocus.png"},
-        {"id": 8237, "icon": "perk-images/Styles/Sorcery/Scorch/Scorch.png"},
-        {"id": 8232, "icon": "perk-images/Styles/Sorcery/Waterwalking/Waterwalking.png"},
-        {"id": 8236, "icon": "perk-images/Styles/Sorcery/GatheringStorm/GatheringStorm.png"}
+        {'id': 8000, 'icon': 'perk-images/Styles/7201_Precision.png'},
+        {'id': 8005, 'icon': 'perk-images/Styles/Precision/PressTheAttack/PressTheAttack.png'},
+        {'id': 8008, 'icon': 'perk-images/Styles/Precision/LethalTempo/LethalTempoTemp.png'},
+        {'id': 8009, 'icon': 'perk-images/Styles/Precision/PresenceOfMind/PresenceOfMind.png'},
+        {'id': 8010, 'icon': 'perk-images/Styles/Precision/Conqueror/Conqueror.png'},
+        {'id': 8014, 'icon': 'perk-images/Styles/Precision/CoupDeGrace/CoupDeGrace.png'},
+        {'id': 8017, 'icon': 'perk-images/Styles/Precision/CutDown/CutDown.png'},
+        {'id': 8021, 'icon': 'perk-images/Styles/Precision/FleetFootwork/FleetFootwork.png'},
+        {'id': 8100, 'icon': 'perk-images/Styles/7200_Domination.png'},
+        {'id': 8105, 'icon': 'perk-images/Styles/Domination/RelentlessHunter/RelentlessHunter.png'},
+        {'id': 8106, 'icon': 'perk-images/Styles/Domination/UltimateHunter/UltimateHunter.png'},
+        {'id': 8112, 'icon': 'perk-images/Styles/Domination/Electrocute/Electrocute.png'},
+        {'id': 8120, 'icon': 'perk-images/Styles/Domination/GhostPoro/GhostPoro.png'},
+        {'id': 8124, 'icon': 'perk-images/Styles/Domination/Predator/Predator.png'},
+        {'id': 8126, 'icon': 'perk-images/Styles/Domination/CheapShot/CheapShot.png'},
+        {'id': 8128, 'icon': 'perk-images/Styles/Domination/DarkHarvest/DarkHarvest.png'},
+        {'id': 8134, 'icon': 'perk-images/Styles/Domination/IngeniousHunter/IngeniousHunter.png'},
+        {'id': 8135, 'icon': 'perk-images/Styles/Domination/TreasureHunter/TreasureHunter.png'},
+        {'id': 8136, 'icon': 'perk-images/Styles/Domination/ZombieWard/ZombieWard.png'},
+        {'id': 8138, 'icon': 'perk-images/Styles/Domination/EyeballCollection/EyeballCollection.png'},
+        {'id': 8139, 'icon': 'perk-images/Styles/Domination/TasteOfBlood/GreenTerror_TasteOfBlood.png'},
+        {'id': 8143, 'icon': 'perk-images/Styles/Domination/SuddenImpact/SuddenImpact.png'},
+        {'id': 8200, 'icon': 'perk-images/Styles/7202_Sorcery.png'},
+        {'id': 8210, 'icon': 'perk-images/Styles/Sorcery/Transcendence/Transcendence.png'},
+        {'id': 8214, 'icon': 'perk-images/Styles/Sorcery/SummonAery/SummonAery.png'},
+        {'id': 8224, 'icon': 'perk-images/Styles/Sorcery/NullifyingOrb/Pokeshield.png'},
+        {'id': 8226, 'icon': 'perk-images/Styles/Sorcery/ManaflowBand/ManaflowBand.png'},
+        {'id': 8229, 'icon': 'perk-images/Styles/Sorcery/ArcaneComet/ArcaneComet.png'},
+        {'id': 8230, 'icon': 'perk-images/Styles/Sorcery/PhaseRush/PhaseRush.png'},
+        {'id': 8232, 'icon': 'perk-images/Styles/Sorcery/Waterwalking/Waterwalking.png'},
+        {'id': 8233, 'icon': 'perk-images/Styles/Sorcery/AbsoluteFocus/AbsoluteFocus.png'},
+        {'id': 8234, 'icon': 'perk-images/Styles/Sorcery/Celerity/CelerityTemp.png'},
+        {'id': 8236, 'icon': 'perk-images/Styles/Sorcery/GatheringStorm/GatheringStorm.png'},
+        {'id': 8237, 'icon': 'perk-images/Styles/Sorcery/Scorch/Scorch.png'},
+        {'id': 8242, 'icon': 'perk-images/Styles/Sorcery/Unflinching/Unflinching.png'},
+        {'id': 8275, 'icon': 'perk-images/Styles/Sorcery/NimbusCloak/6361.png'},
+        {'id': 8299, 'icon': 'perk-images/Styles/Sorcery/LastStand/LastStand.png'},
+        {'id': 8300, 'icon': 'perk-images/Styles/7203_Whimsy.png'},
+        {'id': 8304, 'icon': 'perk-images/Styles/Inspiration/MagicalFootwear/MagicalFootwear.png'},
+        {'id': 8306, 'icon': 'perk-images/Styles/Inspiration/HextechFlashtraption/HextechFlashtraption.png'},
+        {'id': 8313, 'icon': 'perk-images/Styles/Inspiration/PerfectTiming/PerfectTiming.png'},
+        {'id': 8316, 'icon': 'perk-images/Styles/Inspiration/MinionDematerializer/MinionDematerializer.png'},
+        {'id': 8321, 'icon': 'perk-images/Styles/Inspiration/FuturesMarket/FuturesMarket.png'},
+        {'id': 8345, 'icon': 'perk-images/Styles/Inspiration/BiscuitDelivery/BiscuitDelivery.png'},
+        {'id': 8347, 'icon': 'perk-images/Styles/Inspiration/CosmicInsight/CosmicInsight.png'},
+        {'id': 8351, 'icon': 'perk-images/Styles/Inspiration/GlacialAugment/GlacialAugment.png'},
+        {'id': 8352, 'icon': 'perk-images/Styles/Inspiration/TimeWarpTonic/TimeWarpTonic.png'},
+        {'id': 8360, 'icon': 'perk-images/Styles/Inspiration/UnsealedSpellbook/UnsealedSpellbook.png'},
+        {'id': 8369, 'icon': 'perk-images/Styles/Inspiration/FirstStrike/FirstStrike.png'},
+        {'id': 8400, 'icon': 'perk-images/Styles/7204_Resolve.png'},
+        {'id': 8401, 'icon': 'perk-images/Styles/Resolve/MirrorShell/MirrorShell.png'},
+        {'id': 8410, 'icon': 'perk-images/Styles/Resolve/ApproachVelocity/ApproachVelocity.png'},
+        {'id': 8429, 'icon': 'perk-images/Styles/Resolve/Conditioning/Conditioning.png'},
+        {'id': 8437, 'icon': 'perk-images/Styles/Resolve/GraspOfTheUndying/GraspOfTheUndying.png'},
+        {'id': 8439, 'icon': 'perk-images/Styles/Resolve/VeteranAftershock/VeteranAftershock.png'},
+        {'id': 8444, 'icon': 'perk-images/Styles/Resolve/SecondWind/SecondWind.png'},
+        {'id': 8446, 'icon': 'perk-images/Styles/Resolve/Demolish/Demolish.png'},
+        {'id': 8451, 'icon': 'perk-images/Styles/Resolve/Overgrowth/Overgrowth.png'},
+        {'id': 8453, 'icon': 'perk-images/Styles/Resolve/Revitalize/Revitalize.png'},
+        {'id': 8463, 'icon': 'perk-images/Styles/Resolve/FontOfLife/FontOfLife.png'},
+        {'id': 8465, 'icon': 'perk-images/Styles/Resolve/Guardian/Guardian.png'},
+        {'id': 8473, 'icon': 'perk-images/Styles/Resolve/BonePlating/BonePlating.png'},
+        {'id': 9101, 'icon': 'perk-images/Styles/Precision/Overheal.png'},
+        {'id': 9103, 'icon': 'perk-images/Styles/Precision/LegendBloodline/LegendBloodline.png'},
+        {'id': 9104, 'icon': 'perk-images/Styles/Precision/LegendAlacrity/LegendAlacrity.png'},
+        {'id': 9105, 'icon': 'perk-images/Styles/Precision/LegendTenacity/LegendTenacity.png'},
+        {'id': 9111, 'icon': 'perk-images/Styles/Precision/Triumph.png'},
+        {'id': 9923, 'icon': 'perk-images/Styles/Domination/HailOfBlades/HailOfBlades.png'}
     ]
 
     // 응답 데이터를 화면에 출력
@@ -475,7 +483,7 @@
             const summoner2Name = summonerSpells[summoner2Id] || "Unknown Spell";
 
             matchElement.innerHTML = `
-        <li style="list-style: none; width: 100%;" class="${targetWin === '승리' ? 'winBox' : 'lossBox'}">
+        <div style="width: 100%;" class="${targetWin === '승리' ? 'winBox' : 'lossBox'}">
           <div class="row-lo" style="width: 100%; justify-content: space-between;">
               <div class="row-lo">
                 <!--게임 정보-->
@@ -546,10 +554,12 @@
                         ${generatePlayerInfo2(match)}
                     </div>
                 </div>
-                <div>버튼</div>
+
                 </div>
+
           </div>
-        </li>
+          ${generateArrow(targetParticipant)}
+        </div>
       `;
             matchHistoryContainer.appendChild(matchElement);
         });
@@ -566,14 +576,18 @@
         // 플레이어 정보를 생성하고 배열에 추가 (인덱스 0부터 maxPlayers-1까지)
         for (let i = 0; i < maxPlayers; i++) {
             const participant = match.info.participants[i];
-            const participantChampionName = participant.championName;
+            let participantChampionName = participant.championName;
             const participantSummonerName = participant.summonerName;
+
+            if (participantChampionName == "FiddleSticks"){
+                participantChampionName = "Fiddlesticks"
+            }
 
             // 특정 닉네임과 같은 플레이어 정보인 경우에만 추가
             playerInfoHtml.push(`
             <div class="row-lo">
                 <img src='${ddragon}${version}/img/champion/${participantChampionName}.png' class="champImgS">
-                <a class="custom-link" href="http://${ip}:8080/info?summonerName=${participantSummonerName}">
+                <a class="custom-link" href="/info?summonerName=${participantSummonerName}">
                     ${participantSummonerName}
                 </a>
             </div>
@@ -597,14 +611,18 @@
         // 플레이어 정보를 생성하고 배열에 추가 (인덱스 0부터 maxPlayers-1까지)
         for (let i = startIndex; i < maxPlayers; i++) {
             const participant = match.info.participants[i];
-            const participantChampionName = participant.championName;
+            let participantChampionName = participant.championName;
             const participantSummonerName = participant.summonerName;
+
+            if (participantChampionName == "FiddleSticks"){
+                participantChampionName = "Fiddlesticks"
+            }
 
             // 특정 닉네임과 같은 플레이어 정보인 경우에만 추가
             playerInfoHtml.push(`
             <div class="row-lo">
                 <img src='${ddragon}${version}/img/champion/${participantChampionName}.png' class="champImgS">
-                <a class="custom-link" href="http://${ip}:8080/info?summonerName=${participantSummonerName}">
+                <a class="custom-link" href="/info?summonerName=${participantSummonerName}">
                     ${participantSummonerName}
                 </a>
             </div>
@@ -707,16 +725,36 @@
         // 배열에 있는 아이템 정보를 문자열로 변환하여 반환
         return lineHtml.join('');
     }
+    function generateArrow(targetParticipant) {
+        const arrow = [];
+
+        const backgroundColor = targetParticipant.win ? 'rgba(49, 142, 239, 0.6)' : 'rgba(244, 88, 78, 0.6)';
+
+        arrow.push(`
+            <div style="display: flex; margin-left: 10px;">
+                <div class="arrow" style="border-color:${backgroundColor};"></div>
+            </div>
+        `);
+
+
+        // 배열에 있는 플레이어 정보를 문자열로 변환하여 반환
+        return arrow.join('');
+    }
+    // 기존 배열에서 id를 키로 사용하여 객체로 변환
+    const iconDataIndexed = {};
+    iconData.forEach(icon => {
+        iconDataIndexed[icon.id] = icon.icon;
+    });
+
     // id에 해당하는 아이콘 URL 생성
     function getIconUrl(id) {
-        const iconInfo = iconData.find(icon => icon.id === id);
-        if (iconInfo) {
-            return `https://ddragon.leagueoflegends.com/cdn/img/${iconInfo.icon}`;
+        const icon = iconDataIndexed[id];
+        if (icon) {
+            return `https://ddragon.leagueoflegends.com/cdn/img/${icon}`;
         } else {
             return '아이콘을 찾을 수 없습니다.';
         }
     }
-
     //소환사 검색 함수
     function highlightInput() {
         const inputLabel = document.querySelector('.custom-input-box');
@@ -738,7 +776,7 @@
 
         if (inputValue) {
             // 입력값을 컨트롤러로 전달하고 페이지 이동
-            window.location.href = `http://${ip}:8080/info?summonerName=${encodeURIComponent(inputValue)}`;
+            window.location.href = `/info?summonerName=${encodeURIComponent(inputValue)}`;
         }
     }
   </script>

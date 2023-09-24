@@ -54,7 +54,10 @@
 
     <div class="main-box bg-dark">
         <main class="main-box2">
+
             <img class="image-style" src="assets/img/ashe.png" alt="..." />
+
+
 
             <label class="custom-input-box">
                 <input type="text" id="inputValue" class="input-field" placeholder="소환사 이름을 입력해주세요." onkeydown="handleEnterKey(event)" onclick="highlightInput()">
@@ -69,6 +72,8 @@
             <p class="masthead-subheading font-weight-light mb-0" style="color: white">League of Legends match analysis</p>
 
         </main>
+
+
 
     </div>
 
@@ -96,7 +101,7 @@
 
             if (inputValue) {
                 // 입력값을 컨트롤러로 전달하고 페이지 이동
-                window.location.href = `http://${ip}:8080/info?summonerName=${encodeURIComponent(inputValue)}`;
+                window.location.href = `/info?summonerName=${encodeURIComponent(inputValue)}`;
             }
         }
 

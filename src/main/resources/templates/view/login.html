@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/default_layout}">
+
+<th:block layout:fragment="content">
+  <style>
+      .loginM{
+          color: white;
+          font-size: 25px;
+          font-weight: bold;
+          margin-top: 20px;
+          text-align: center;
+      }
+
+      .login{
+
+      }
+
+      .inputCss{
+          min-height: 30px;
+          color:lightslategray;
+          text-align: left;
+      }
+
+      .inputBox{
+          border-radius: 15px;
+          border: 1px solid lightslategray;
+          width: 300px;
+          height: 61px
+      }
+
+      .inputBoxLine{
+          width: 300px;
+          height: 1px;
+          border: 1px solid lightslategray;
+      }
+
+      .input-field {
+          flex: 1;
+          border: none;
+          margin-left: 10px;
+          background-color: transparent;
+          outline: none;
+          width: 95%;
+          height: 95%;
+          color: white;
+      }
+
+      .input-field::placeholder {
+          color: lightslategray;
+      }
+
+      .notice{
+          color: white;
+          font-size: 15px;
+          text-align: center;
+          margin-top: 20px;
+          margin-bottom: 10px;
+      }
+
+
+
+  </style>
+
+
+  <div class="main-box bg-dark">
+      <main class="main-box2">
+          <div class="column-lo">
+              <div class="column-lo">
+                  <div class="loginM">LP.GG 로그인</div>
+                  <div class="column-lo">
+                      <div class="notice">소셜 로그인</div>
+                      <div class="row-lo">
+                          <div>1</div>
+                          <div>2</div>
+                          <div>3</div>
+                      </div>
+                  </div>
+                  <div style='width: 300px; height: 1px; background:lightslategray;'></div>
+              </div>
+              <div class="column-lo">
+                  <div class="notice">이메일 로그인</div>
+                  <div>
+                      <div class="inputBox">
+                          <div class="inputCss"><input type="text" class="input-field" id="inputId" placeholder="Email Address"></div>
+                          <div class="inputBoxLine"></div>
+                          <div class="inputCss"><input type="text" class="input-field" id="inputPw" placeholder="Password"></div>
+                      </div>
+                      <div class="row-lo">
+                          <input type="checkbox">
+                          <div style="color: gray; font-size: 20px">Remember me</div>
+                      </div>
+                      <div class="row-lo">
+                          <div>잠금</div>
+                          <div>로그인</div>
+                      </div>
+                      <div class="row-lo">
+                          <div>비밀번호 찾기</div>
+                          <div>회원가입</div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </main>
+
+
+  </div>
+
+
+</th:block>
+
+
+</html>
