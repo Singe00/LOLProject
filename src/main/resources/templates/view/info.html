@@ -6,10 +6,14 @@
 <th:block layout:fragment="content">
   <style>
 
-      .arrow {
-          position: relative;
+      :root {
+          --toggle-degree: 135deg;
       }
 
+      .arrow {
+          position: relative;
+          cursor: pointer;
+      }
       .arrow::after {
           position: absolute;
           margin-top: auto;
@@ -21,168 +25,147 @@
           border-top: 2px solid #000; /* 선 두께 */
           border-right: 2px solid #000; /* 선 두께 */
           border-color: inherit;
-          transform: rotate(135deg); /* 각도 */
+          transition: all 0.5s;
+          transform: rotate(var(--toggle-degree));
       }
 
-    .custom-input-box {
-        background-color: #f5f5f5;
-        border: none;
-        border-radius: 13px;
-        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-        display: flex;
-        align-items: center;
-        width: 850px;
-        height: 35px;
-        padding: 10px;
-        border: 3px solid #ccc;
-        transition: border-color 0.3s;
-        margin: 20px;
-    }
-
-    .input-field {
-        flex: 1;
-        padding: 8px;
-        border: none;
-        border-radius: 5px;
-        background-color: #f5f5f5;
-        outline: none;
-        width: 100%;
-        height: 95%;
-        font-size: 15px;
-    }
-
-    .api-button {
-        background-image: url('/assets/img/icon/icon-search.png');
-        background-position: center;
-        background-size: contain;
-        background-repeat: no-repeat;
-        background-color: transparent;
-        background-size: 25px auto;
-        padding: 15px 15px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-    }
-
-    .font-bold{
-      font-weight: 700;
-    }
-
-    .us{
-      align-items: center;
-      justify-content: left;
-      text-align: center;
-      font-size: 13px;
-    }
-
-    .rankSelect {
-      color: gray; /* Lighter color for unselected text */
-      cursor: pointer; /* Change cursor to pointer on hover */
-    }
-
-    .rankSelect.selected {
-      color: white; /* Darker color for selected text */
-      font-weight: bold; /* Add bold style to selected text */
-    }
-
-    #profileIcon {
-      width: 125px;
-      height: 125px;
-      margin: 5px;
-    }
-
-    #emblem{
-      width: 125px;
-      height: auto;
-      margin: 5px;
-      margin-right: 10px;
-    }
-
-    #summonerName{
-      font-size: 35px;
-      margin: 5px;
-    }
-
-    #summonerLevel{
-      font-size: 25px;
-      margin: 5px;
-    }
-
-    #rank, #tier{
-      margin: 5px;
-      font-size: 25px;
-      justify-content: center;
-    }
-
-    #wins, #losses{
-      margin: 5px;
-      font-size: 20px;
-      justify-content: center;
-    }
-
-    #rankOptions{
-      margin: 6px;
-    }
-
-    .winBox{
-        background: rgba(49, 142, 239, 0.1);
-        border-left: 5px solid rgba(49, 142, 239, 0.6); /* Adjust the width as needed */
-        border-radius: 4px;
-        display: flex;
-        position: relative;
-        padding: 10px 18px 10px 18px;
-        margin-top: 5px;
-        margin-bottom: 5px;
-    }
-
-    .lossBox {
-        background: rgba(244, 88, 78, 0.1);
-        border-left: 5px solid rgba(244, 88, 78, 0.6); /* Adjust the width as needed */
-        border-radius: 4px;
-        display: flex;
-        position: relative;
-        padding: 10px 18px 10px 18px;
-        margin-top: 5px;
-        margin-bottom: 5px;
-    }
-
-    .champImgS{
-        width: 25px;
-        height: 25px;
-        border-radius: 50%;
-    }
-
-    .custom-link {
-        text-decoration: none; /* 밑줄 제거 */
-        color: white; /* 링크 색상 설정 */
-        cursor: pointer; /* 커서 스타일 변경 (선택 사항) */
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap
-    }
-
-    .rune-img {
-        width: 25px;
-        height: 25px;
-        overflow: hidden;
-        border-radius: 50%;
-        margin-right: 15px;
-    }
-
-    .ka-st{
-        font-size: 18px;
-    }
-
-    .d-st{
-        font-size: 18px;
-        color: crimson;
-    }
-
-    .kda-st{
-        font-size: 15px;
-        color: gray;
-    }
-
+      .custom-input-box {
+            background-color: #f5f5f5;
+            border: none;
+            border-radius: 13px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            width: 850px;
+            height: 35px;
+            padding: 10px;
+            border: 3px solid #ccc;
+            transition: border-color 0.3s;
+            margin: 20px;
+        }
+      .input-field {
+            flex: 1;
+            padding: 8px;
+            border: none;
+            border-radius: 5px;
+            background-color: #f5f5f5;
+            outline: none;
+            width: 100%;
+            height: 95%;
+            font-size: 15px;
+        }
+      .api-button {
+            background-image: url('/assets/img/icon/icon-search.png');
+            background-position: center;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-color: transparent;
+            background-size: 25px auto;
+            padding: 15px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+      .font-bold{
+          font-weight: 700;
+        }
+      .us{
+          align-items: center;
+          justify-content: left;
+          text-align: center;
+          font-size: 13px;
+        }
+      .rankSelect {
+          color: gray; /* Lighter color for unselected text */
+          cursor: pointer; /* Change cursor to pointer on hover */
+        }
+      .rankSelect.selected {
+          color: white; /* Darker color for selected text */
+          font-weight: bold; /* Add bold style to selected text */
+        }
+      #profileIcon {
+          width: 125px;
+          height: 125px;
+          margin: 5px;
+        }
+      #emblem{
+          width: 125px;
+          height: auto;
+          margin: 5px;
+          margin-right: 10px;
+        }
+      #summonerName{
+          font-size: 35px;
+          margin: 5px;
+        }
+      #summonerLevel{
+          font-size: 25px;
+          margin: 5px;
+        }
+      #rank, #tier{
+          margin: 5px;
+          font-size: 25px;
+          justify-content: center;
+        }
+      #wins, #losses{
+          margin: 5px;
+          font-size: 20px;
+          justify-content: center;
+        }
+      #rankOptions{
+          margin: 6px;
+        }
+      .winBox{
+            background: rgba(49, 142, 239, 0.1);
+            border-left: 5px solid rgba(49, 142, 239, 0.6); /* Adjust the width as needed */
+            border-radius: 4px;
+            display: flex;
+            position: relative;
+            padding: 10px 18px 10px 18px;
+            margin-top: 5px;
+            margin-bottom: 5px;
+        }
+      .lossBox {
+            background: rgba(244, 88, 78, 0.1);
+            border-left: 5px solid rgba(244, 88, 78, 0.6); /* Adjust the width as needed */
+            border-radius: 4px;
+            display: flex;
+            position: relative;
+            padding: 10px 18px 10px 18px;
+            margin-top: 5px;
+            margin-bottom: 5px;
+        }
+      .champImgS{
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+        }
+      .custom-link {
+            text-decoration: none; /* 밑줄 제거 */
+            color: white; /* 링크 색상 설정 */
+            cursor: pointer; /* 커서 스타일 변경 (선택 사항) */
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap
+        }
+      .rune-img {
+            width: 25px;
+            height: 25px;
+            overflow: hidden;
+            border-radius: 50%;
+            margin-right: 15px;
+        }
+      .ka-st{
+            font-size: 18px;
+        }
+      .d-st{
+            font-size: 18px;
+            color: crimson;
+        }
+      .kda-st{
+            font-size: 15px;
+            color: gray;
+        }
   </style>
 
   <div class="main-box bg-dark">
@@ -483,7 +466,7 @@
             const summoner2Name = summonerSpells[summoner2Id] || "Unknown Spell";
 
             matchElement.innerHTML = `
-        <div style="width: 100%;" class="${targetWin === '승리' ? 'winBox' : 'lossBox'}">
+        <div id="B${match.metadata.matchId}" style="width: 100%;" class="${targetWin === '승리' ? 'winBox' : 'lossBox'}">
           <div class="row-lo" style="width: 100%; justify-content: space-between;">
               <div class="row-lo">
                 <!--게임 정보-->
@@ -558,7 +541,7 @@
                 </div>
 
           </div>
-          ${generateArrow(targetParticipant)}
+          ${generateArrow(targetParticipant,match)}
         </div>
       `;
             matchHistoryContainer.appendChild(matchElement);
@@ -725,21 +708,58 @@
         // 배열에 있는 아이템 정보를 문자열로 변환하여 반환
         return lineHtml.join('');
     }
-    function generateArrow(targetParticipant) {
+    //추가정보 버튼 생성
+    function generateArrow(targetParticipant,match) {
         const arrow = [];
-
         const backgroundColor = targetParticipant.win ? 'rgba(49, 142, 239, 0.6)' : 'rgba(244, 88, 78, 0.6)';
 
         arrow.push(`
-            <div style="display: flex; margin-left: 10px;">
-                <div class="arrow" style="border-color:${backgroundColor};"></div>
+            <div style="display: flex; margin-left: 10px;") id = "${match.metadata.matchId}" onclick="generateDetail('${match.metadata.matchId}','${match.metadata.matchId}')">
+                <div class="arrow" style="border-color:${backgroundColor};" ></div>
             </div>
         `);
-
 
         // 배열에 있는 플레이어 정보를 문자열로 변환하여 반환
         return arrow.join('');
     }
+    //추가정보 생성
+    function generateDetail(arrowId, matchId) {
+        const result = document.getElementById(arrowId);
+        const deg = window.getComputedStyle(result,'::after').getPropertyValue('--toggle-degree');
+
+        const parentDetail = document.getElementById('B'+matchId);
+
+        let detail = document.getElementById('D'+matchId);
+
+        if (deg == '135deg'){
+            document.getElementById(arrowId).style.setProperty('--toggle-degree', '315deg');
+
+            if (!detail){
+                    detail = document.createElement('div');
+                    detail.setAttribute('id', 'D'+matchId)
+                    detail.innerHTML = `
+                <div class="row-lo">
+                    <div>dddd</div>
+                    <div>dddd</div>
+                    <div>dddd</div>
+                    <div>dddd</div>
+                    <div>dddd</div>
+                </div>
+              `;
+                parentDetail.after(detail);
+            }else {
+                detail.style.display = 'block';
+            }
+
+        }
+        else{
+            document.getElementById(arrowId).style.setProperty('--toggle-degree', '135deg');
+            detail.style.display = 'none'; // 예시: display 속성을 사용하여 감추기
+        }
+    }
+
+
+
     // 기존 배열에서 id를 키로 사용하여 객체로 변환
     const iconDataIndexed = {};
     iconData.forEach(icon => {
