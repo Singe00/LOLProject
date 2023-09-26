@@ -44,7 +44,8 @@ public class MatchDto {
         private int kills;
         private int summoner1Id;
         private int summoner2Id;
-        private int totalDamageDealt;
+        private int totalDamageDealtToChampions;
+        private int trueDamageDealtToChampions;
         private int totalDamageTaken;
         private int item0;
         private int item1;
@@ -55,6 +56,10 @@ public class MatchDto {
         private int item6;
         private int goldEarned;
         private int visionScore;
+        private int wardsKilled;
+        private int totalTimeSpentDead;
+        private int totalTimeCCDealt;
+        private int timeCCingOthers;
         private int wardsPlaced;
         private int visionWardsBoughtInGame;
         private int detectorWardsPlaced;
@@ -64,8 +69,17 @@ public class MatchDto {
         private int pentaKills;
         private int champLevel;
         private int championId;
+        private int turretTakedowns;
+        private int turretKills;
+        private int inhibitorTakedowns;
+        private int inhibitorKills;
+        private int totalHeal;
+        private int totalHealsOnTeammates;
+        private int totalDamageShieldedOnTeammates;
+        private int objectivesStolen;
         private String summonerId;
         private String championName;
+        private String teamPosition;
         private int totalMinionsKilled;
         private boolean win;
         private Perks perks;

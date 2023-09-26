@@ -139,6 +139,7 @@
             width: 25px;
             height: 25px;
             border-radius: 50%;
+            clip-path: inset(2px);
         }
       .custom-link {
             text-decoration: none; /* 밑줄 제거 */
@@ -166,6 +167,50 @@
             font-size: 15px;
             color: gray;
         }
+      .detailButton{
+          font-size: 15px;
+          cursor: pointer;
+          margin-top: 10px;
+          font-weight: bold;
+      }
+      .outLineBox{
+          background-color: #393a3c;
+          border-radius: 5px;
+          border-style: none;
+          width: 180px;
+          height: 120px;
+          margin-top: 10px;
+          display: flex;
+          justify-content: center;
+      }
+      .olpBox{
+          width: 85%;
+          display:flex;
+          justify-content: space-between
+      }
+      .detailImg{
+          width: 25px;
+          height: auto;
+          object-fit: cover;
+      }
+      .detailChampImg{
+          width: 25px;
+          height: auto;
+          margin-right: 3px;
+          object-fit: cover;
+          clip-path: inset(2px);
+      }
+      .outlineTtile{
+          font-size: 12px;
+          margin-left: 10px;
+          margin-bottom: 3px;
+      }
+      .detailValue{
+          margin-left: 10px;
+          margin-bottom: 8px;
+          font-size: 25px;
+          font-weight: bold
+      }
   </style>
 
   <div class="main-box bg-dark">
@@ -484,7 +529,7 @@
                                   <div style="position: absolute; right: 0; bottom: 0; z-index: 1;">
                                     <div style="display: inline-block; background-color: black; border-radius: 50%; padding: 5px; width: 25px; height: 25px; font-size: 13px; font-weight: bold;">${targetParticipant.champLevel}</div>
                                   </div>
-                                  <img src='${ddragon}${version}/img/champion/${targetParticipant.championName}.png' style='width: 65px; height: 65px; overflow: hidden; border-radius: 50%;'>
+                                  <img src='${ddragon}${version}/img/champion/${targetParticipant.championName}.png' style='width: 70px; height: 70px; overflow: hidden; border-radius: 50%; clip-path: inset(3px);'>
                                 </div>
                             <div class="row-lo" style="margin: 5px;">
                               <!--스펠 부분-->
@@ -522,7 +567,7 @@
                   <!--아이템 부분-->
                   <div class="row-lo" style="margin: 5px; margin-top: 15px; width: 100%; min-width: 350px">
                     <div class="row-lo" style="max-width: 220px;">${generateItemInfo(targetParticipant)}</div>
-                    <div>${generateSlayer(targetParticipant)}</div>
+                    <div class="row-lo">${generateSlayer(targetParticipant,min)}</div>
                   </div>
                 </div>
 
@@ -570,7 +615,7 @@
             playerInfoHtml.push(`
             <div class="row-lo">
                 <img src='${ddragon}${version}/img/champion/${participantChampionName}.png' class="champImgS">
-                <a class="custom-link" href="/info?summonerName=${participantSummonerName}">
+                <a class="custom-link" href="/info?summonerName=${participantSummonerName}" target="_blank">
                     ${participantSummonerName}
                 </a>
             </div>
@@ -605,7 +650,7 @@
             playerInfoHtml.push(`
             <div class="row-lo">
                 <img src='${ddragon}${version}/img/champion/${participantChampionName}.png' class="champImgS">
-                <a class="custom-link" href="/info?summonerName=${participantSummonerName}">
+                <a class="custom-link" href="/info?summonerName=${participantSummonerName}" target="_blank">
                     ${participantSummonerName}
                 </a>
             </div>
@@ -621,8 +666,8 @@
         return playerInfoHtml.join('');
     }
     //플레이어 킬 리스트 생성
-    function generateSlayer(targetParticipant) {
-        const playerSlayer = [];
+    function generateSlayer(targetParticipant,min) {
+        const Slayer = [];
 
         const slayerList = [];
         slayerList.push(targetParticipant.pentaKills)
@@ -633,8 +678,8 @@
 
         for (let i = 0; i < 4; i++) {
             if (slayerList[i] > 0){
-                playerSlayer.push(`
-                    <div style="height: 25px; background-color: #b02a37; border-radius: 15px; text-align: center; margin-left: 20px;">
+                Slayer.push(`
+                    <div style="height: 25px; background-color: #b02a37; border-radius: 15px; text-align: center; margin-left: 10px;">
                         &nbsp;&nbsp;${slayerList2[i]}&nbsp;&nbsp;
                     </div>
                 `);
@@ -642,9 +687,17 @@
             }
         }
 
+        if ((targetParticipant.totalMinionsKilled / min).toFixed(1) > 9.0){
+            Slayer.push(`
+                    <div style="height: 25px; background-color: #b02a37; border-radius: 15px; text-align: center; margin-left: 10px;">
+                        &nbsp;&nbsp;파밍왕&nbsp;&nbsp;
+                    </div>
+                `);
+        }
+
 
         // 배열에 있는 플레이어 정보를 문자열로 변환하여 반환
-        return playerSlayer.join('');
+        return Slayer.join('');
     }
     //플레이어 아이템 리스트 생성
     function generateItemInfo(targetParticipant) {
@@ -714,7 +767,7 @@
         const backgroundColor = targetParticipant.win ? 'rgba(49, 142, 239, 0.6)' : 'rgba(244, 88, 78, 0.6)';
 
         arrow.push(`
-            <div style="display: flex; margin-left: 10px;") id = "${match.metadata.matchId}" onclick="generateDetail('${match.metadata.matchId}','${match.metadata.matchId}')">
+            <div style="display: flex; margin-left: 10px;") id = "${match.metadata.matchId}" onclick="generateDetail('${match.metadata.matchId}')">
                 <div class="arrow" style="border-color:${backgroundColor};" ></div>
             </div>
         `);
@@ -723,41 +776,348 @@
         return arrow.join('');
     }
     //추가정보 생성
-    function generateDetail(arrowId, matchId) {
-        const result = document.getElementById(arrowId);
-        const deg = window.getComputedStyle(result,'::after').getPropertyValue('--toggle-degree');
+    function generateDetail(matchId) {
+        const targetMatch = findMatchById(matchId);
 
-        const parentDetail = document.getElementById('B'+matchId);
+        const result = document.getElementById(matchId);
+        const deg = window.getComputedStyle(result, '::after').getPropertyValue('--toggle-degree');
 
-        let detail = document.getElementById('D'+matchId);
+        const parentDetail = document.getElementById('B' + matchId);
 
-        if (deg == '135deg'){
-            document.getElementById(arrowId).style.setProperty('--toggle-degree', '315deg');
+        let detail = document.getElementById('D' + matchId);
 
-            if (!detail){
-                    detail = document.createElement('div');
-                    detail.setAttribute('id', 'D'+matchId)
-                    detail.innerHTML = `
-                <div class="row-lo">
-                    <div>dddd</div>
-                    <div>dddd</div>
-                    <div>dddd</div>
-                    <div>dddd</div>
-                    <div>dddd</div>
+        if (deg === '135deg') {
+            document.getElementById(matchId).style.setProperty('--toggle-degree', '315deg');
+
+            if (!detail) {
+                const detailInfo = findHighestStatsPlayer(targetMatch.info);
+
+                console.log(detailInfo);
+
+                detail = document.createElement('div');
+                detail.setAttribute('id', 'D' + matchId);
+                detail.classList.add('detail-container');
+                detail.innerHTML = `
+                <div class="row-lo" style="display: flex; justify-content: space-between; width: 100%;">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div class="detailButton" id="detailOutline${matchId}" onclick="toggleTab('tabOutline${matchId}')">개요</div>
+                    <div style="font-size: 15px; margin-top: 10px;">|</div>
+                    <div class="detailButton" id="detailInfo${matchId}" onclick="toggleTab('tabInfo${matchId}')">상세</div>
+                    <div style="font-size: 15px; margin-top: 10px;">|</div>
+                    <div class="detailButton" id="detailBuild${matchId}" onclick="toggleTab('tabBuild${matchId}')">빌드</div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
                 </div>
-              `;
+                <div class="tab-content" style="margin-bottom: 15px;">
+                    <div id="tabOutline${matchId}" class="tab-pane coulmn-lo">
+                        <div class="column-lo" style="display: flex; align-items: center;">
+                            ${generateOutline(detailInfo)}
+                        </div>
+                        <div class="column-lo">
+
+                        </div>
+                    </div>
+                    <div id="tabInfo${matchId}" class="tab-pane hidden coulmn-lo">
+                        <div class="column-lo">
+                            <div class="row-lo">
+                                <div></div>
+                            </div>
+                        </div>
+                        <div class="column-lo">
+
+                        </div>
+                    </div>
+                    <div id="tabBuild${matchId}" class="tab-pane hidden coulmn-lo">
+                        <div class="column-lo">
+
+                        </div>
+                        <div class="column-lo">
+
+                        </div>
+                    </div>
+                </div>
+            `;
                 parentDetail.after(detail);
-            }else {
+                // 개요 탭을 보이게 설정
+                const tabOutline = document.getElementById('tabOutline' + matchId);
+                tabOutline.classList.remove('hidden');
+                tabOutline.classList.add('active');
                 detail.style.display = 'block';
+            } else {
+                // 숨겨진 탭이 있으면 모두 숨김
+                const hiddenTabs = detail.querySelectorAll('.tab-pane.hidden');
+                for (const tab of hiddenTabs) {
+                    tab.classList.remove('active');
+                    tab.classList.add('hidden');
+                }
+                // 마지막으로 누른 탭을 보이게 설정
+                const lastClickedTab = document.querySelector('.tab-pane.active');
+                lastClickedTab.classList.remove('hidden');
+                lastClickedTab.classList.add('active');
+
+                detail.style.display = 'block';
+            }
+        } else {
+            document.getElementById(matchId).style.setProperty('--toggle-degree', '135deg');
+            // 현재 전적 리스트의 추가 정보를 숨김
+            if (detail) {
+                detail.style.display = 'none';
+            }
+        }
+    }
+    //추가정보 탭
+    function toggleTab(tabId) {
+        const currentTab = document.getElementById(tabId);
+
+        // 모든 탭 숨기기
+        const tabs = currentTab.parentElement.parentElement.querySelectorAll('.tab-pane');
+        for (const tab of tabs) {
+            tab.classList.remove('active');
+            tab.classList.add('hidden');
+        }
+
+        // 클릭된 탭 보이기
+        currentTab.classList.remove('hidden');
+        currentTab.classList.add('active');
+    }
+    //매치정보 찾기
+    function findMatchById(matchId) {
+        return matchData.find(match => match.metadata.matchId === matchId);
+    }
+    //각 정보에 맞는 요소 찾기
+    function findHighestStatsPlayer(gameInfo) {
+
+        const highestStats = {
+            gameMode: {mode : '' },
+            totalDamageDealt: {id:1,tag:'최다 딜량', value: -1, playerName: '', champion: '',teamPosition:'' },
+            totalDamageTaken: {id:2,tag:'최다 피해량', value: -1, playerName: '', champion: '',teamPosition:'' },
+            goldEarned: {id:3,tag:'최다 골드 획득', value: -1, playerName: '', champion: '',teamPosition:'' },
+            kills: {id:4,tag:'최다 킬', value: -1, playerName: '', champion: '',teamPosition:'' },
+            deaths: {id:5,tag:'최다 데스', value: -1, playerName: '', champion: '',teamPosition:'' },
+            assists: {id:6,tag:'최다 어시스트', value: -1, playerName: '', champion: '',teamPosition:'' },
+            turretKills: {id:7,tag:'철거왕', value: -1,tk: -1,ik: -1, playerName: '', champion: '',teamPosition:'' },
+            save: {id:8,tag:'회복왕', value: -1, playerName: '', champion: '',teamPosition:'' },
+            vision: {id:9,tag:'시야왕', value: -1,dp: -1,wp: -1, playerName: '', champion: '',teamPosition:'' },
+            steal: {id:10,tag:'스틸왕', value: -1, playerName: '', champion: '',teamPosition:'' },
+            wardsKilled: {id:11,tag:'와드 학살자', value: -1, playerName: '', champion: '',teamPosition:'' },
+            totalMinionsKilled: {id:12,tag:'미니언 학살자', value: -1,min:-1, playerName: '', champion: '',teamPosition:'' }
+        };
+
+        highestStats.gameMode.mode = gameInfo.gameMode;
+
+        gameInfo.participants.forEach(participant => {
+            const totalDamageDealt = participant.totalDamageDealtToChampions + participant.trueDamageDealtToChampions;
+            const totalstuc = participant.turretTakedowns + participant.inhibitorTakedowns;
+            const save = participant.totalHealsOnTeammates + participant.totalDamageShieldedOnTeammates;
+
+            //최대 딜량
+            if (totalDamageDealt > highestStats.totalDamageDealt.value) {
+                highestStats.totalDamageDealt.value = totalDamageDealt;
+                highestStats.totalDamageDealt.playerName = participant.summonerName;
+                highestStats.totalDamageDealt.champion = participant.championName;
+                highestStats.totalDamageDealt.teamPosition = participant.teamPosition || 'MIDDLE';
+            }
+            //받은 피해량
+            if (participant.totalDamageTaken > highestStats.totalDamageTaken.value) {
+                highestStats.totalDamageTaken.value = participant.totalDamageTaken;
+                highestStats.totalDamageTaken.playerName = participant.summonerName;
+                highestStats.totalDamageTaken.champion = participant.championName;
+                highestStats.totalDamageTaken.teamPosition = participant.teamPosition || 'MIDDLE';
+            }
+            //골드 획득량
+            if (participant.goldEarned > highestStats.goldEarned.value) {
+                highestStats.goldEarned.value = participant.goldEarned;
+                highestStats.goldEarned.playerName = participant.summonerName;
+                highestStats.goldEarned.champion = participant.championName;
+                highestStats.goldEarned.teamPosition = participant.teamPosition || 'MIDDLE';
+            }
+            //킬
+            if (participant.kills > highestStats.kills.value) {
+                highestStats.kills.value = participant.kills;
+                highestStats.kills.playerName = participant.summonerName;
+                highestStats.kills.champion = participant.championName;
+                highestStats.kills.teamPosition = participant.teamPosition || 'MIDDLE';
+            }
+            //데스
+            if (participant.deaths > highestStats.deaths.value) {
+                highestStats.deaths.value = participant.deaths;
+                highestStats.deaths.playerName = participant.summonerName;
+                highestStats.deaths.champion = participant.championName;
+                highestStats.deaths.teamPosition = participant.teamPosition || 'MIDDLE';
+            }
+            //어시
+            if (participant.assists > highestStats.assists.value) {
+                highestStats.assists.value = participant.assists;
+                highestStats.assists.playerName = participant.summonerName;
+                highestStats.assists.champion = participant.championName;
+                highestStats.assists.teamPosition = participant.teamPosition || 'MIDDLE';
+            }
+            //철거
+            if (totalstuc > highestStats.turretKills.value) {
+                highestStats.turretKills.value = totalstuc;
+                highestStats.turretKills.tk = participant.turretTakedowns;
+                highestStats.turretKills.ik = participant.inhibitorTakedowns
+                highestStats.turretKills.playerName = participant.summonerName;
+                highestStats.turretKills.champion = participant.championName;
+                highestStats.turretKills.teamPosition = participant.teamPosition || 'MIDDLE';
+            }
+            //회복
+            if (save > highestStats.save.value) {
+                highestStats.save.value = save;
+                highestStats.save.playerName = participant.summonerName;
+                highestStats.save.champion = participant.championName;
+                highestStats.save.teamPosition = participant.teamPosition || 'MIDDLE';
+            }
+            //시야
+            if (participant.visionScore > highestStats.vision.value) {
+                highestStats.vision.value = participant.visionScore;
+                highestStats.vision.dp = participant.detectorWardsPlaced;
+                highestStats.vision.wp = participant.wardsPlaced;
+                highestStats.vision.playerName = participant.summonerName;
+                highestStats.vision.champion = participant.championName;
+                highestStats.vision.teamPosition = participant.teamPosition || 'MIDDLE';
+            }
+            //스틸
+            if (participant.objectivesStolen > highestStats.steal.value) {
+                highestStats.steal.value = participant.objectivesStolen;
+                highestStats.steal.playerName = participant.summonerName;
+                highestStats.steal.champion = participant.championName;
+                highestStats.steal.teamPosition = participant.teamPosition || 'MIDDLE';
+            }
+            //와드
+            if (participant.wardsKilled > highestStats.wardsKilled.value) {
+                highestStats.wardsKilled.value = participant.wardsKilled;
+                highestStats.wardsKilled.playerName = participant.summonerName;
+                highestStats.wardsKilled.champion = participant.championName;
+                highestStats.wardsKilled.teamPosition = participant.teamPosition || 'MIDDLE';
+            }
+            //미니언
+            if (participant.totalMinionsKilled > highestStats.totalMinionsKilled.value) {
+                const min = Math.floor(gameInfo.gameDuration / 60);
+                highestStats.totalMinionsKilled.value = participant.totalMinionsKilled;
+                highestStats.totalMinionsKilled.min = min;
+                highestStats.totalMinionsKilled.playerName = participant.summonerName;
+                highestStats.totalMinionsKilled.champion = participant.championName;
+                highestStats.totalMinionsKilled.teamPosition = participant.teamPosition || 'MIDDLE';
+            }
+
+        });
+
+        return highestStats;
+    }
+    //추가정보 버튼 생성
+    function generateOutline(data) {
+
+        const hsa = Object.values(data);
+        console.log(hsa)
+
+        const outlineInfo = [];
+
+        for (let i =1;i<hsa.length;i++){
+            if (hsa[0].mode === "칼바람" && (hsa[i].tag === "시야왕" || hsa[i].tag === "스틸왕" || hsa[i].tag === "와드 학살자")) {
+                continue;
+            }
+
+
+            if (hsa[i].champion == "FiddleSticks"){
+                hsa[i].champion = "Fiddlesticks"
+            }
+
+            if (i == 1 || i == 4 || i == 7 || i ==10){
+                outlineInfo.push(`
+                <div class="row-lo olpBox">
+            `);
+            }
+
+            outlineInfo.push(`
+                <div class="column-lo outLineBox">
+                    <div class="outlineTtile">${hsa[i].tag}</div>
+
+            `);
+
+            if (hsa[i].tag =="스틸왕" && hsa[i].value ==0){
+                    outlineInfo.push(`
+                        <div class="row-lo" style="width:100%; margin:0px;">
+                            <div class="detailValue">No Data</div>
+                        </div>
+                        <div class="row-lo" style="display: flex; font-size: 12px;margin-top: 10px; margin-left: 10px; justify-content: space-between; min-height: 26.5px">스틸 기록이 없습니다.</div>
+                    </div>
+                `);
+                continue;
+            }
+            else {
+                if (hsa[i].tag =="철거왕"){
+                    outlineInfo.push(`
+                        <div class="row-lo" style="width:100%; margin:0px; justify-content: space-between">
+                            <div class="detailValue">${addCommasToNumber(hsa[i].value)}</div>
+                            <div class="column-lo" style="margin-right: 10px;">
+                                <div style="font-size: 13px; font-weight: bold">포탑 : ${(hsa[i].tk)}</div>
+                                <div style="font-size: 13px; font-weight: bold">억제기 : ${(hsa[i].ik)}</div>
+                            </div>
+                        </div>
+                `);
+                }
+                else if (hsa[i].tag =="시야왕"){
+                    outlineInfo.push(`
+                        <div class="row-lo" style="width:100%; margin:0px; justify-content: space-between;">
+                            <div class="detailValue">${addCommasToNumber(hsa[i].value)}</div>
+                            <div class="column-lo" style="margin-right: 10px;">
+                                <div style="font-size: 15px; font-weight: bold"><img src="assets/img/icon/VW.png" style='width: 20px; height: auto; object-fit: cover;'> ${(hsa[i].wp)}</div>
+                                <div style="font-size: 15px; font-weight: bold"><img src="assets/img/icon/DW.png" style='width: 20px; height: auto; object-fit: cover;'> ${(hsa[i].dp)}</div>
+                            </div>
+                        </div>
+                `);
+                }
+                else if (hsa[i].tag =="미니언 학살자"){
+                    outlineInfo.push(`
+                        <div class="row-lo" style="width:100%; margin:0px; justify-content: space-between; align-items: center">
+                            <div class="detailValue">${addCommasToNumber(hsa[i].value)}</div>
+                            <div style="font-size: 13px; font-weight: bold; margin-right: 10px;">분당 CS: ${((hsa[i].value)/(hsa[i].min)).toFixed(1)}</div>
+                        </div>
+                `);
+                }
+                else {
+                    outlineInfo.push(`
+                        <div class="row-lo" style="width:100%; margin:0px;">
+                            <div class="detailValue">${addCommasToNumber(hsa[i].value)}</div>
+                        </div>
+                `);
+                }
+            }
+            outlineInfo.push(`
+
+                    <div class="row-lo" style="display: flex; justify-content: space-between">
+                        <div class="row-lo" style="margin-left: 10px">
+                            <div><img src='${ddragon}${version}/img/champion/${hsa[i].champion}.png' class="detailChampImg"></div>
+                            <div><a class="custom-link" href="/info?summonerName=${hsa[i].playerName}" target="_blank" style="font-size: 13px;">${hsa[i].playerName}</a></div>
+                        </div>
+                        <div style="margin-right: 10px;"><img src="assets/img/position/${hsa[i].teamPosition}.png" class="detailImg"></div>
+                    </div>
+                </div>
+            `);
+
+
+            if (i == 3 || i == 6 || i == 9 || i ==12){
+                outlineInfo.push(`
+                </div>
+            `);
             }
 
         }
-        else{
-            document.getElementById(arrowId).style.setProperty('--toggle-degree', '135deg');
-            detail.style.display = 'none'; // 예시: display 속성을 사용하여 감추기
-        }
-    }
 
+
+
+        // 배열에 있는 플레이어 정보를 문자열로 변환하여 반환
+        return outlineInfo.join('');
+    }
+    //자릿수 변환
+    function addCommasToNumber(number) {
+
+        return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
 
 
     // 기존 배열에서 id를 키로 사용하여 객체로 변환
