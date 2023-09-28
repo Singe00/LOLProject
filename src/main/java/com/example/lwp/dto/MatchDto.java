@@ -81,6 +81,7 @@ public class MatchDto {
         private String championName;
         private String teamPosition;
         private int totalMinionsKilled;
+        private int neutralMinionsKilled;
         private boolean win;
         private Perks perks;
     }

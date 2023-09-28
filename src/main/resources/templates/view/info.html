@@ -9,7 +9,6 @@
       :root {
           --toggle-degree: 135deg;
       }
-
       .arrow {
           position: relative;
           cursor: pointer;
@@ -28,7 +27,6 @@
           transition: all 0.5s;
           transform: rotate(var(--toggle-degree));
       }
-
       .custom-input-box {
             background-color: #f5f5f5;
             border: none;
@@ -172,6 +170,10 @@
           cursor: pointer;
           margin-top: 10px;
           font-weight: bold;
+          color: gray;
+      }
+      .detailButton.selected{
+          color: white;
       }
       .outLineBox{
           background-color: #393a3c;
@@ -211,6 +213,49 @@
           font-size: 25px;
           font-weight: bold
       }
+      .centered-container {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+      }
+      .gold-coin {
+          position: relative;
+          width: 15px;
+          height: 15px;
+          border-radius: 50%;
+          background-color: #FFD700; /* Gold color */
+          overflow: hidden;
+          box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+      }
+      .coin-edge {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          border: 2px solid #DAA520; /* Darker gold color for the edge */
+          border-radius: 50%;
+          box-sizing: border-box;
+      }
+      .coin-body {
+          position: absolute;
+          top: 2px;
+          left: 2px;
+          width: 11px;
+          height: 11px;
+          border-radius: 50%;
+          background-color: #FFD700; /* Gold color */
+      }
+      .coin-details {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          width: 7px;
+          height: 3px;
+          background-color: #DAA520; /* Darker gold color for the details */
+      }
+
   </style>
 
   <div class="main-box bg-dark">
@@ -266,7 +311,7 @@
     // 링크 설정
     var ddragon = "http://ddragon.leagueoflegends.com/cdn/"
     // Version
-    var version = "13.18.1";
+    var version = "13.19.1";
 
     const jsonUrl = 'https://ddragon.leagueoflegends.com/cdn/'+version+'/data/ko_KR/runesReforged.json';
 
@@ -275,6 +320,22 @@
       { rank: ".", tier: ".", wins: 0, losses: 0 },
       { rank: ".", tier: ".", wins: 0, losses: 0 }
     ];
+
+    const summonerSpells = {
+        1: "SummonerBoost",
+        3: "SummonerExhaust",
+        4: "SummonerFlash",
+        6: "SummonerHaste",
+        7: "SummonerHeal",
+        11: "SummonerSmite",
+        12: "SummonerTeleport",
+        13: "SummonerMana",
+        14: "SummonerDot",
+        21: "SummonerBarrier",
+        32: "SummonerSnowURFSnowball_Mark",
+        2201: "SummonerCherryHold",
+        2202: "SummonerCherryFlash"
+    };
     //룬특 ID, Icon링크
     const iconData = [
         {'id': 8000, 'icon': 'perk-images/Styles/7201_Precision.png'},
@@ -360,6 +421,8 @@
     const soloRank = document.getElementById("soloRank");
     const flexRank = document.getElementById("flexRank");
     const matchHistoryContainer = document.getElementById('match-history');
+
+    let targetId;
 
     const matchData = [
         // 여기에 JSON 데이터 추가
@@ -461,14 +524,7 @@
       soloRank.classList.remove("selected");
     });
 
-    //솔로,자유랭크 생성
-    function updateRankDisplay(rankData) {
-      emblemElement.innerHTML = `<img src="assets/img/emblem/${rankData.tier}.png" style='width: 100%; height: auto; object-fit: cover; border-radius: 10px;'>`;
-      rankElement.textContent = rankData.rank;
-      tierElement.textContent = rankData.tier;
-      winsElement.textContent = `${rankData.wins}승 `;
-      lossesElement.textContent = `${rankData.losses}패`;
-    }
+
     //전적 리스트 생성
     function generateMatchHistory() {
         // JSON 데이터를 기반으로 동적으로 레이아웃 생성
@@ -482,24 +538,10 @@
             const sec = match.info.gameDuration % 60;
             var summonerNameParam = new URLSearchParams(window.location.search).get("summonerName");
 
-            const summonerSpells = {
-                1: "SummonerBoost",
-                3: "SummonerExhaust",
-                4: "SummonerFlash",
-                6: "SummonerHaste",
-                7: "SummonerHeal",
-                11: "SummonerSmite",
-                12: "SummonerTeleport",
-                13: "SummonerMana",
-                14: "SummonerDot",
-                21: "SummonerBarrier",
-                32: "SummonerSnowURFSnowball_Mark",
-                2201: "SummonerCherryHold",
-                2202: "SummonerCherryFlash"
-            };
 
             // 특정 닉네임의 win 값을 가져오기
             const targetParticipant = findParticipantBySummonerId(userId[0], match.info.participants);
+            targetId = targetParticipant.teamId;
             const targetWin = targetParticipant
                 ? match.info.teams[targetParticipant.teamId === 100 ? 0 : 1].win ? '승리' : '패배'
                 : null;
@@ -527,7 +569,7 @@
                             <!--챔피언 초상화/레벨 부분-->
                             <div class="row-lo" style="position: relative">
                                   <div style="position: absolute; right: 0; bottom: 0; z-index: 1;">
-                                    <div style="display: inline-block; background-color: black; border-radius: 50%; padding: 5px; width: 25px; height: 25px; font-size: 13px; font-weight: bold;">${targetParticipant.champLevel}</div>
+                                    <div style="display: inline-block; background-color: black; border-radius: 50%; text-align: center; padding: 5px; width: 25px; height: 25px; font-size: 13px; font-weight: bold;">${targetParticipant.champLevel}</div>
                                   </div>
                                   <img src='${ddragon}${version}/img/champion/${targetParticipant.championName}.png' style='width: 70px; height: 70px; overflow: hidden; border-radius: 50%; clip-path: inset(3px);'>
                                 </div>
@@ -560,7 +602,7 @@
                             <div class="column-lo" style="min-width: 90px">
                               <div>제어와드 : ${targetParticipant.visionWardsBoughtInGame}</div>
                               <div>시야점수 : ${targetParticipant.visionScore}</div>
-                              <div>cs ${targetParticipant.totalMinionsKilled} (${(targetParticipant.totalMinionsKilled / min).toFixed(1)})</div>
+                              <div>cs ${(targetParticipant.totalMinionsKilled + targetParticipant.neutralMinionsKilled)} (${((targetParticipant.totalMinionsKilled+targetParticipant.neutralMinionsKilled) / min).toFixed(1)})</div>
                             </div>
                         </div>
                   </div>
@@ -591,10 +633,6 @@
       `;
             matchHistoryContainer.appendChild(matchElement);
         });
-    }
-    // participants 배열 내에서 특정 아이디을 찾아 해당 객체를 반환하는 함수
-    function findParticipantBySummonerId(summonerId, participants) {
-        return participants.find(participant => participant.summonerId === summonerId);
     }
     //블루팀 플레이어 리스트 생성
     function generatePlayerInfo1(match) {
@@ -687,7 +725,7 @@
             }
         }
 
-        if ((targetParticipant.totalMinionsKilled / min).toFixed(1) > 9.0){
+        if (((targetParticipant.totalMinionsKilled+targetParticipant.neutralMinionsKilled) / min).toFixed(1) > 9.0){
             Slayer.push(`
                     <div style="height: 25px; background-color: #b02a37; border-radius: 15px; text-align: center; margin-left: 10px;">
                         &nbsp;&nbsp;파밍왕&nbsp;&nbsp;
@@ -729,7 +767,6 @@
     function generateRuneInfo(gameMode, targetParticipant) {
         const runeInfoHtml = [];
 
-
             if (gameMode != "아레나") {
                 runeInfoHtml.push(`
                 <div><img src='${getIconUrl(targetParticipant.perks.styles[0].selections[0].perk)}' style="width: 25px; height: 25px; overflow: hidden; border-radius: 50%; margin-right: 15px;"></div>
@@ -743,7 +780,6 @@
                 <div style='width: 25px; height: 25px; border-radius: 50%; background:${backgroundColor}; margin-right: 15px;'></div>
             `);
             }
-
 
         // 배열에 있는 아이템 정보를 문자열로 변환하여 반환
         return runeInfoHtml.join('');
@@ -792,8 +828,6 @@
             if (!detail) {
                 const detailInfo = findHighestStatsPlayer(targetMatch.info);
 
-                console.log(detailInfo);
-
                 detail = document.createElement('div');
                 detail.setAttribute('id', 'D' + matchId);
                 detail.classList.add('detail-container');
@@ -802,40 +836,29 @@
                     <div></div>
                     <div></div>
                     <div></div>
-                    <div class="detailButton" id="detailOutline${matchId}" onclick="toggleTab('tabOutline${matchId}')">개요</div>
+                    <div class="detailButton selected" id="detailOutline${matchId}" onclick="toggleTab('${matchId}','tabOutline')">개요</div>
                     <div style="font-size: 15px; margin-top: 10px;">|</div>
-                    <div class="detailButton" id="detailInfo${matchId}" onclick="toggleTab('tabInfo${matchId}')">상세</div>
+                    <div class="detailButton" id="detailInfo${matchId}" onclick="toggleTab('${matchId}','tabInfo')">상세</div>
                     <div style="font-size: 15px; margin-top: 10px;">|</div>
-                    <div class="detailButton" id="detailBuild${matchId}" onclick="toggleTab('tabBuild${matchId}')">빌드</div>
+                    <div class="detailButton" id="detailBuild${matchId}" onclick="toggleTab('${matchId}','tabBuild')">빌드</div>
                     <div></div>
                     <div></div>
                     <div></div>
                 </div>
                 <div class="tab-content" style="margin-bottom: 15px;">
                     <div id="tabOutline${matchId}" class="tab-pane coulmn-lo">
-                        <div class="column-lo" style="display: flex; align-items: center;">
+                        <div class="column-lo" style="display: flex; align-items: center; margin-bottom: 15px;">
                             ${generateOutline(detailInfo)}
-                        </div>
-                        <div class="column-lo">
-
                         </div>
                     </div>
                     <div id="tabInfo${matchId}" class="tab-pane hidden coulmn-lo">
-                        <div class="column-lo">
-                            <div class="row-lo">
-                                <div></div>
-                            </div>
-                        </div>
-                        <div class="column-lo">
-
+                        <div class="column-lo" style="margin-bottom: 15px;">
+                            ${generateInfo(matchId)}
                         </div>
                     </div>
                     <div id="tabBuild${matchId}" class="tab-pane hidden coulmn-lo">
                         <div class="column-lo">
-
-                        </div>
-                        <div class="column-lo">
-
+                            ${generateBuild()}
                         </div>
                     </div>
                 </div>
@@ -868,8 +891,504 @@
             }
         }
     }
+    //개요 생성
+    function generateOutline(data) {
+
+        const hsa = Object.values(data);
+
+        const outline = [];
+
+        for (let i =1;i<hsa.length;i++){
+            if (hsa[0].mode === "칼바람" && (hsa[i].tag === "시야왕" || hsa[i].tag === "스틸왕" || hsa[i].tag === "와드 학살자")) {
+                continue;
+            }
+
+            if (hsa[i].champion == "FiddleSticks"){
+                hsa[i].champion = "Fiddlesticks"
+            }
+
+            if (i == 1 || i == 4 || i == 7 || i ==10){
+                outline.push(`
+                <div class="row-lo olpBox">
+            `);
+            }
+
+            outline.push(`
+                <div class="column-lo outLineBox">
+                    <div class="outlineTtile">${hsa[i].tag}</div>
+
+            `);
+
+            if (hsa[i].tag =="스틸왕" && hsa[i].value ==0){
+                outline.push(`
+                        <div class="row-lo" style="width:100%; margin:0px;">
+                            <div class="detailValue">No Data</div>
+                        </div>
+                        <div class="row-lo" style="display: flex; font-size: 12px;margin-top: 10px; margin-left: 10px; justify-content: space-between; min-height: 26.5px">스틸 기록이 없습니다.</div>
+                    </div>
+                `);
+                continue;
+            }
+            else {
+                if (hsa[i].tag =="철거왕"){
+                    outline.push(`
+                        <div class="row-lo" style="width:100%; margin:0px; justify-content: space-between">
+                            <div class="detailValue">${addCommasToNumber(hsa[i].value)}</div>
+                            <div class="column-lo" style="margin-right: 10px;">
+                                <div style="font-size: 13px; font-weight: bold">포탑 : ${(hsa[i].tk)}</div>
+                                <div style="font-size: 13px; font-weight: bold">억제기 : ${(hsa[i].ik)}</div>
+                            </div>
+                        </div>
+                `);
+                }
+                else if (hsa[i].tag =="시야왕"){
+                    outline.push(`
+                        <div class="row-lo" style="width:100%; margin:0px; justify-content: space-between;">
+                            <div class="detailValue">${addCommasToNumber(hsa[i].value)}</div>
+                            <div class="column-lo" style="margin-right: 10px;">
+                                <div style="font-size: 15px; font-weight: bold"><img src="assets/img/icon/VW.png" style='width: 20px; height: auto; object-fit: cover;'> ${(hsa[i].wp)}</div>
+                                <div style="font-size: 15px; font-weight: bold"><img src="assets/img/icon/DW.png" style='width: 20px; height: auto; object-fit: cover;'> ${(hsa[i].dp)}</div>
+                            </div>
+                        </div>
+                `);
+                }
+                else if (hsa[i].tag =="미니언 학살자"){
+                    outline.push(`
+                        <div class="row-lo" style="width:100%; margin:0px; justify-content: space-between; align-items: center">
+                            <div class="detailValue">${addCommasToNumber(hsa[i].value)}</div>
+                            <div style="font-size: 13px; font-weight: bold; margin-right: 10px;">분당 : ${((hsa[i].value)/(hsa[i].min)).toFixed(1)}</div>
+                        </div>
+                `);
+                }
+                else {
+                    outline.push(`
+                        <div class="row-lo" style="width:100%; margin:0px;">
+                            <div class="detailValue">${addCommasToNumber(hsa[i].value)}</div>
+                        </div>
+                `);
+                }
+            }
+            outline.push(`
+
+                    <div class="row-lo" style="display: flex; justify-content: space-between">
+                        <div class="row-lo" style="margin-left: 10px">
+                            <div><img src='${ddragon}${version}/img/champion/${hsa[i].champion}.png' class="detailChampImg"></div>
+                            <div><a class="custom-link" href="/info?summonerName=${hsa[i].playerName}" target="_blank" style="font-size: 13px;">${hsa[i].playerName}</a></div>
+                        </div>
+                        <div style="margin-right: 10px;"><img src="assets/img/position/${hsa[i].teamPosition}.png" class="detailImg"></div>
+                    </div>
+                </div>
+            `);
+
+
+            if (i == 3 || i == 6 || i == 9 || i ==12){
+                outline.push(`
+                </div>
+            `);
+            }
+
+        }
+
+        // 배열에 있는 플레이어 정보를 문자열로 변환하여 반환
+        return outline.join('');
+    }
+    //상세 생성
+    function generateInfo(matchId) {
+        const info = [];
+        const targetMatch = findMatchById(matchId).info;
+        const participants = targetMatch.participants
+        const targetP = findParticipantBySummonerId(userId[0],participants);
+        const teamGold = [0,0];
+        const min = Math.floor(targetMatch.gameDuration / 60);
+
+        let dealt = 0;
+        let taken = 0;
+
+        for (let i = 0;i<10;i++){
+            if (targetMatch.participants[i].totalDamageDealtToChampions > dealt){
+                dealt = targetMatch.participants[i].totalDamageDealtToChampions
+            }
+
+            if (targetMatch.participants[i].totalDamageTaken > taken){
+                taken = targetMatch.participants[i].totalDamageTaken
+            }
+
+        }
+        console.log(dealt)
+        console.log(taken)
+
+        for (let i = 0;i<5;i++){
+            teamGold[0]+= participants[i].goldEarned;
+            teamGold[1]+= participants[i+5].goldEarned;
+        }
+
+        const teamRoles = [
+            [], // 인덱스 0: 탑
+            [], // 인덱스 1: 정글
+            [], // 인덱스 2: 미드
+            [], // 인덱스 3: 바텀
+            []  // 인덱스 4: 유틸리티
+        ];
+
+        if (targetMatch.gameMode == "칼바람"){
+            // 각 포지션에 플레이어 추가
+            for (let i = 0; i < 5; i++) {
+                teamRoles[i].push(participants[i]);
+                teamRoles[i].push(participants[i + 5]);
+            }
+        }
+        else{
+            for (let i = 0; i < participants.length; i++) {
+                const teamPosition = participants[i].teamPosition;
+
+                switch (teamPosition) {
+                    case 'TOP':
+                        teamRoles[0].push(participants[i]);
+                        break;
+                    case 'JUNGLE':
+                        teamRoles[1].push(participants[i]);
+                        break;
+                    case 'MIDDLE':
+                        teamRoles[2].push(participants[i]);
+                        break;
+                    case 'BOTTOM':
+                        teamRoles[3].push(participants[i]);
+                        break;
+                    case 'UTILITY':
+                        teamRoles[4].push(participants[i]);
+                        break;
+                    default:
+                        // Handle any other cases or invalid values
+                        break;
+                }
+            }
+        }
+
+        const targetWin = targetP.win? "승리":"패배";
+
+        info.push(`
+            <div class="column-lo">
+                <div class="row-lo" style="width: 100%;;height: 40px; display: flex; justify-content: space-between; align-items: center; text-align: center">
+                    <!--팀-->
+                    <div class="row-lo" style="display: flex; justify-content: center; align-items: center; text-align: center;">
+                        <div style="font-size: 15px; font-weight: bold; color: ${participants[0].win? 'skyblue' : 'orangered'}">${participants[0].win? "승리":"패배"}</div>
+                        <div style="font-size: 13px;">&nbsp;&nbsp;블루팀</div>
+                    </div>
+                    <!--오브젝트-->
+                    <div class="row-lo" style="display: flex; flex-direction: row;">
+                        <div class="row-lo">
+                            <svg width="20" height="20" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7.92046 11L6.98046 10.0533L4.63379 7.70667L5.93356 15.0067H9.91356L11.2138 7.70667L8.86712 10.0533L7.92046 11Z" fill="skyblue"></path><path d="M7.92016 9.84669L12.5068 5.26002H10.3335L11.4202 4.17335L7.92016 0.666687L4.42016 4.17335L5.50683 5.26002H3.3335L7.92016 9.84669ZM7.92016 2.28002L9.62683 3.98669L7.92016 5.69335L6.2135 3.98669L7.92016 2.28002V2.28002Z" fill="skyblue"></path></svg>
+                            ${targetMatch.teams[0].objectives.tower.kills}
+                        </div>
+                        <div class="row-lo" style="margin-left: 3px">
+                            <svg width="20" height="20" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M11.9998 5.66665L12.6665 1.99998L9.33317 4.99998L7.99984 0.333313L6.6665 4.99998L3.55317 1.99998L3.99984 5.66665H0.666504L3.99984 8.33331V9.48665C3.99984 10.4733 4.3065 11.4333 4.87984 12.2333L6.9465 15.1266C7.1865 15.4666 7.57984 15.6666 7.99984 15.6666C8.41984 15.6666 8.81317 15.4666 9.05317 15.1266L11.1198 12.2333C11.6932 11.4333 11.9998 10.4733 11.9998 9.48665V8.33331L15.3332 5.66665H11.9998ZM7.33317 11.6666L6.33984 11.28C5.89317 11.1066 5.5665 10.72 5.47317 10.2533L4.99984 7.99998L6.21317 9.21331C6.51317 9.51331 6.73984 9.87998 6.87317 10.28L7.33317 11.6666V11.6666ZM9.65984 11.28L8.6665 11.6666L9.1265 10.28C9.25984 9.87998 9.4865 9.51331 9.7865 9.21331L10.9998 7.99998L10.5265 10.2533C10.4265 10.72 10.0998 11.1066 9.65984 11.28V11.28Z" fill="skyblue"></path></svg>
+                            ${targetMatch.teams[0].objectives.dragon.kills}
+                        </div>
+                        <div class="row-lo" style="margin-left: 3px">
+                            <svg width="20" height="20" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8.00016 10.0333C8.36835 10.0333 8.66683 9.43635 8.66683 8.69997C8.66683 7.96359 8.36835 7.36664 8.00016 7.36664C7.63197 7.36664 7.3335 7.96359 7.3335 8.69997C7.3335 9.43635 7.63197 10.0333 8.00016 10.0333Z" fill="skyblue"></path><path d="M3.33341 14.0333C3.56008 13.76 3.22007 13.0333 3.02007 12.3267C2.79341 11.5133 2.66674 10.7133 2.44008 10.62C1.78674 10.36 1.10007 11.08 1.02007 11.64C0.913408 12.3667 2.99341 14.44 3.33341 14.0333Z" fill="skyblue"></path><path d="M14 7.36666C14 4.7 11 1.91333 11 1.91333V5.62C10.2667 4.64666 9.19333 4.28 8 4.28C6.80667 4.28 5.73333 4.64666 5 5.62V1.91333C5 1.91333 2 4.7 2 7.36666C2 8.10666 2.06 8.48 2.18 8.7H3.48C3.99333 11.38 6.36667 12.6867 7.99333 12.6867C9.62 12.6867 11.9933 11.3867 12.5067 8.7H13.8067C13.9267 8.48 13.9867 8.10666 13.9867 7.36666H14ZM8 6.03333C9.47333 6.03333 10.6667 7.22666 10.6667 8.7C10.6667 10.1733 8.88 11.3667 8 11.3667C7.12 11.3667 5.33333 10.1733 5.33333 8.7C5.33333 7.22666 6.52667 6.03333 8 6.03333Z" fill="skyblue"></path><path d="M12.6669 14.0333C12.4402 13.76 12.7802 13.0333 12.9802 12.3267C13.2069 11.5133 13.3336 10.7133 13.5602 10.62C14.2136 10.36 14.9002 11.08 14.9802 11.64C15.0869 12.3667 13.0069 14.44 12.6669 14.0333Z" fill="skyblue"></path></svg>
+                            ${targetMatch.teams[0].objectives.riftHerald.kills}
+                        </div>
+                        <div class="row-lo" style="margin-left: 3px">
+                            <svg width="20" height="20" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M9.3335 1L11.5402 5.33333L11.5002 5.38C10.9735 5.98667 10.2068 6.33333 9.40016 6.33333H9.00016L8.00016 5L7.00016 6.33333H6.6335C5.80683 6.33333 5.02683 5.96667 4.4935 5.33333L7.00016 1L1.3335 4.33333C1.3335 5.19333 1.64016 6.02667 2.20016 6.68L3.1335 8C3.1335 9.52667 3.7335 11.0333 4.4935 12.36L6.00016 15V13.6667H10.0002V15L11.5068 12.36C12.2668 11.0333 12.8668 9.52667 12.8668 8L13.7935 6.68C14.3535 6.02667 14.6602 5.19333 14.6602 4.33333L9.3335 1ZM6.3335 10.6667C5.96683 10.6667 5.66683 10.3667 5.66683 10C5.66683 9.63333 5.96683 9.33333 6.3335 9.33333C6.70016 9.33333 7.00016 9.63333 7.00016 10C7.00016 10.3667 6.70016 10.6667 6.3335 10.6667ZM8.00016 12.3333C7.6335 12.3333 7.3335 12.0333 7.3335 11.6667C7.3335 11.3 7.6335 11 8.00016 11C8.36683 11 8.66683 11.3 8.66683 11.6667C8.66683 12.0333 8.36683 12.3333 8.00016 12.3333ZM8.00016 8.75333C7.6335 8.75333 7.3335 8.45333 7.3335 8.08667C7.3335 7.72 7.6335 7.42 8.00016 7.42C8.36683 7.42 8.66683 7.72 8.66683 8.08667C8.66683 8.45333 8.36683 8.75333 8.00016 8.75333ZM9.66683 10.6667C9.30016 10.6667 9.00016 10.3667 9.00016 10C9.00016 9.63333 9.30016 9.33333 9.66683 9.33333C10.0335 9.33333 10.3335 9.63333 10.3335 10C10.3335 10.3667 10.0335 10.6667 9.66683 10.6667Z" fill="skyblue"></path></svg>
+                            ${targetMatch.teams[0].objectives.baron.kills}
+                        </div>
+                    </div>
+                    <!--골드-->
+                    <div class="row-lo" style="display: flex; justify-content: center; align-items: center">
+                        <div style="margin-right: 2px;">${(teamGold[0] / 1000).toFixed(1)}K</div>
+                        <div class="centered-container">
+                            <div class="gold-coin">
+                                <div class="coin-edge"></div>
+                                <div class="coin-body"></div>
+                                <div class="coin-details"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--킬-->
+                    <div class="row-lo" style="display: flex; justify-content: center; align-items: center; text-align: center;">
+                        <div style="flex: 1; font-size: 20px; font-weight: bold;">${targetMatch.teams[0].objectives.champion.kills}</div>
+                        <div style="font-size: 13px;">&nbsp;&nbsp;VS&nbsp;&nbsp;</div>
+                        <div style="flex: 1; font-size: 20px; font-weight: bold;">${targetMatch.teams[1].objectives.champion.kills}</div>
+                    </div>
+                    <!--골드-->
+                    <div class="row-lo" style="display: flex; justify-content: center; align-items: center">
+                        <div class="centered-container">
+                            <div class="gold-coin">
+                                <div class="coin-edge"></div>
+                                <div class="coin-body"></div>
+                                <div class="coin-details"></div>
+                            </div>
+                        </div>
+                        <div style="margin-left: 2px;">${(teamGold[1] / 1000).toFixed(1)}K</div>
+                    </div>
+                    <!--오브젝트-->
+                    <div class="row-lo" style="display: flex; flex-direction: row;">
+                        <div class="row-lo">
+                            <svg width="20" height="20" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7.92046 11L6.98046 10.0533L4.63379 7.70667L5.93356 15.0067H9.91356L11.2138 7.70667L8.86712 10.0533L7.92046 11Z" fill="orangered"></path><path d="M7.92016 9.84669L12.5068 5.26002H10.3335L11.4202 4.17335L7.92016 0.666687L4.42016 4.17335L5.50683 5.26002H3.3335L7.92016 9.84669ZM7.92016 2.28002L9.62683 3.98669L7.92016 5.69335L6.2135 3.98669L7.92016 2.28002V2.28002Z" fill="orangered"></path></svg>
+                            ${targetMatch.teams[1].objectives.tower.kills}
+                        </div>
+                        <div class="row-lo" style="margin-left: 3px">
+                            <svg width="20" height="20" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M11.9998 5.66665L12.6665 1.99998L9.33317 4.99998L7.99984 0.333313L6.6665 4.99998L3.55317 1.99998L3.99984 5.66665H0.666504L3.99984 8.33331V9.48665C3.99984 10.4733 4.3065 11.4333 4.87984 12.2333L6.9465 15.1266C7.1865 15.4666 7.57984 15.6666 7.99984 15.6666C8.41984 15.6666 8.81317 15.4666 9.05317 15.1266L11.1198 12.2333C11.6932 11.4333 11.9998 10.4733 11.9998 9.48665V8.33331L15.3332 5.66665H11.9998ZM7.33317 11.6666L6.33984 11.28C5.89317 11.1066 5.5665 10.72 5.47317 10.2533L4.99984 7.99998L6.21317 9.21331C6.51317 9.51331 6.73984 9.87998 6.87317 10.28L7.33317 11.6666V11.6666ZM9.65984 11.28L8.6665 11.6666L9.1265 10.28C9.25984 9.87998 9.4865 9.51331 9.7865 9.21331L10.9998 7.99998L10.5265 10.2533C10.4265 10.72 10.0998 11.1066 9.65984 11.28V11.28Z" fill="orangered"></path></svg>
+                            ${targetMatch.teams[1].objectives.dragon.kills}
+                        </div>
+                        <div class="row-lo" style="margin-left: 3px">
+                            <svg width="20" height="20" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8.00016 10.0333C8.36835 10.0333 8.66683 9.43635 8.66683 8.69997C8.66683 7.96359 8.36835 7.36664 8.00016 7.36664C7.63197 7.36664 7.3335 7.96359 7.3335 8.69997C7.3335 9.43635 7.63197 10.0333 8.00016 10.0333Z" fill="orangered"></path><path d="M3.33341 14.0333C3.56008 13.76 3.22007 13.0333 3.02007 12.3267C2.79341 11.5133 2.66674 10.7133 2.44008 10.62C1.78674 10.36 1.10007 11.08 1.02007 11.64C0.913408 12.3667 2.99341 14.44 3.33341 14.0333Z" fill="orangered"></path><path d="M14 7.36666C14 4.7 11 1.91333 11 1.91333V5.62C10.2667 4.64666 9.19333 4.28 8 4.28C6.80667 4.28 5.73333 4.64666 5 5.62V1.91333C5 1.91333 2 4.7 2 7.36666C2 8.10666 2.06 8.48 2.18 8.7H3.48C3.99333 11.38 6.36667 12.6867 7.99333 12.6867C9.62 12.6867 11.9933 11.3867 12.5067 8.7H13.8067C13.9267 8.48 13.9867 8.10666 13.9867 7.36666H14ZM8 6.03333C9.47333 6.03333 10.6667 7.22666 10.6667 8.7C10.6667 10.1733 8.88 11.3667 8 11.3667C7.12 11.3667 5.33333 10.1733 5.33333 8.7C5.33333 7.22666 6.52667 6.03333 8 6.03333Z" fill="orangered"></path><path d="M12.6669 14.0333C12.4402 13.76 12.7802 13.0333 12.9802 12.3267C13.2069 11.5133 13.3336 10.7133 13.5602 10.62C14.2136 10.36 14.9002 11.08 14.9802 11.64C15.0869 12.3667 13.0069 14.44 12.6669 14.0333Z" fill="orangered"></path></svg>
+                            ${targetMatch.teams[1].objectives.riftHerald.kills}
+                        </div>
+                        <div class="row-lo" style="margin-left: 3px">
+                            <svg width="20" height="20" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M9.3335 1L11.5402 5.33333L11.5002 5.38C10.9735 5.98667 10.2068 6.33333 9.40016 6.33333H9.00016L8.00016 5L7.00016 6.33333H6.6335C5.80683 6.33333 5.02683 5.96667 4.4935 5.33333L7.00016 1L1.3335 4.33333C1.3335 5.19333 1.64016 6.02667 2.20016 6.68L3.1335 8C3.1335 9.52667 3.7335 11.0333 4.4935 12.36L6.00016 15V13.6667H10.0002V15L11.5068 12.36C12.2668 11.0333 12.8668 9.52667 12.8668 8L13.7935 6.68C14.3535 6.02667 14.6602 5.19333 14.6602 4.33333L9.3335 1ZM6.3335 10.6667C5.96683 10.6667 5.66683 10.3667 5.66683 10C5.66683 9.63333 5.96683 9.33333 6.3335 9.33333C6.70016 9.33333 7.00016 9.63333 7.00016 10C7.00016 10.3667 6.70016 10.6667 6.3335 10.6667ZM8.00016 12.3333C7.6335 12.3333 7.3335 12.0333 7.3335 11.6667C7.3335 11.3 7.6335 11 8.00016 11C8.36683 11 8.66683 11.3 8.66683 11.6667C8.66683 12.0333 8.36683 12.3333 8.00016 12.3333ZM8.00016 8.75333C7.6335 8.75333 7.3335 8.45333 7.3335 8.08667C7.3335 7.72 7.6335 7.42 8.00016 7.42C8.36683 7.42 8.66683 7.72 8.66683 8.08667C8.66683 8.45333 8.36683 8.75333 8.00016 8.75333ZM9.66683 10.6667C9.30016 10.6667 9.00016 10.3667 9.00016 10C9.00016 9.63333 9.30016 9.33333 9.66683 9.33333C10.0335 9.33333 10.3335 9.63333 10.3335 10C10.3335 10.3667 10.0335 10.6667 9.66683 10.6667Z" fill="orangered"></path></svg>
+                            ${targetMatch.teams[1].objectives.baron.kills}
+                        </div>
+                    </div>
+                    <!--팀-->
+                    <div class="row-lo" style="display: flex; justify-content: center; align-items: center; text-align: center;">
+                        <div style="font-size: 13px;">레드팀&nbsp;&nbsp;</div>
+                        <div style="font-size: 15px; font-weight: bold; color: ${participants[5].win? 'skyblue' : 'orangered'}">${participants[5].win? "승리":"패배"}</div>
+                    </div>
+                </div>
+        `);
+
+        for (let i = 0;i<5;i++){
+
+
+            const p1 = teamRoles[i][0];
+            const p2 = teamRoles[i][1];
+            info.push(`
+                <div class="row-lo" style="">
+                    <div class="row-lo" style="height: 90px; min-width:350px;max-widthwidth: 350px; padding: 4px; display: flex;justify-content: space-between; align-items: center; background-color: rgba(49, 142, 239, 0.1);">
+                        <div class="column-lo">
+                            <div class="column-lo">
+                                <div class="row-lo">
+                                    ${generateDetailItem(p1.item0,p1.teamId)}
+                                    ${generateDetailItem(p1.item1,p1.teamId)}
+                                    ${generateDetailItem(p1.item2,p1.teamId)}
+                                </div>
+                                <div class="row-lo">
+                                    ${generateDetailItem(p1.item3,p1.teamId)}
+                                    ${generateDetailItem(p1.item4,p1.teamId)}
+                                    ${generateDetailItem(p1.item5,p1.teamId)}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="column-lo" style="min-width: 70px; max-width: 95px; text-align: right;">
+                            <div class="row-lo" style="font-size: 13px; text-align: text-align: right; display: flex;justify-content: right;">
+                                <div>${p1.kills}</div>
+                                <div style="crimson: #b02a37">&nbsp;/&nbsp;${p1.deaths}&nbsp;/&nbsp;</div>
+                                <div>${p1.assists}</div>
+                            </div>
+                            <div style="color: #808080; font-size: 12px">${((p1.kills+p1.assists)/Math.max(p1.deaths,1)).toFixed(2)}</div>
+                            <div style="font-size: 13px;">${p1.totalMinionsKilled + p1.neutralMinionsKilled}&nbsp;(${((p1.totalMinionsKilled + p1.neutralMinionsKilled)/min).toFixed(1)})</div>
+                        </div>
+                        <div class="column-lo" style="min-width: 55px; display: flex; justify-content: right; text-align: right;">
+                            <div class="column-lo" style="margin-bottom: 10px;display: flex;justify-content: right;" title="챔피언에게 가한 피해량">
+                                <div style="font-size: 12px;">${(p1.totalDamageDealtToChampions/1000).toFixed(1)}K</div>
+                                <div style="width: 55px; height: 8px; background-color: #10131c; border-radius: 10px;">
+                                    <div style="width: ${((p1.totalDamageDealtToChampions / dealt).toFixed(2)) * 100}%; height: 100%; background-color: #e84057; border-radius: 10px;"></div>
+                                </div>
+                            </div>
+                            <div class="column-lo" style="display: flex;justify-content: right;" title="챔피언에게 받은 피해량">
+                                <div style="font-size: 12px;">${(p1.totalDamageTaken/1000).toFixed(1)}K</div>
+                                <div style="width: 55px; height: 8px; background-color: #10131c; border-radius: 10px;">
+                                    <div style="width: ${((p1.totalDamageTaken / taken).toFixed(2)) * 100}%; height: 100%; background-color: dimgray; border-radius: 10px;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="column-lo" style="min-width: 100px;">
+                            <div class="row-lo" style="display: flex; align-items: center; justify-content: right">
+                                <div class="row-lo">
+                                    <div class="column-lo">
+                                        <img src='${getIconUrl(p1.perks.styles[0].selections[0].perk)}' style="width: 20px; height: 20px; overflow: hidden; border-radius: 50%;">
+                                        <img src='${getIconUrl(p1.perks.styles[1].style)}' style="width: 20px; height: 20px; overflow: hidden; border-radius: 50%;">
+                                    </div>
+                                    <div class="column-lo">
+                                        <img src='${ddragon}${version}/img/spell/${summonerSpells[p1.summoner1Id]}.png' style='width: 20px; height: 20px; overflow: hidden; border-radius: 50%;'>
+                                        <img src='${ddragon}${version}/img/spell/${summonerSpells[p1.summoner2Id]}.png' style='width: 20px; height: 20px; overflow: hidden; border-radius: 50%;'>
+                                    </div>
+                                </div>
+                                <div class="row-lo" style="position: relative; width: 45px; height: 45px">
+                                    <img src='${ddragon}${version}/img/champion/${p1.championName}.png' style='width: 45px; height: 45px; overflow: hidden; border-radius: 50%; clip-path: inset(3px);'>
+                                    <div style="position: absolute; width: 15px;height: 15px; right: 0; bottom: 0; z-index: 1;">
+                                        <div style="background-color: black; border-radius: 50%; width: 15px; text-align: center; height: 15px; font-size: 10px; font-weight: bold;">${participants[i].champLevel}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="column-lo" style="text-align: right">
+                                <div style="font-size: 11px;">${p1.summonerName}</div>
+                                <div style="font-size: 9px">Level&nbsp;${p1.summonerLevel}</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="column-lo" style="min-width: 50px; max-width: 50px; background: linear-gradient(to right, rgba(49, 142, 239, 0.1), rgba(244, 88, 78, 0.1));">
+
+                    </div>
+                    <div class="row-lo" style="height: 90px; min-width:350px;max-widthwidth: 350px; padding: 4px; display: flex;justify-content: space-between; align-items: center; background-color: rgba(244, 88, 78, 0.1);">
+                        <div class="column-lo" style="min-width: 100px;">
+                            <div class="row-lo" style="display: flex; align-items: center; justify-content: left">
+                                <div class="row-lo" style="position: relative; width: 45px; height: 45px">
+                                    <img src='${ddragon}${version}/img/champion/${p2.championName}.png' style='width: 45px; height: 45px; overflow: hidden; border-radius: 50%; clip-path: inset(3px);'>
+                                    <div style="position: absolute;width: 15px;height: 15px; left: 0; bottom: 0; z-index: 1;">
+                                        <div style="background-color: black; border-radius: 50%; width: 15px; text-align: center; height: 15px; font-size: 10px; font-weight: bold;">${participants[i].champLevel}</div>
+                                    </div>
+                                </div>
+                                <div class="row-lo">
+                                    <div class="column-lo">
+                                        <img src='${ddragon}${version}/img/spell/${summonerSpells[p1.summoner1Id]}.png' style='width: 20px; height: 20px; overflow: hidden; border-radius: 50%;'>
+                                        <img src='${ddragon}${version}/img/spell/${summonerSpells[p1.summoner2Id]}.png' style='width: 20px; height: 20px; overflow: hidden; border-radius: 50%;'>
+                                    </div>
+                                    <div class="column-lo">
+                                        <img src='${getIconUrl(p2.perks.styles[0].selections[0].perk)}' style="width: 20px; height: 20px; overflow: hidden; border-radius: 50%;">
+                                        <img src='${getIconUrl(p2.perks.styles[1].style)}' style="width: 20px; height: 20px; overflow: hidden; border-radius: 50%;">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="column-lo" style="text-align: left;">
+                                <div style="font-size: 11px;">${p2.summonerName}</div>
+                                <div style="font-size: 9px">Level&nbsp;${p2.summonerLevel}</div>
+                            </div>
+                        </div>
+                        <div class="column-lo" style="min-width: 55px; display: flex; justify-content: left;">
+                            <div class="column-lo" style="margin-bottom: 10px" title="챔피언에게 가한 피해량">
+                                <div style="font-size: 12px;">${(p2.totalDamageDealtToChampions/1000).toFixed(1)}K</div>
+                                <div style="width: 55px; height: 8px; background-color: #10131c; border-radius: 10px;">
+                                    <div style="width: ${((p2.totalDamageDealtToChampions / dealt).toFixed(2)) * 100}%; height: 100%; background-color: #e84057; border-radius: 10px;"></div>
+                                </div>
+                            </div>
+                            <div class="column-lo" title="챔피언에게 받은 피해량">
+                                <div style="font-size: 12px;">${(p2.totalDamageTaken/1000).toFixed(1)}K</div>
+                                <div style="width: 55px; height: 8px; background-color: #10131c; border-radius: 10px;">
+                                    <div style="width: ${((p2.totalDamageTaken / taken).toFixed(2)) * 100}%; height: 100%; background-color: dimgray; border-radius: 10px;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="column-lo" style="min-width: 70px; max-width: 95px;">
+                            <div class="row-lo" style="font-size: 13px;">
+                                <div>${p2.kills}</div>
+                                <div style="crimson: #b02a37">&nbsp;/&nbsp;${p2.deaths}&nbsp;/&nbsp;</div>
+                                <div>${p2.assists}</div>
+                            </div>
+                            <div style="color: #808080; font-size: 12px">${((p2.kills+p2.assists)/Math.max(p2.deaths,1)).toFixed(2)}</div>
+                            <div style="font-size: 13px;">${p2.totalMinionsKilled + p2.neutralMinionsKilled}&nbsp;(${((p2.totalMinionsKilled + p2.neutralMinionsKilled)/min).toFixed(1)})</div>
+                        </div>
+                        <div class="column-lo">
+                            <div class="column-lo">
+                                <div class="row-lo">
+                                    ${generateDetailItem(p2.item0,p2.teamId)}
+                                    ${generateDetailItem(p2.item1,p2.teamId)}
+                                    ${generateDetailItem(p2.item2,p2.teamId)}
+                                </div>
+                                <div class="row-lo">
+                                    ${generateDetailItem(p2.item3,p2.teamId)}
+                                    ${generateDetailItem(p2.item4,p2.teamId)}
+                                    ${generateDetailItem(p2.item5,p2.teamId)}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            `);
+        }
+
+        info.push(`
+                </div>
+            `);
+        // 배열에 있는 플레이어 정보를 문자열로 변환하여 반환
+        return info.join('');
+
+    }
+    //빌드 생성
+    function generateBuild() {
+
+        const build = [];
+
+        build.push(`
+            <div>asdasdasdasd</div>
+        `);
+
+        // 배열에 있는 플레이어 정보를 문자열로 변환하여 반환
+        return build.join('');
+    }
+    //아이템 생성2
+    function generateDetailItem(itemImageId,teamId){
+        const itemslot = [];
+        // 아이템 ID가 0인 경우에는 빈 칸으로 처리
+        if (itemImageId !== 0) {
+            const itemImageSrc = `${ddragon}${version}/img/item/${itemImageId}.png`;
+            itemslot.push(`
+                <img src='${itemImageSrc}' style='width: 22px; height: 22px; overflow: hidden; margin: 1px;'>
+            `);
+        } else {
+            // 아이템 ID가 0인 경우, 빈 칸 추가
+            const backgroundColor = teamId === 100 ? 'rgba(49, 142, 239, 0.2)' : 'rgba(244, 88, 78, 0.2)';
+            itemslot.push(`
+                <div style='width: 22px; height: 22px;background:${backgroundColor}; margin: 1px;'></div>
+            `);
+        }
+
+        return itemslot.join('');
+    }
+
+    // 기존 배열에서 id를 키로 사용하여 객체로 변환
+    const iconDataIndexed = {};
+    iconData.forEach(icon => {
+        iconDataIndexed[icon.id] = icon.icon;
+    });
+
+    //솔로,자유랭크 생성
+    function updateRankDisplay(rankData) {
+        emblemElement.innerHTML = `<img src="assets/img/emblem/${rankData.tier}.png" style='width: 100%; height: auto; object-fit: cover; border-radius: 10px;'>`;
+        rankElement.textContent = rankData.rank;
+        tierElement.textContent = rankData.tier;
+        winsElement.textContent = `${rankData.wins}승 `;
+        lossesElement.textContent = `${rankData.losses}패`;
+    }
+    // participants 배열 내에서 특정 아이디을 찾아 해당 객체를 반환하는 함수
+    function findParticipantBySummonerId(summonerId, participants) {
+        return participants.find(participant => participant.summonerId === summonerId);
+    }
+    // id에 해당하는 아이콘 URL 생성
+    function getIconUrl(id) {
+        const icon = iconDataIndexed[id];
+        if (icon) {
+            return `https://ddragon.leagueoflegends.com/cdn/img/${icon}`;
+        } else {
+            return '아이콘을 찾을 수 없습니다.';
+        }
+    }
+    //소환사 검색 함수
+    function highlightInput() {
+        const inputLabel = document.querySelector('.custom-input-box');
+        inputLabel.style.borderColor = '#007bff';
+    }
+    function handleEnterKey(event) {
+        if (event.key === 'Enter') {
+            callApi();
+        }
+    }
+    document.addEventListener('click', function(event) {
+        const inputLabel = document.querySelector('.custom-input-box');
+        if (!inputLabel.contains(event.target)) {
+            inputLabel.style.borderColor = '#ccc';
+        }
+    });
+    function callApi() {
+        const inputValue = document.getElementById('inputValue').value;
+
+        if (inputValue) {
+            // 입력값을 컨트롤러로 전달하고 페이지 이동
+            window.location.href = `/info?summonerName=${encodeURIComponent(inputValue)}`;
+        }
+    }
+    //자릿수 변환
+    function addCommasToNumber(number) {
+
+        return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
     //추가정보 탭
-    function toggleTab(tabId) {
+    function toggleTab(mId,tId) {
+        tabId = tId+mId
         const currentTab = document.getElementById(tabId);
 
         // 모든 탭 숨기기
@@ -882,7 +1401,30 @@
         // 클릭된 탭 보이기
         currentTab.classList.remove('hidden');
         currentTab.classList.add('active');
+
+        const outline = document.getElementById('detailOutline'+mId);
+        const info = document.getElementById('detailInfo'+mId);
+        const build = document.getElementById('detailBuild'+mId);
+
+        if (tId == "tabOutline"){
+            outline.classList.add('selected')
+            info.classList.remove('selected')
+            build.classList.remove('selected')
+        }
+        else if (tId == "tabInfo"){
+            outline.classList.remove('selected')
+            info.classList.add('selected')
+            build.classList.remove('selected')
+        }
+        else if (tId == "tabBuild"){
+            outline.classList.remove('selected')
+            info.classList.remove('selected')
+            build.classList.add('selected')
+        }
+
     }
+
+
     //매치정보 찾기
     function findMatchById(matchId) {
         return matchData.find(match => match.metadata.matchId === matchId);
@@ -1007,157 +1549,6 @@
         });
 
         return highestStats;
-    }
-    //추가정보 버튼 생성
-    function generateOutline(data) {
-
-        const hsa = Object.values(data);
-        console.log(hsa)
-
-        const outlineInfo = [];
-
-        for (let i =1;i<hsa.length;i++){
-            if (hsa[0].mode === "칼바람" && (hsa[i].tag === "시야왕" || hsa[i].tag === "스틸왕" || hsa[i].tag === "와드 학살자")) {
-                continue;
-            }
-
-
-            if (hsa[i].champion == "FiddleSticks"){
-                hsa[i].champion = "Fiddlesticks"
-            }
-
-            if (i == 1 || i == 4 || i == 7 || i ==10){
-                outlineInfo.push(`
-                <div class="row-lo olpBox">
-            `);
-            }
-
-            outlineInfo.push(`
-                <div class="column-lo outLineBox">
-                    <div class="outlineTtile">${hsa[i].tag}</div>
-
-            `);
-
-            if (hsa[i].tag =="스틸왕" && hsa[i].value ==0){
-                    outlineInfo.push(`
-                        <div class="row-lo" style="width:100%; margin:0px;">
-                            <div class="detailValue">No Data</div>
-                        </div>
-                        <div class="row-lo" style="display: flex; font-size: 12px;margin-top: 10px; margin-left: 10px; justify-content: space-between; min-height: 26.5px">스틸 기록이 없습니다.</div>
-                    </div>
-                `);
-                continue;
-            }
-            else {
-                if (hsa[i].tag =="철거왕"){
-                    outlineInfo.push(`
-                        <div class="row-lo" style="width:100%; margin:0px; justify-content: space-between">
-                            <div class="detailValue">${addCommasToNumber(hsa[i].value)}</div>
-                            <div class="column-lo" style="margin-right: 10px;">
-                                <div style="font-size: 13px; font-weight: bold">포탑 : ${(hsa[i].tk)}</div>
-                                <div style="font-size: 13px; font-weight: bold">억제기 : ${(hsa[i].ik)}</div>
-                            </div>
-                        </div>
-                `);
-                }
-                else if (hsa[i].tag =="시야왕"){
-                    outlineInfo.push(`
-                        <div class="row-lo" style="width:100%; margin:0px; justify-content: space-between;">
-                            <div class="detailValue">${addCommasToNumber(hsa[i].value)}</div>
-                            <div class="column-lo" style="margin-right: 10px;">
-                                <div style="font-size: 15px; font-weight: bold"><img src="assets/img/icon/VW.png" style='width: 20px; height: auto; object-fit: cover;'> ${(hsa[i].wp)}</div>
-                                <div style="font-size: 15px; font-weight: bold"><img src="assets/img/icon/DW.png" style='width: 20px; height: auto; object-fit: cover;'> ${(hsa[i].dp)}</div>
-                            </div>
-                        </div>
-                `);
-                }
-                else if (hsa[i].tag =="미니언 학살자"){
-                    outlineInfo.push(`
-                        <div class="row-lo" style="width:100%; margin:0px; justify-content: space-between; align-items: center">
-                            <div class="detailValue">${addCommasToNumber(hsa[i].value)}</div>
-                            <div style="font-size: 13px; font-weight: bold; margin-right: 10px;">분당 CS: ${((hsa[i].value)/(hsa[i].min)).toFixed(1)}</div>
-                        </div>
-                `);
-                }
-                else {
-                    outlineInfo.push(`
-                        <div class="row-lo" style="width:100%; margin:0px;">
-                            <div class="detailValue">${addCommasToNumber(hsa[i].value)}</div>
-                        </div>
-                `);
-                }
-            }
-            outlineInfo.push(`
-
-                    <div class="row-lo" style="display: flex; justify-content: space-between">
-                        <div class="row-lo" style="margin-left: 10px">
-                            <div><img src='${ddragon}${version}/img/champion/${hsa[i].champion}.png' class="detailChampImg"></div>
-                            <div><a class="custom-link" href="/info?summonerName=${hsa[i].playerName}" target="_blank" style="font-size: 13px;">${hsa[i].playerName}</a></div>
-                        </div>
-                        <div style="margin-right: 10px;"><img src="assets/img/position/${hsa[i].teamPosition}.png" class="detailImg"></div>
-                    </div>
-                </div>
-            `);
-
-
-            if (i == 3 || i == 6 || i == 9 || i ==12){
-                outlineInfo.push(`
-                </div>
-            `);
-            }
-
-        }
-
-
-
-        // 배열에 있는 플레이어 정보를 문자열로 변환하여 반환
-        return outlineInfo.join('');
-    }
-    //자릿수 변환
-    function addCommasToNumber(number) {
-
-        return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    }
-
-
-    // 기존 배열에서 id를 키로 사용하여 객체로 변환
-    const iconDataIndexed = {};
-    iconData.forEach(icon => {
-        iconDataIndexed[icon.id] = icon.icon;
-    });
-
-    // id에 해당하는 아이콘 URL 생성
-    function getIconUrl(id) {
-        const icon = iconDataIndexed[id];
-        if (icon) {
-            return `https://ddragon.leagueoflegends.com/cdn/img/${icon}`;
-        } else {
-            return '아이콘을 찾을 수 없습니다.';
-        }
-    }
-    //소환사 검색 함수
-    function highlightInput() {
-        const inputLabel = document.querySelector('.custom-input-box');
-        inputLabel.style.borderColor = '#007bff';
-    }
-    function handleEnterKey(event) {
-        if (event.key === 'Enter') {
-            callApi();
-        }
-    }
-    document.addEventListener('click', function(event) {
-        const inputLabel = document.querySelector('.custom-input-box');
-        if (!inputLabel.contains(event.target)) {
-            inputLabel.style.borderColor = '#ccc';
-        }
-    });
-    function callApi() {
-        const inputValue = document.getElementById('inputValue').value;
-
-        if (inputValue) {
-            // 입력값을 컨트롤러로 전달하고 페이지 이동
-            window.location.href = `/info?summonerName=${encodeURIComponent(inputValue)}`;
-        }
     }
   </script>
 
