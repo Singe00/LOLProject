@@ -255,6 +255,21 @@
           height: 3px;
           background-color: #DAA520; /* Darker gold color for the details */
       }
+      .itemBuild{
+          width: 100%;
+          padding: 10px;
+          margin-top: 10px;
+          background-color: #2c2c2f;
+          border-top-left-radius: 10px;
+          border-top-right-radius: 10px;
+      }
+      .itemDiv{
+          width: 100%;
+          padding: 10px;
+          display:flex;
+          flex-wrap: wrap;
+          background-color: #31313c;
+      }
 
   </style>
 
@@ -803,7 +818,7 @@
         const backgroundColor = targetParticipant.win ? 'rgba(49, 142, 239, 0.6)' : 'rgba(244, 88, 78, 0.6)';
 
         arrow.push(`
-        <div style="display: flex; margin-left: 10px;" id="${match.metadata.matchId}" onclick="generateDetail('${match.metadata.matchId}', '${targetParticipant.puuid}')">
+        <div style="display: flex; margin-left: 10px;" id="${match.metadata.matchId}" onclick="generateDetail('${match.metadata.matchId}', '${targetParticipant.puuid}','${targetParticipant.championName}')">
             <div class="arrow" style="border-color:${backgroundColor};" ></div>
         </div>
     `);
@@ -812,9 +827,8 @@
         return arrow.join('');
     }
     //추가정보 생성
-    async function generateDetail(matchId,tpid) {
+    async function generateDetail(matchId,tpid,cn) {
         const targetMatch = findMatchById(matchId);
-
         const result = document.getElementById(matchId);
         const deg = window.getComputedStyle(result, '::after').getPropertyValue('--toggle-degree');
 
@@ -858,8 +872,8 @@
                         </div>
                     </div>
                     <div id="tabBuild${matchId}" class="tab-pane hidden coulmn-lo">
-                        <div id="${matchId}childtab" class="column-lo">
-                            ${await generateBuild(matchId, tpid)}
+                        <div id="${matchId}childtab" class="column-lo" style="display: flex; justify-content: center;align-items: center;">
+                            ${await generateBuild(matchId, tpid,cn)}
                         </div>
                     </div>
                 </div>
@@ -1303,15 +1317,18 @@
 
     }
     //빌드 생성
-    async function generateBuild(matchId, tpid) {
+    async function generateBuild(matchId, tpid,cn) {
         const build = [];
-        const itemList = [];
+        const minuteItemMap = {};
         const skillList = [];
+        const skill = [];
         let pid=-1;
 
         try {
             const data = await main(matchId);
+            const champD = await fetchChampionData(cn);
 
+            //데이터 처리
             data.info.participants.forEach(p =>{
                 if (p.puuid == tpid){
                     pid = p.participantId;
@@ -1322,7 +1339,13 @@
                 data.info.frames[i].events.forEach(e=>{
                     if (e.participantId == pid){
                         if (e.type == "ITEM_PURCHASED") {
-                            itemList.push(e);
+                            const minute = Math.floor(e.timestamp / 60000);
+                            if (!minuteItemMap[minute]) {
+                                minuteItemMap[minute] = [];
+                            }
+
+                            // 해당 분 단위의 배열에 아이템 추가
+                            minuteItemMap[minute].push(e);
                         }
                         else if (e.type == "SKILL_LEVEL_UP"){
                             skillList.push(e);
@@ -1331,20 +1354,69 @@
                 })
             }
 
+            //HTML 삽입
+            build.push(`
+                <div class="itemBuild">아이템 빌드</div>
+            `);
+            build.push(`<div class="row-lo itemDiv">`);
 
-            for (let i = 0;i<itemList.length;i++) {
-                const itemImageSrc = `${ddragon}${version}/img/item/${itemList[i].itemId}.png`;
+            const mins = Object.keys(minuteItemMap);
+            const lastm = mins[mins.length-1];
+
+            for(let i =0;i<4;i++){
+                skill.push(champD.data[cn].spells[i].id);
+            }
+            console.log(skill);
+            // Assuming minuteItemMap is already defined and populated
+            for (const minute in minuteItemMap) {
+                build.push(`
+                    <div class="column-lo" style="text-align: center; margin: 0px;">
+                        <div class="row-lo" style="display: flex;justify-content: center;align-items: center">
+                            <div class="row-lo" style="align-items: center; padding: 8px; background-color: #1c1c1f;border-radius: 10px;">
+
+                `)
+
+                minuteItemMap[minute].forEach(item => {
+                    const itemImageSrc = `${ddragon}${version}/img/item/${item.itemId}.png`;
+                    build.push(`
+                        <img src='${itemImageSrc}' style='width: 40px; height: 40px; margin: 1.5px; overflow: hidden; border-radius: 10px;'>
+                    `)
+                });
 
                 build.push(`
-                    <img src='${itemImageSrc}' style='width: 30px; height: 30px; overflow: hidden; border-radius: 50%;'>
-                `);
+                            </div>
+                `)
+
+                if (minute != lastm){
+                    build.push(`<div style="background-color: #1c1c1f; padding: 2px;"><img src="assets/img/icon/icon-arrow.png" style="height: 20px; width: auto; color: white; margin: 3px;"></div>`);
+                }
+
+                build.push(`
+                        </div>
+                        <div style="font-size: 13px; font-weight: bold; text-align: left; margin-top: 3px; margin: 10px;">${minute}&nbsp;분</div>
+                    </div>
+                `)
             }
+
+            build.push(`</div>`);
+
+            build.push(`
+                <div class="itemBuild">스킬 빌드</div>
+            `);
+            build.push(`<div class="row-lo itemDiv">`);
+            //http://ddragon.leagueoflegends.com/cdn/10.6.1/img/spell/IreliaQ.png
+            //
+            skillList.forEach(s=>{
+                build.push(`<div><img src='${ddragon}${version}/img/spell/${skill[s.skillSlot-1]}.png'></div>`)
+            })
+            build.push(`</div>`);
 
         } catch (error) {
             console.error('Error fetching data:', error);
             // Handle the error, e.g., return an error message
             build.push(`<div>Error: Unable to fetch data</div>`);
         }
+
 
         return build.join('');
     }
@@ -1618,6 +1690,22 @@
             return result;
         } catch (error) {
             console.error('Error in generating build:', error);
+        }
+    }
+    async function fetchChampionData(chamN) {
+        const jsonUrl = `${ddragon}${version}/data/en_US/champion/${chamN}.json`;
+
+        try {
+            const response = await fetch(jsonUrl);
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error('Error fetching data:', error);
+            throw error; // Re-throw the error to be caught by the caller, if needed
         }
     }
   </script>
