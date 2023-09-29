@@ -1,10 +1,7 @@
 package com.example.lwp.service;
 
 import com.example.lwp.config.RiotConstant;
-import com.example.lwp.dto.MatchDto;
-import com.example.lwp.dto.SummonerDto;
-import com.example.lwp.dto.SummonerInfoDto;
-import com.example.lwp.dto.SummonerRankInfoDto;
+import com.example.lwp.dto.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -124,6 +121,20 @@ public class ApiService {
             }
         }
         return matchDtoList;
+    }
+
+    public MatchTimelineDto FindMatchTimeline(String sn){
+        MatchTimelineDto matchTimelineDto = new MatchTimelineDto();
+
+        try {
+            String apiUrl = "https://asia.api.riotgames.com/lol/match/v5/matches/"+sn+"/timeline?api_key="+RiotConstant.API_KEY;
+            ObjectMapper objectMapper = new ObjectMapper();
+
+            matchTimelineDto = objectMapper.readValue(new URL(apiUrl), MatchTimelineDto.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return matchTimelineDto;
     }
 }
 

@@ -84,6 +84,7 @@ public class MatchDto {
         private int neutralMinionsKilled;
         private boolean win;
         private Perks perks;
+        private String puuid;
     }
 
     @Data

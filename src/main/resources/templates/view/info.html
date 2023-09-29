@@ -526,9 +526,9 @@
 
 
     //전적 리스트 생성
-    function generateMatchHistory() {
+    async function generateMatchHistory() {
         // JSON 데이터를 기반으로 동적으로 레이아웃 생성
-        matchData.forEach(match => {
+        for (const match of matchData) {
             const matchElement = document.createElement('div');
             // gameCreation 값 변환 (에포크 시간 -> 날짜와 시간)
             const gameCreationDate = new Date(match.info.gameCreation);
@@ -628,11 +628,11 @@
                 </div>
 
           </div>
-          ${generateArrow(targetParticipant,match)}
+          ${await generateArrow(targetParticipant,match)}
         </div>
       `;
             matchHistoryContainer.appendChild(matchElement);
-        });
+        }
     }
     //블루팀 플레이어 리스트 생성
     function generatePlayerInfo1(match) {
@@ -798,21 +798,21 @@
         return lineHtml.join('');
     }
     //추가정보 버튼 생성
-    function generateArrow(targetParticipant,match) {
+    async function generateArrow(targetParticipant, match) {
         const arrow = [];
         const backgroundColor = targetParticipant.win ? 'rgba(49, 142, 239, 0.6)' : 'rgba(244, 88, 78, 0.6)';
 
         arrow.push(`
-            <div style="display: flex; margin-left: 10px;") id = "${match.metadata.matchId}" onclick="generateDetail('${match.metadata.matchId}')">
-                <div class="arrow" style="border-color:${backgroundColor};" ></div>
-            </div>
-        `);
+        <div style="display: flex; margin-left: 10px;" id="${match.metadata.matchId}" onclick="generateDetail('${match.metadata.matchId}', '${targetParticipant.puuid}')">
+            <div class="arrow" style="border-color:${backgroundColor};" ></div>
+        </div>
+    `);
 
         // 배열에 있는 플레이어 정보를 문자열로 변환하여 반환
         return arrow.join('');
     }
     //추가정보 생성
-    function generateDetail(matchId) {
+    async function generateDetail(matchId,tpid) {
         const targetMatch = findMatchById(matchId);
 
         const result = document.getElementById(matchId);
@@ -821,6 +821,7 @@
         const parentDetail = document.getElementById('B' + matchId);
 
         let detail = document.getElementById('D' + matchId);
+
 
         if (deg === '135deg') {
             document.getElementById(matchId).style.setProperty('--toggle-degree', '315deg');
@@ -857,8 +858,8 @@
                         </div>
                     </div>
                     <div id="tabBuild${matchId}" class="tab-pane hidden coulmn-lo">
-                        <div class="column-lo">
-                            ${generateBuild()}
+                        <div id="${matchId}childtab" class="column-lo">
+                            ${await generateBuild(matchId, tpid)}
                         </div>
                     </div>
                 </div>
@@ -1014,8 +1015,6 @@
             }
 
         }
-        console.log(dealt)
-        console.log(taken)
 
         for (let i = 0;i<5;i++){
             teamGold[0]+= participants[i].goldEarned;
@@ -1304,17 +1303,53 @@
 
     }
     //빌드 생성
-    function generateBuild() {
-
+    async function generateBuild(matchId, tpid) {
         const build = [];
+        const itemList = [];
+        const skillList = [];
+        let pid=-1;
 
-        build.push(`
-            <div>asdasdasdasd</div>
-        `);
+        try {
+            const data = await main(matchId);
 
-        // 배열에 있는 플레이어 정보를 문자열로 변환하여 반환
+            data.info.participants.forEach(p =>{
+                if (p.puuid == tpid){
+                    pid = p.participantId;
+                }
+            })
+
+            for (let i = 1;i<data.info.frames.length;i++){
+                data.info.frames[i].events.forEach(e=>{
+                    if (e.participantId == pid){
+                        if (e.type == "ITEM_PURCHASED") {
+                            itemList.push(e);
+                        }
+                        else if (e.type == "SKILL_LEVEL_UP"){
+                            skillList.push(e);
+                        }
+                    }
+                })
+            }
+
+
+            for (let i = 0;i<itemList.length;i++) {
+                const itemImageSrc = `${ddragon}${version}/img/item/${itemList[i].itemId}.png`;
+
+                build.push(`
+                    <img src='${itemImageSrc}' style='width: 30px; height: 30px; overflow: hidden; border-radius: 50%;'>
+                `);
+            }
+
+        } catch (error) {
+            console.error('Error fetching data:', error);
+            // Handle the error, e.g., return an error message
+            build.push(`<div>Error: Unable to fetch data</div>`);
+        }
+
         return build.join('');
     }
+
+
     //아이템 생성2
     function generateDetailItem(itemImageId,teamId){
         const itemslot = [];
@@ -1428,8 +1463,6 @@
         }
 
     }
-
-
     //매치정보 찾기
     function findMatchById(matchId) {
         return matchData.find(match => match.metadata.matchId === matchId);
@@ -1554,6 +1587,38 @@
         });
 
         return highestStats;
+    }
+    //빌드 비동기 api요청
+    const callBuild = async (matchId) => {
+        try {
+            const response = await fetch(apiUrl + "/timeline", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ matchId: matchId })
+            });
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error("API Error:", error);
+            throw error;
+        }
+    }
+    const main = async (matchId) => {
+
+        try {
+            const result = await callBuild(matchId);
+
+            return result;
+        } catch (error) {
+            console.error('Error in generating build:', error);
+        }
     }
   </script>
 

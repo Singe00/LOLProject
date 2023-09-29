@@ -1,8 +1,6 @@
 package com.example.lwp.controller;
 
-import com.example.lwp.dto.MatchDto;
-import com.example.lwp.dto.SearchDto;
-import com.example.lwp.dto.SummonerInfoDto;
+import com.example.lwp.dto.*;
 import com.example.lwp.service.ApiService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,5 +34,12 @@ public class ApiController {
 
     }
 
+    @PostMapping("/timeline")
+    @ResponseBody
+    public MatchTimelineDto search(@RequestBody TimelineDto request) {
+        MatchTimelineDto m = apiService.FindMatchTimeline(request.getMatchId());
+        return m;
+
+    }
 
 }
