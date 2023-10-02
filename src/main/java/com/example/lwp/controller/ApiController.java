@@ -23,6 +23,9 @@ public class ApiController {
     @ResponseBody
     public SummonerInfoDto user(@RequestBody SearchDto request) {
         SummonerInfoDto sid = apiService.FindSummonerInfo(request.getSummonerName());
+        if (sid == null){
+            return null;
+        }
         return sid;
     }
 
@@ -30,6 +33,9 @@ public class ApiController {
     @ResponseBody
     public List<MatchDto> search(@RequestBody SearchDto request) {
         List<MatchDto> m = apiService.FindMatch(request.getSummonerName());
+        if (m == null){
+            return null;
+        }
         return m;
 
     }

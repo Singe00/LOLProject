@@ -116,6 +116,7 @@ public class MatchDto {
     @Data
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Perks {
+        private StatPerks statPerks;
         private List<Style> styles;
     }
 
@@ -125,6 +126,14 @@ public class MatchDto {
         private String description;
         private List<Selections> selections;
         private int style;
+    }
+
+    @Data
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class StatPerks {
+        private int defense;
+        private int flex;
+        private int offense;
     }
 
     @Data

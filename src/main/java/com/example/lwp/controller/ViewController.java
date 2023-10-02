@@ -23,7 +23,7 @@ public class ViewController {
         return "view/about";
     }
 
-    @GetMapping("/riot.txt")
+    @GetMapping("//riot.txt")
     public String riot(){
         return "view/riot";
     }

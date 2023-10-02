@@ -40,6 +40,7 @@ public class MatchTimelineDto {
     public static class Event {
         private String type;
         private int itemId;
+        private String levelUpType;
         private int skillSlot;
         private int participantId;
         private long timestamp;

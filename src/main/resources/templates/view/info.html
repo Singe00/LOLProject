@@ -270,6 +270,24 @@
           flex-wrap: wrap;
           background-color: #31313c;
       }
+      .skilldiv{
+          width: 100%;
+          padding: 10px;
+          display:flex;
+          flex-wrap: wrap;
+      }
+      .runeTitle{
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          text-align: center;
+          font-weight: bold;
+      }
+      .runeImg{
+          width: 40px;
+          height: 40px;
+          margin-bottom: 7px;
+      }
 
   </style>
 
@@ -281,7 +299,7 @@
                 <button onclick="callApi()" class="api-button" style=""></button>
             </label>
         </div>
-      <div class="row-lo" style="display:flex; justify-content: space-between; width: 100%; margin-top: 20px">
+      <div id="errorAppend" class="row-lo" style="display:flex; justify-content: space-between; width: 100%; margin-top: 20px">
           <div class="row-lo">
             <div id="profileIcon"></div>
             <div>
@@ -351,77 +369,6 @@
         2201: "SummonerCherryHold",
         2202: "SummonerCherryFlash"
     };
-/*    //룬특 ID, Icon링크
-    const iconData = [
-        {'id': 8000, 'icon': 'perk-images/Styles/7201_Precision.png'},
-        {'id': 8005, 'icon': 'perk-images/Styles/Precision/PressTheAttack/PressTheAttack.png'},
-        {'id': 8008, 'icon': 'perk-images/Styles/Precision/LethalTempo/LethalTempoTemp.png'},
-        {'id': 8009, 'icon': 'perk-images/Styles/Precision/PresenceOfMind/PresenceOfMind.png'},
-        {'id': 8010, 'icon': 'perk-images/Styles/Precision/Conqueror/Conqueror.png'},
-        {'id': 8014, 'icon': 'perk-images/Styles/Precision/CoupDeGrace/CoupDeGrace.png'},
-        {'id': 8017, 'icon': 'perk-images/Styles/Precision/CutDown/CutDown.png'},
-        {'id': 8021, 'icon': 'perk-images/Styles/Precision/FleetFootwork/FleetFootwork.png'},
-        {'id': 8100, 'icon': 'perk-images/Styles/7200_Domination.png'},
-        {'id': 8105, 'icon': 'perk-images/Styles/Domination/RelentlessHunter/RelentlessHunter.png'},
-        {'id': 8106, 'icon': 'perk-images/Styles/Domination/UltimateHunter/UltimateHunter.png'},
-        {'id': 8112, 'icon': 'perk-images/Styles/Domination/Electrocute/Electrocute.png'},
-        {'id': 8120, 'icon': 'perk-images/Styles/Domination/GhostPoro/GhostPoro.png'},
-        {'id': 8124, 'icon': 'perk-images/Styles/Domination/Predator/Predator.png'},
-        {'id': 8126, 'icon': 'perk-images/Styles/Domination/CheapShot/CheapShot.png'},
-        {'id': 8128, 'icon': 'perk-images/Styles/Domination/DarkHarvest/DarkHarvest.png'},
-        {'id': 8134, 'icon': 'perk-images/Styles/Domination/IngeniousHunter/IngeniousHunter.png'},
-        {'id': 8135, 'icon': 'perk-images/Styles/Domination/TreasureHunter/TreasureHunter.png'},
-        {'id': 8136, 'icon': 'perk-images/Styles/Domination/ZombieWard/ZombieWard.png'},
-        {'id': 8138, 'icon': 'perk-images/Styles/Domination/EyeballCollection/EyeballCollection.png'},
-        {'id': 8139, 'icon': 'perk-images/Styles/Domination/TasteOfBlood/GreenTerror_TasteOfBlood.png'},
-        {'id': 8143, 'icon': 'perk-images/Styles/Domination/SuddenImpact/SuddenImpact.png'},
-        {'id': 8200, 'icon': 'perk-images/Styles/7202_Sorcery.png'},
-        {'id': 8210, 'icon': 'perk-images/Styles/Sorcery/Transcendence/Transcendence.png'},
-        {'id': 8214, 'icon': 'perk-images/Styles/Sorcery/SummonAery/SummonAery.png'},
-        {'id': 8224, 'icon': 'perk-images/Styles/Sorcery/NullifyingOrb/Pokeshield.png'},
-        {'id': 8226, 'icon': 'perk-images/Styles/Sorcery/ManaflowBand/ManaflowBand.png'},
-        {'id': 8229, 'icon': 'perk-images/Styles/Sorcery/ArcaneComet/ArcaneComet.png'},
-        {'id': 8230, 'icon': 'perk-images/Styles/Sorcery/PhaseRush/PhaseRush.png'},
-        {'id': 8232, 'icon': 'perk-images/Styles/Sorcery/Waterwalking/Waterwalking.png'},
-        {'id': 8233, 'icon': 'perk-images/Styles/Sorcery/AbsoluteFocus/AbsoluteFocus.png'},
-        {'id': 8234, 'icon': 'perk-images/Styles/Sorcery/Celerity/CelerityTemp.png'},
-        {'id': 8236, 'icon': 'perk-images/Styles/Sorcery/GatheringStorm/GatheringStorm.png'},
-        {'id': 8237, 'icon': 'perk-images/Styles/Sorcery/Scorch/Scorch.png'},
-        {'id': 8242, 'icon': 'perk-images/Styles/Sorcery/Unflinching/Unflinching.png'},
-        {'id': 8275, 'icon': 'perk-images/Styles/Sorcery/NimbusCloak/6361.png'},
-        {'id': 8299, 'icon': 'perk-images/Styles/Sorcery/LastStand/LastStand.png'},
-        {'id': 8300, 'icon': 'perk-images/Styles/7203_Whimsy.png'},
-        {'id': 8304, 'icon': 'perk-images/Styles/Inspiration/MagicalFootwear/MagicalFootwear.png'},
-        {'id': 8306, 'icon': 'perk-images/Styles/Inspiration/HextechFlashtraption/HextechFlashtraption.png'},
-        {'id': 8313, 'icon': 'perk-images/Styles/Inspiration/PerfectTiming/PerfectTiming.png'},
-        {'id': 8316, 'icon': 'perk-images/Styles/Inspiration/MinionDematerializer/MinionDematerializer.png'},
-        {'id': 8321, 'icon': 'perk-images/Styles/Inspiration/FuturesMarket/FuturesMarket.png'},
-        {'id': 8345, 'icon': 'perk-images/Styles/Inspiration/BiscuitDelivery/BiscuitDelivery.png'},
-        {'id': 8347, 'icon': 'perk-images/Styles/Inspiration/CosmicInsight/CosmicInsight.png'},
-        {'id': 8351, 'icon': 'perk-images/Styles/Inspiration/GlacialAugment/GlacialAugment.png'},
-        {'id': 8352, 'icon': 'perk-images/Styles/Inspiration/TimeWarpTonic/TimeWarpTonic.png'},
-        {'id': 8360, 'icon': 'perk-images/Styles/Inspiration/UnsealedSpellbook/UnsealedSpellbook.png'},
-        {'id': 8369, 'icon': 'perk-images/Styles/Inspiration/FirstStrike/FirstStrike.png'},
-        {'id': 8400, 'icon': 'perk-images/Styles/7204_Resolve.png'},
-        {'id': 8401, 'icon': 'perk-images/Styles/Resolve/MirrorShell/MirrorShell.png'},
-        {'id': 8410, 'icon': 'perk-images/Styles/Resolve/ApproachVelocity/ApproachVelocity.png'},
-        {'id': 8429, 'icon': 'perk-images/Styles/Resolve/Conditioning/Conditioning.png'},
-        {'id': 8437, 'icon': 'perk-images/Styles/Resolve/GraspOfTheUndying/GraspOfTheUndying.png'},
-        {'id': 8439, 'icon': 'perk-images/Styles/Resolve/VeteranAftershock/VeteranAftershock.png'},
-        {'id': 8444, 'icon': 'perk-images/Styles/Resolve/SecondWind/SecondWind.png'},
-        {'id': 8446, 'icon': 'perk-images/Styles/Resolve/Demolish/Demolish.png'},
-        {'id': 8451, 'icon': 'perk-images/Styles/Resolve/Overgrowth/Overgrowth.png'},
-        {'id': 8453, 'icon': 'perk-images/Styles/Resolve/Revitalize/Revitalize.png'},
-        {'id': 8463, 'icon': 'perk-images/Styles/Resolve/FontOfLife/FontOfLife.png'},
-        {'id': 8465, 'icon': 'perk-images/Styles/Resolve/Guardian/Guardian.png'},
-        {'id': 8473, 'icon': 'perk-images/Styles/Resolve/BonePlating/BonePlating.png'},
-        {'id': 9101, 'icon': 'perk-images/Styles/Precision/Overheal.png'},
-        {'id': 9103, 'icon': 'perk-images/Styles/Precision/LegendBloodline/LegendBloodline.png'},
-        {'id': 9104, 'icon': 'perk-images/Styles/Precision/LegendAlacrity/LegendAlacrity.png'},
-        {'id': 9105, 'icon': 'perk-images/Styles/Precision/LegendTenacity/LegendTenacity.png'},
-        {'id': 9111, 'icon': 'perk-images/Styles/Precision/Triumph.png'},
-        {'id': 9923, 'icon': 'perk-images/Styles/Domination/HailOfBlades/HailOfBlades.png'}
-    ]*/
 
     // 응답 데이터를 화면에 출력
     const summonerNameElement = document.getElementById("summonerName");
@@ -436,6 +383,7 @@
     const soloRank = document.getElementById("soloRank");
     const flexRank = document.getElementById("flexRank");
     const matchHistoryContainer = document.getElementById('match-history');
+    const errorAppend = document.getElementById('errorAppend');
 
     let targetId;
 
@@ -466,8 +414,6 @@
                   .then(response => response.json())
                   .then(data => {
 
-                    // API 응답을 처리하는 코드
-                    console.log("API Response:", data);
                     userId.push(data.id);
                     summonerNameElement.textContent = data.summonerName;
                     profileIconElement.innerHTML = "<img src='http://ddragon.leagueoflegends.com/cdn/"+version+"/img/profileicon/" + data.profileIcon + ".png' alt='Profile Icon' style='width: 100%; height: 100%; object-fit: cover; border-radius: 10px;'>";
@@ -490,7 +436,8 @@
                     lossesElement.textContent = data.ranks[0].losses+"패";
                   })
                   .catch(error => {
-                    console.error("API Error:", error);
+                      generateEmpty();
+                      console.log("소환사 정보 없음")
                   });
         }
       }
@@ -540,6 +487,22 @@
     });
 
 
+    //에러 페이지 생성
+    async function generateEmpty() {
+
+        const matchElement = document.createElement('div');
+
+        matchElement.innerHTML = `
+            <div class="column-lo" style="text-align: center; align-items: center; display: flex;">
+            <img src="assets/img/icon/error.png" style='width: 250px; height: auto;'>
+            <h2>존재 하지 않는 소환사 정보 입니다!</h2>
+            <h3>오탈자를 확인 후 재검색해주세요.</h3>
+            </div>
+
+        `;
+        errorAppend.after(matchElement);
+
+    }
     //전적 리스트 생성
     async function generateMatchHistory() {
         // JSON 데이터를 기반으로 동적으로 레이아웃 생성
@@ -814,11 +777,12 @@
     }
     //추가정보 버튼 생성
     async function generateArrow(targetParticipant, match) {
+        const tp = encodeURIComponent(JSON.stringify(targetParticipant));
         const arrow = [];
         const backgroundColor = targetParticipant.win ? 'rgba(49, 142, 239, 0.6)' : 'rgba(244, 88, 78, 0.6)';
 
         arrow.push(`
-        <div style="display: flex; margin-left: 10px;" id="${match.metadata.matchId}" onclick="generateDetail('${match.metadata.matchId}', '${targetParticipant.puuid}','${targetParticipant.championName}')">
+        <div style="display: flex; margin-left: 10px;" id="${match.metadata.matchId}" onclick="generateDetail('${match.metadata.matchId}', '${tp}')">
             <div class="arrow" style="border-color:${backgroundColor};" ></div>
         </div>
     `);
@@ -827,7 +791,8 @@
         return arrow.join('');
     }
     //추가정보 생성
-    async function generateDetail(matchId,tpid,cn) {
+    async function generateDetail(matchId,tp) {
+
         const targetMatch = findMatchById(matchId);
         const result = document.getElementById(matchId);
         const deg = window.getComputedStyle(result, '::after').getPropertyValue('--toggle-degree');
@@ -873,7 +838,7 @@
                     </div>
                     <div id="tabBuild${matchId}" class="tab-pane hidden coulmn-lo">
                         <div id="${matchId}childtab" class="column-lo" style="display: flex; justify-content: center;align-items: center;">
-                            ${await generateBuild(matchId, tpid,cn)}
+                            ${await generateBuild(matchId,tp)}
                         </div>
                     </div>
                 </div>
@@ -1319,11 +1284,23 @@
 
     }
     //빌드 생성
-    async function generateBuild(matchId, tpid,cn) {
+    async function generateBuild(matchId,tp) {
+        const decodedTp = decodeURIComponent(tp);
+        const targetParticipant = JSON.parse(decodedTp);
+        const tpid = targetParticipant.puuid;
+        const cn = targetParticipant.championName;
         const build = [];
         const minuteItemMap = {};
         const skillList = [];
+        const evolveList = [];
         const skill = [];
+        const stat = [5008, 5005, 5007, 5008, 5002, 5003, 5001, 5002, 5003];
+        const primaryStyle = targetParticipant.perks.styles[0].selections;
+        const subStyle = targetParticipant.perks.styles[1].selections;
+        const ppi = primaryStyle.map(style => style.perk);
+        const spi = subStyle.map(style => style.perk);
+        const statP = [targetParticipant.perks.statPerks.offense,targetParticipant.perks.statPerks.flex,targetParticipant.perks.statPerks.defense];
+
         let pid=-1;
 
         try {
@@ -1349,8 +1326,11 @@
                             // 해당 분 단위의 배열에 아이템 추가
                             minuteItemMap[minute].push(e);
                         }
-                        else if (e.type == "SKILL_LEVEL_UP"){
+                        else if (e.type == "SKILL_LEVEL_UP" && e.levelUpType == "NORMAL"){
                             skillList.push(e);
+                        }
+                        else if (e.type == "SKILL_LEVEL_UP" && e.levelUpType == "EVOLVE"){
+                            evolveList.push(e);
                         }
                     }
                 })
@@ -1362,6 +1342,7 @@
             build.push(`
                 <div class="itemBuild">아이템 빌드</div>
             `);
+
             build.push(`<div class="row-lo itemDiv">`);
 
             const mins = Object.keys(minuteItemMap);
@@ -1411,7 +1392,77 @@
             `);
 
 
-            build.push(`<div class="row-lo itemDiv">`);
+            build.push(`<div class="column-lo itemDiv">`);
+
+            build.push(`<div class="row-lo" style="padding: 10px;">`);
+            build.push(`<div class="column-lo" style="width: 160px;">`);
+
+            build.push(`<div style="font-weight: bold; text-align: left; padding-left: 10px; margin-bottom: 5px;">스킬 마스터</div>`);
+            build.push(`<div class="row-lo" style="align-items: center;">`);
+
+
+            const countMap = {};
+
+            for (let i = 0;i<skillList.length;i++){
+                let skillKey = ["Q", "W", "E"][skillList[i].skillSlot - 1] || "Unknown";
+                const skillSlot = skillList[i].skillSlot;
+                if (skillSlot == 4){
+                    continue;
+                }
+
+                if (countMap[skillSlot]) {
+                    countMap[skillSlot]++;
+                    if (countMap[skillSlot] >= 5){
+                        if (Object.keys(countMap).length<3){
+                            build.push(`<div><img src="assets/img/icon/icon-arrow.png" style="height: 15px; width: auto; color: white; margin: 3px;"></div>`);
+                        }
+                        build.push(`
+                            <div style="align-items: center; padding: 8px; background-color: #1c1c1f;border-radius: 10px; position: relative;">
+                                <img src='${ddragon}${version}/img/spell/${skill[skillList[i].skillSlot-1]}.png' style="width: 30px;height: 30px; border-radius: 10px;">
+                                <div style="text-align:center; position: absolute; right: 0px;bottom: 0px; font-size: 10px; background-color: black; border-radius: 5px; width: 17px; height: 17px;">${skillKey}</div>
+                            </div>
+                        `);
+                        delete countMap[skillSlot];
+                    }
+                } else {
+                    countMap[skillSlot] = 1;
+                }
+            }
+
+            if (countMap.length > 1){
+                console.log(countMap);
+            }
+
+            build.push(`</div>`);
+            build.push(`</div>`);
+
+            if (evolveList.length > 0){
+                build.push(`<div class="column-lo" style="margin-left: 150px;">`);
+                build.push(`<div style="font-weight: bold; text-align: left; padding-left: 10px; margin-bottom: 5px;">스킬 진화</div>`);
+                build.push(`<div class="row-lo" style="align-items: center;">`);
+                for (let i =0;i<evolveList.length;i++){
+                    let skillKey = ["Q", "W", "E","R"][evolveList[i].skillSlot - 1] || "Unknown";
+                    build.push(`
+                            <div style="align-items: center; padding: 8px; background-color: #5f1c1f;border-radius: 10px; position: relative;">
+                                <img src='${ddragon}${version}/img/spell/${skill[evolveList[i].skillSlot-1]}.png' style="width: 30px;height: 30px; border-radius: 10px;">
+                                <div style="text-align:center; position: absolute; right: 0px;bottom: 0px; font-size: 10px; background-color: black; border-radius: 5px; width: 17px; height: 17px;">${skillKey}</div>
+                            </div>
+                    `);
+                    if (i+1 < evolveList.length){
+                        build.push(`<div><img src="assets/img/icon/icon-arrow.png" style="height: 15px; width: auto; color: white; margin: 3px;"></div>`);
+                    }
+                }
+                build.push(`</div>`);
+                build.push(`</div>`);
+            }
+
+
+
+            build.push(`</div>`);
+
+
+
+            build.push(`<div class="row-lo skilldiv">`);
 
             for (let i = 0;i<skillList.length;i++){
                 let skillKey = ["Q", "W", "E", "R"][skillList[i].skillSlot - 1] || "Unknown";
@@ -1431,17 +1482,139 @@
                     </div>
                 `)
             }
-
+            build.push(`</div>`);
             build.push(`</div>`);
             //스킬 빌드 끝
 
             //룬 빌드 시작
+            const runeData = await getRuneInfo();
+
+            let mainRuneInfo = [];
+            let mainRune;
+            let subRuneInfo = [];
+            let subRune;
+
+            for (let i = 0; i <5;i++){
+                if (runeData[i].id == targetParticipant.perks.styles[0].style){
+                    mainRune = runeData[i].slots;
+                    mainRuneInfo.push(runeData[i].icon);
+                    mainRuneInfo.push(runeData[i].name);
+                }
+                else if (runeData[i].id == targetParticipant.perks.styles[1].style){
+                    subRune = runeData[i].slots;
+                    subRuneInfo.push(runeData[i].icon);
+                    subRuneInfo.push(runeData[i].name);
+                }
+            }
+
+
             build.push(`
                 <div class="itemBuild">룬 빌드</div>
             `);
+            build.push(`<div class="row-lo itemDiv" style="display: flex; justify-content: space-between;">`);
+            build.push(`<div></div>`);
 
+            build.push(`
+                    <div class="column-lo" style="min-width: 180px; height: auto;">
+            `);
+
+            for (let i = 0;i<mainRune.length;i++){
+                if(i==0){
+                    build.push(`
+                    <div class="row-lo runeTitle"><img src="https://ddragon.leagueoflegends.com/cdn/img/${mainRuneInfo[0]}" class="runeImg">&nbsp;${mainRuneInfo[1]}</div>
+                    `);
+                }
+                build.push(`
+                        <div class="row-lo" style="width: auto; display: flex;justify-content: space-between;align-items: center;">
+                `);
+
+                for (let j = 0;j<mainRune[i].runes.length;j++) {
+                    if (ppi.includes(mainRune[i].runes[j].id)) {
+                        build.push(`
+                        <img src="https://ddragon.leagueoflegends.com/cdn/img/${mainRune[i].runes[j].icon}" class="runeImg">
+                        `);
+                    }
+                    else{
+                        build.push(`
+                        <img src="https://ddragon.leagueoflegends.com/cdn/img/${mainRune[i].runes[j].icon}" class="runeImg" style="filter: grayscale(1)">
+                        `);
+                    }
+
+                }
+                build.push(`
+                    </div>
+                `);
+            }
+            build.push(`
+                    </div>
+            `);
+
+
+            build.push(`
+                    <div class="column-lo" style="min-width: 180px; height: auto;">
+            `);
+
+            for (let i = 1;i<subRune.length;i++){
+                if(i==1){
+                    build.push(`
+                    <div class="row-lo runeTitle"><img src="https://ddragon.leagueoflegends.com/cdn/img/${subRuneInfo[0]}" class="runeImg">&nbsp;${subRuneInfo[1]}</div>
+                    `);
+                }
+
+                build.push(`
+                        <div class="row-lo" style="width: auto; display: flex;justify-content: space-between;align-items: center;">
+                `);
+
+
+                for (let j = 0;j<subRune[i].runes.length;j++) {
+                    if (spi.includes(subRune[i].runes[j].id)) {
+                        build.push(`
+                        <img src="https://ddragon.leagueoflegends.com/cdn/img/${subRune[i].runes[j].icon}" class="runeImg">
+                        `);
+                    }
+                    else{
+                        build.push(`
+                        <img src="https://ddragon.leagueoflegends.com/cdn/img/${subRune[i].runes[j].icon}" class="runeImg" style="filter: grayscale(1)">
+                        `);
+                    }
+
+                }
+                build.push(`
+                    </div>
+                `);
+            }
+            build.push(`
+                    </div>
+            `);
+
+            /*5008 5005 5007
+              5008 5002 5003
+              5001 5002 5003*/
+
+            build.push(`
+                    <div class="column-lo" style="min-width: 160px; height: auto;">
+            `);
+
+            build.push(`<div class="row-lo runeTitle" style="height: 47px;">파편</div>`);
+
+
+            for (let i  =0;i<3;i++){
+                build.push(`<div class="row-lo" style="width: auto; display: flex;justify-content: space-between;align-items: center;">`);
+                for (let j = 0;j<3;j++){
+                    if (statP[i] == stat[i*3+j]){
+                        build.push(`<img src="assets/img/icon/${stat[i*3+j]}.png" class="runeImg">`);
+                    }
+                    else {
+                        build.push(`<img src="assets/img/icon/${stat[i*3+j]}.png" class="runeImg" style="filter: grayscale(1)">`);
+                    }
+
+                }
+                build.push(`</div>`);
+            }
 
             build.push(`</div>`);
+            build.push(`<div></div>`);
+            build.push(`</div></div>`);
             //룬 빌드 끝
 
         } catch (error) {
