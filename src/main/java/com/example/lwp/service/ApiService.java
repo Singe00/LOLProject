@@ -145,5 +145,26 @@ public class ApiService {
         }
         return matchTimelineDto;
     }
+
+    public List<MasteryDto> FindMastery(String sn){
+
+
+        try {
+            //puuid 가져오기
+            String apiUrl1 = "https://kr.api.riotgames.com/lol/summoner/v4/summoners/by-name/"+sn+"?api_key="+RiotConstant.API_KEY;
+            RestTemplate restTemplate = new RestTemplate();
+            ResponseEntity<SummonerDto> response1= restTemplate.getForEntity(apiUrl1, SummonerDto.class);
+            String puuid = response1.getBody().getPuuid();
+
+            //matchid 가져오기
+            String apiUrl2 = "https://kr.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-puuid/"+puuid+"/top?count=10&api_key="+RiotConstant.API_KEY;
+            ResponseEntity<MasteryDto[]> masteryResponse = restTemplate.getForEntity(apiUrl2, MasteryDto[].class);
+            System.out.println(masteryResponse);
+            return Arrays.asList(masteryResponse.getBody());
+
+        } catch (HttpClientErrorException.NotFound e) {
+            return null;
+        }
+    }
 }
 

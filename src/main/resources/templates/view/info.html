@@ -288,6 +288,29 @@
           height: 40px;
           margin-bottom: 7px;
       }
+      .spinner {
+          border: 3px solid #f3f3f3; /* Light grey */
+          border-top: 3px solid #3498db; /* Blue */
+          border-radius: 50%;
+          width: 20px;
+          height: 20px;
+          animation: spin 1s linear infinite;
+          margin-right: 10px;
+      }
+      @keyframes spin {
+          0% {
+              transform: rotate(0deg);
+          }
+          100% {
+              transform: rotate(360deg);
+          }
+      }
+      .centered {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 100%; /* 너비를 100%로 설정하여 화면 가로 전체를 차지 */
+      }
 
   </style>
 
@@ -307,6 +330,7 @@
               <div class="font-bold" id="summonerLevel"></div>
             </div>
           </div>
+          <div class="spinner" id="sp1"></div>
           <div class="row-lo">
               <div style="height: 100%;">
                 <div class="row-lo" id="emblem"></div>
@@ -328,10 +352,10 @@
               </div>
           </div>
       </div>
-        <div style="width: 100%; display: flex; justify-content: flex-end;">
-            <div id="match-history" style="width: 75%;"></div>
+        <div class="row-lo" style="width: 100%; display: flex; justify-content: space-between; margin-top: 15px;">
+            <div class="column-lo" id="most-info" style="width: 23%; display: flex;justify-content: center;align-items: center;"><div class="spinner" id="sp3"></div></div>
+            <div class="column-lo" id="match-history" style="width: 75%; display: flex;justify-content: center;align-items: center;"><div class="spinner" id="sp2"></div></div>
         </div>
-
     </main>
 
 
@@ -398,6 +422,7 @@
 
       // 첫 번째 함수 실행, 소환사 기본 정보 생성
       function firstFunction() {
+        ss1();
         // URL에서 summonerName 쿼리 파라미터 값을 가져옴
         var summonerNameParam = new URLSearchParams(window.location.search).get("summonerName");
         // summonerName 요소가 존재하는지 확인
@@ -413,7 +438,6 @@
           })
                   .then(response => response.json())
                   .then(data => {
-
                     userId.push(data.id);
                     summonerNameElement.textContent = data.summonerName;
                     profileIconElement.innerHTML = "<img src='http://ddragon.leagueoflegends.com/cdn/"+version+"/img/profileicon/" + data.profileIcon + ".png' alt='Profile Icon' style='width: 100%; height: 100%; object-fit: cover; border-radius: 10px;'>";
@@ -434,6 +458,7 @@
                     tierElement.textContent = data.ranks[0].tier;
                     winsElement.textContent = data.ranks[0].wins+"승 ";
                     lossesElement.textContent = data.ranks[0].losses+"패";
+                    hs1();
                   })
                   .catch(error => {
                       generateEmpty();
@@ -445,6 +470,7 @@
 
       // 두 번째 함수 실행, 전적 리스트 생성
       function secondFunction() {
+          ss2();
           // URL에서 summonerName 쿼리 파라미터 값을 가져옴
           var summonerNameParam = new URLSearchParams(window.location.search).get("summonerName");
           // summonerName 요소가 존재하는지 확인
@@ -461,15 +487,44 @@
                   .then(response => response.json())
                   .then(md => {
                       matchData.push(...md);
-                      console.log("API Response:", md);
+                      console.log("MatchData Response:", md);
                       generateMatchHistory();
+                      hs2();
                   })
                   .catch(error => {
-                      console.error("API Error:", error);
+                      console.error("MatchData Error:", error);
                   });
           }
       }
       secondFunction();
+
+      // 두 번째 함수 실행, 전적 리스트 생성
+      function thirdFunction() {
+            ss3();
+            // URL에서 summonerName 쿼리 파라미터 값을 가져옴
+            var summonerNameParam = new URLSearchParams(window.location.search).get("summonerName");
+            // summonerName 요소가 존재하는지 확인
+            if (summonerNameParam) {
+                var userApiUrl = apiUrl + "/match"; // URL 파라미터를 제외한 URL
+
+                fetch(userApiUrl, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ summonerName: summonerNameParam }) // 요청 데이터를 JSON 형식으로 전달
+                })
+                    .then(response => response.json())
+                    .then(mastery => {
+                        generateMastery(mastery);
+                        hs3();
+                    })
+                    .catch(error => {
+                        console.error("Mastery Error:", mastery);
+                    });
+            }
+        }
+      thirdFunction();
     });
 
     soloRank.classList.add("selected");
@@ -608,9 +663,16 @@
           </div>
           ${await generateArrow(targetParticipant,match)}
         </div>
+        <div style="position: relative; height: 550px; width: 100%; text-align: center; display: none;" id="sp${match.metadata.matchId}">
+            <div class="spinner" style="position: absolute;top: 50%;left: 50%;"></div>
+        </div>
       `;
             matchHistoryContainer.appendChild(matchElement);
         }
+    }
+    //숙련도 리스트 생성
+    function generateMastery(mastery){
+        console.log("Mastery Response:", mastery);
     }
     //블루팀 플레이어 리스트 생성
     function generatePlayerInfo1(match) {
@@ -782,7 +844,7 @@
         const backgroundColor = targetParticipant.win ? 'rgba(49, 142, 239, 0.6)' : 'rgba(244, 88, 78, 0.6)';
 
         arrow.push(`
-        <div style="display: flex; margin-left: 10px;" id="${match.metadata.matchId}" onclick="generateDetail('${match.metadata.matchId}', '${tp}')">
+        <div style="display: flex; margin-left: 10px;" id="${match.metadata.matchId}" onclick="generateDetail('${match.metadata.matchId}', '${tp}');">
             <div class="arrow" style="border-color:${backgroundColor};" ></div>
         </div>
     `);
@@ -792,7 +854,6 @@
     }
     //추가정보 생성
     async function generateDetail(matchId,tp) {
-
         const targetMatch = findMatchById(matchId);
         const result = document.getElementById(matchId);
         const deg = window.getComputedStyle(result, '::after').getPropertyValue('--toggle-degree');
@@ -803,6 +864,7 @@
 
 
         if (deg === '135deg') {
+            sds(`sp${matchId}`);
             document.getElementById(matchId).style.setProperty('--toggle-degree', '315deg');
 
             if (!detail) {
@@ -844,12 +906,15 @@
                 </div>
             `;
                 parentDetail.after(detail);
+                hds(`sp${matchId}`);
                 // 개요 탭을 보이게 설정
                 const tabOutline = document.getElementById('tabOutline' + matchId);
                 tabOutline.classList.remove('hidden');
                 tabOutline.classList.add('active');
                 detail.style.display = 'block';
-            } else {
+            }
+            else {
+                hds(`sp${matchId}`);
                 // 숨겨진 탭이 있으면 모두 숨김
                 const hiddenTabs = detail.querySelectorAll('.tab-pane.hidden');
                 for (const tab of hiddenTabs) {
@@ -863,7 +928,9 @@
 
                 detail.style.display = 'block';
             }
-        } else {
+        }
+        else {
+            hds(`sp${matchId}`);
             document.getElementById(matchId).style.setProperty('--toggle-degree', '135deg');
             // 현재 전적 리스트의 추가 정보를 숨김
             if (detail) {
@@ -1930,6 +1997,30 @@
             console.error('Error fetching data:', error);
             throw error; // Re-throw the error to be caught by the caller, if needed
         }
+    }
+    function ss1() {
+        document.getElementById('sp1').style.display='block';
+    }
+    function hs1() {
+        document.getElementById('sp1').style.display='none';
+    }
+    function ss2() {
+        document.getElementById('sp1').style.display='block';
+    }
+    function hs2() {
+        document.getElementById('sp2').style.display='none';
+    }
+    function ss3() {
+        document.getElementById('sp3').style.display='block';
+    }
+    function hs3() {
+        document.getElementById('sp3').style.display='none';
+    }
+    function sds(spid) {
+        document.getElementById(spid).style.display='block';
+    }
+    function hds(spid) {
+        document.getElementById(spid).style.display='none';
     }
   </script>
 

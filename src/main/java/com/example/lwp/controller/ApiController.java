@@ -37,7 +37,17 @@ public class ApiController {
             return null;
         }
         return m;
+    }
 
+    @PostMapping("/mastery")
+    @ResponseBody
+    public List<MasteryDto> mastery(@RequestBody SearchDto request) {
+        List<MasteryDto> m = apiService.FindMastery(request.getSummonerName());
+        System.out.println(m);
+        if (m == null){
+            return null;
+        }
+        return m;
     }
 
     @PostMapping("/timeline")
