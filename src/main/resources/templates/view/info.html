@@ -311,6 +311,12 @@
           justify-content: center;
           width: 100%; /* 너비를 100%로 설정하여 화면 가로 전체를 차지 */
       }
+      .sideLayout{
+          width: 100%;
+          height: 100%;
+          justify-content: start;
+          align-items: center;
+      }
 
   </style>
 
@@ -322,7 +328,7 @@
                 <button onclick="callApi()" class="api-button" style=""></button>
             </label>
         </div>
-      <div id="errorAppend" class="row-lo" style="display:flex; justify-content: space-between; width: 100%; margin-top: 20px">
+        <div id="errorAppend" class="row-lo" style="display:flex; justify-content: space-between; width: 100%; margin-top: 20px">
           <div class="row-lo">
             <div id="profileIcon"></div>
             <div>
@@ -353,8 +359,8 @@
           </div>
       </div>
         <div class="row-lo" style="width: 100%; display: flex; justify-content: space-between; margin-top: 15px;">
-            <div class="column-lo" id="most-info" style="width: 23%; display: flex;justify-content: center;align-items: center;"><div class="spinner" id="sp3"></div></div>
-            <div class="column-lo" id="match-history" style="width: 75%; display: flex;justify-content: center;align-items: center;"><div class="spinner" id="sp2"></div></div>
+            <div class="column-lo" id="most-info" style="width: 360px; display: flex;justify-content: center;align-items: center;"><div class="spinner" id="sp3"></div></div>
+            <div class="column-lo" id="match-history" style="width: 730px; display: flex;justify-content: center;align-items: center;"><div class="spinner" id="sp2"></div></div>
         </div>
     </main>
 
@@ -408,6 +414,7 @@
     const flexRank = document.getElementById("flexRank");
     const matchHistoryContainer = document.getElementById('match-history');
     const errorAppend = document.getElementById('errorAppend');
+    const sideInfoContainer = document.getElementById('most-info');
 
     let targetId;
 
@@ -422,7 +429,7 @@
 
       // 첫 번째 함수 실행, 소환사 기본 정보 생성
       function firstFunction() {
-        ss1();
+        sds("sp1");
         // URL에서 summonerName 쿼리 파라미터 값을 가져옴
         var summonerNameParam = new URLSearchParams(window.location.search).get("summonerName");
         // summonerName 요소가 존재하는지 확인
@@ -458,7 +465,7 @@
                     tierElement.textContent = data.ranks[0].tier;
                     winsElement.textContent = data.ranks[0].wins+"승 ";
                     lossesElement.textContent = data.ranks[0].losses+"패";
-                    hs1();
+                    hds("sp1");
                   })
                   .catch(error => {
                       generateEmpty();
@@ -470,7 +477,7 @@
 
       // 두 번째 함수 실행, 전적 리스트 생성
       function secondFunction() {
-          ss2();
+          sds("sp2");
           // URL에서 summonerName 쿼리 파라미터 값을 가져옴
           var summonerNameParam = new URLSearchParams(window.location.search).get("summonerName");
           // summonerName 요소가 존재하는지 확인
@@ -489,7 +496,7 @@
                       matchData.push(...md);
                       console.log("MatchData Response:", md);
                       generateMatchHistory();
-                      hs2();
+                      hds("sp2");
                   })
                   .catch(error => {
                       console.error("MatchData Error:", error);
@@ -498,31 +505,15 @@
       }
       secondFunction();
 
-      // 두 번째 함수 실행, 전적 리스트 생성
-      function thirdFunction() {
-            ss3();
-            // URL에서 summonerName 쿼리 파라미터 값을 가져옴
-            var summonerNameParam = new URLSearchParams(window.location.search).get("summonerName");
-            // summonerName 요소가 존재하는지 확인
-            if (summonerNameParam) {
-                var userApiUrl = apiUrl + "/match"; // URL 파라미터를 제외한 URL
+      // 세 번째 함수 실행, 숙련도 리스트 생성
+      async function thirdFunction() {
+          sds("sp3");
 
-                fetch(userApiUrl, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({ summonerName: summonerNameParam }) // 요청 데이터를 JSON 형식으로 전달
-                })
-                    .then(response => response.json())
-                    .then(mastery => {
-                        generateMastery(mastery);
-                        hs3();
-                    })
-                    .catch(error => {
-                        console.error("Mastery Error:", mastery);
-                    });
-            }
+          // URL에서 summonerName 쿼리 파라미터 값을 가져옴
+          var summonerNameParam = new URLSearchParams(window.location.search).get("summonerName");
+          console.log("너의 이름은 / ",summonerNameParam);
+          await generateSideContainer(summonerNameParam);
+          hds("sp3");
         }
       thirdFunction();
     });
@@ -671,8 +662,59 @@
         }
     }
     //숙련도 리스트 생성
-    function generateMastery(mastery){
-        console.log("Mastery Response:", mastery);
+    async function generateSideContainer(summonerName){
+
+        const sideElement = document.createElement('div');
+        sideElement.classList.add("column-lo");
+        sideElement.classList.add('sideLayout');
+
+        sideElement.innerHTML = `
+            <div class="column-lo" style="width: 100%; align-items: center;">
+                ${await generateMastery(summonerName)}
+            </div>
+            <div class="column-lo" style="width: 100%; align-items: center;">
+                ${await generateRating(summonerName)}
+            </div>
+        `;
+
+        sideInfoContainer.appendChild(sideElement)
+    }
+    async function generateMastery(summonerName){
+        const mastery = [];
+        const data = await callMastery(summonerName);
+
+
+
+        console.log(data);
+        for (let i = 0;i<data.length;i++){
+
+            const gameCreationDate = new Date(data[i].lastPlayTime);
+            const month = gameCreationDate.getMonth() + 1; // 월은 0부터 시작하므로 1을 더해줍니다
+            const day = gameCreationDate.getDate();
+
+            mastery.push(`
+                <div class="row-lo">
+                    <img src='${ddragon}${version}/img/champion/${data[i].championName}.png' style='width: 40px; height: 40px; overflow: hidden; border-radius: 50%; clip-path: inset(3px);'>
+                    <div class="column-lo">
+                        <div>숙련도 레벨 : ${data[i].championLevel}</div>
+                        <div>숙련도 점수 : ${data[i].championPoints}</div>
+                        <div>마지막 플레이 : ${month}월 ${day}일</div>
+                    </div>
+                </div>
+            `)
+        }
+
+        return mastery.join('');
+    }
+    async function generateRating(summonerName){
+        const rating = [];
+/*
+        const data = await callMastery(summonerName);
+*/
+
+        rating.push(`여기는 랭크 전적 정보 란입니다.`)
+
+        return rating.join('');
     }
     //블루팀 플레이어 리스트 생성
     function generatePlayerInfo1(match) {
@@ -1371,7 +1413,7 @@
         let pid=-1;
 
         try {
-            const data = await main(matchId);
+            const data = await callBuild(matchId);
             const champD = await fetchChampionData(cn);
 
             //데이터 처리
@@ -1955,16 +1997,6 @@
             throw error;
         }
     }
-    const main = async (matchId) => {
-
-        try {
-            const result = await callBuild(matchId);
-
-            return result;
-        } catch (error) {
-            console.error('Error in generating build:', error);
-        }
-    }
     async function fetchChampionData(chamN) {
         const jsonUrl = `${ddragon}${version}/data/en_US/champion/${chamN}.json`;
 
@@ -1998,23 +2030,27 @@
             throw error; // Re-throw the error to be caught by the caller, if needed
         }
     }
-    function ss1() {
-        document.getElementById('sp1').style.display='block';
-    }
-    function hs1() {
-        document.getElementById('sp1').style.display='none';
-    }
-    function ss2() {
-        document.getElementById('sp1').style.display='block';
-    }
-    function hs2() {
-        document.getElementById('sp2').style.display='none';
-    }
-    function ss3() {
-        document.getElementById('sp3').style.display='block';
-    }
-    function hs3() {
-        document.getElementById('sp3').style.display='none';
+    //숙련도 비동기 api요청
+    const callMastery = async (summonerName) => {
+        try {
+            const response = await fetch(apiUrl + "/mastery", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ summonerName: summonerName })
+            });
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error("API Error:", error);
+            throw error;
+        }
     }
     function sds(spid) {
         document.getElementById(spid).style.display='block';
@@ -2025,7 +2061,6 @@
   </script>
 
 </th:block>
-
 
 
 </html>

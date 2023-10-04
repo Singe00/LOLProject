@@ -1,10 +1,13 @@
 package com.example.lwp.service;
 
 import com.example.lwp.config.RiotConstant;
+import com.example.lwp.domain.Champion;
 import com.example.lwp.dto.*;
+import com.example.lwp.repository.ChampionRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
@@ -21,6 +24,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ApiService {
 
+
+    @Autowired
+    private final ChampionRepository championRepository;
 
     public SummonerInfoDto FindSummonerInfo(String sn){
 
@@ -159,7 +165,14 @@ public class ApiService {
             //matchid 가져오기
             String apiUrl2 = "https://kr.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-puuid/"+puuid+"/top?count=10&api_key="+RiotConstant.API_KEY;
             ResponseEntity<MasteryDto[]> masteryResponse = restTemplate.getForEntity(apiUrl2, MasteryDto[].class);
-            System.out.println(masteryResponse);
+
+            for (int i = 0;i<masteryResponse.getBody().length;i++){
+                Champion c = championRepository.findChampionByChampionId(masteryResponse.getBody()[i].getChampionId());
+                masteryResponse.getBody()[i].setChampionName(c.getChampionName());
+
+            }
+
+
             return Arrays.asList(masteryResponse.getBody());
 
         } catch (HttpClientErrorException.NotFound e) {

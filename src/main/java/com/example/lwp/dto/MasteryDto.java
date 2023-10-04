@@ -9,6 +9,8 @@ import lombok.*;
 @Data
 public class MasteryDto {
     private long championId;
+    private long lastPlayTime;
     private int championLevel;
     private int championPoints;
+    private String championName;
 }
