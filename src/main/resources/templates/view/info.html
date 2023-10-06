@@ -284,8 +284,8 @@
           font-weight: bold;
       }
       .runeImg{
-          width: 40px;
-          height: 40px;
+          width: 30px;
+          height: 30px;
           margin-bottom: 7px;
       }
       .spinner {
@@ -317,6 +317,26 @@
           justify-content: start;
           align-items: center;
       }
+      .sideDiv{
+          width: 90%;
+          align-items: center;
+          background-color: #2c2c2f;
+          border-radius: 10px;
+          padding: 15px;
+          margin-top: 5px;
+      }
+      .sideSelect {
+          cursor: pointer;
+          font-size: 15px;
+          text-align: center;
+          border-radius: 8px;
+          font-weight: bold;
+          width: 100px;
+          height: 30px;
+          margin-top: 5px;
+          line-height: 30px;
+      }
+
 
   </style>
 
@@ -360,7 +380,7 @@
       </div>
         <div class="row-lo" style="width: 100%; display: flex; justify-content: space-between; margin-top: 15px;">
             <div class="column-lo" id="most-info" style="width: 360px; display: flex;justify-content: center;align-items: center;"><div class="spinner" id="sp3"></div></div>
-            <div class="column-lo" id="match-history" style="width: 730px; display: flex;justify-content: center;align-items: center;"><div class="spinner" id="sp2"></div></div>
+            <div class="column-lo" id="match-history" style="min-width: 730px; display: flex;justify-content: center;align-items: center;"><div class="spinner" id="sp2"></div></div>
         </div>
     </main>
 
@@ -536,6 +556,9 @@
     //에러 페이지 생성
     async function generateEmpty() {
 
+        hds("sp1");
+        hds("sp2");
+        hds("sp3");
         const matchElement = document.createElement('div');
 
         matchElement.innerHTML = `
@@ -626,7 +649,7 @@
                             <div class="column-lo" style="min-width: 90px">
                               <div>제어와드 : ${targetParticipant.visionWardsBoughtInGame}</div>
                               <div>시야점수 : ${targetParticipant.visionScore}</div>
-                              <div>cs ${(targetParticipant.totalMinionsKilled + targetParticipant.neutralMinionsKilled)} (${((targetParticipant.totalMinionsKilled+targetParticipant.neutralMinionsKilled) / min).toFixed(1)})</div>
+                              <div>CS ${(targetParticipant.totalMinionsKilled + targetParticipant.neutralMinionsKilled)} (${((targetParticipant.totalMinionsKilled+targetParticipant.neutralMinionsKilled) / min).toFixed(1)})</div>
                             </div>
                         </div>
                   </div>
@@ -640,11 +663,11 @@
               </div>
               <!--플레이어 정보-->
               <div class="row-lo">
-                <div class="row-lo" style="justify-content: space-between; min-width:180px;">
-                    <div class="column-lo" style="margin: 5px; font-size: 12px; max-width: 83px;">
+                <div class="row-lo" style="justify-content: space-between; width:100%;">
+                    <div class="column-lo" style="margin: 5px; font-size: 12px; min-width: 83px; max-width: 83px;">
                         ${generatePlayerInfo1(match)}
                     </div>
-                    <div class="column-lo" style="margin: 5px; font-size: 12px; max-width: 83px;">
+                    <div class="column-lo" style="margin: 5px; font-size: 12px; min-width: 83px; max-width: 83px;">
                         ${generatePlayerInfo2(match)}
                     </div>
                 </div>
@@ -669,11 +692,17 @@
         sideElement.classList.add('sideLayout');
 
         sideElement.innerHTML = `
-            <div class="column-lo" style="width: 100%; align-items: center;">
-                ${await generateMastery(summonerName)}
-            </div>
-            <div class="column-lo" style="width: 100%; align-items: center;">
-                ${await generateRating(summonerName)}
+            <div class="column-lo" style="width: 100%;align-items: start; justify-content: left;">
+                <div class="column-lo sideDiv">
+                    <div style="font-size: 17px; font-weight: bold; text-align: left; margin-left: 35px; width: 100%;">숙련도 TOP 10</div>
+                    <div style="background: white; width: 90%; height: 1px;margin: 5px;"></div>
+                    ${await generateMastery(summonerName)}
+                </div>
+                <div class="column-lo sideDiv" style="margin-top: 15px;">
+                    <div style="font-size: 17px; font-weight: bold; text-align: left; margin-left: 35px; width: 100%;">최근 랭크 정보</div>
+                    <div style="background: white; width: 90%; height: 1px;margin: 5px;"></div>
+                    ${await generateRating(summonerName)}
+                </div>
             </div>
         `;
 
@@ -683,8 +712,6 @@
         const mastery = [];
         const data = await callMastery(summonerName);
 
-
-
         console.log(data);
         for (let i = 0;i<data.length;i++){
 
@@ -693,13 +720,18 @@
             const day = gameCreationDate.getDate();
 
             mastery.push(`
-                <div class="row-lo">
-                    <img src='${ddragon}${version}/img/champion/${data[i].championName}.png' style='width: 40px; height: 40px; overflow: hidden; border-radius: 50%; clip-path: inset(3px);'>
-                    <div class="column-lo">
-                        <div>숙련도 레벨 : ${data[i].championLevel}</div>
-                        <div>숙련도 점수 : ${data[i].championPoints}</div>
-                        <div>마지막 플레이 : ${month}월 ${day}일</div>
+                <div class="row-lo" style="width: 90%; height: 55px; align-items: center; justify-content: space-between;">
+                    <div class="row-lo">
+                        <img src='${ddragon}${version}/img/champion/${data[i].championName}.png' style='width: 45px; height: 45px; overflow: hidden; border-radius: 50%; margin-right: 13px; clip-path: inset(3px);'>
+                        <div class="column-lo">
+                            <div class="row-lo" style="text-align: center; justify-content: space-between; width:150px;">
+                                <div style="font-size: 15px; font-weight: bold;">${data[i].championName}</div>
+                                <div>${addCommasToNumber(data[i].championPoints)}점</div>
+                            </div>
+                            <div style="font-size: 12px; text-align: left;">마지막 플레이 : ${month}월 ${day}일</div>
+                        </div>
                     </div>
+                    <img src="assets/img/mastery/lv${data[i].championLevel}.png" style='width: 45px; height: auto;'>
                 </div>
             `)
         }
@@ -708,10 +740,21 @@
     }
     async function generateRating(summonerName){
         const rating = [];
-/*
-        const data = await callMastery(summonerName);
-*/
 
+        const data = await callRating(summonerName);
+
+        console.log(data);
+
+        rating.push(`
+            <div class="column-lo">
+                <div class="row-lo">
+                    <div class="sideSelect" style="margin-right: 20px; background-color: #393a3c;" id="soloSide" onclick="toggleSide('soloSide')">솔로랭크</div>
+                    <div class="sideSelect" style="color:gray;" id="flexSide" onclick="toggleSide('flexSide')">자유랭크</div>
+                </div>
+                <div id="soloSideTab">솔로탭</div>
+                <div id="flexSideTab" style="display: none;">자유탭</div>
+            </div>
+        `)
         rating.push(`여기는 랭크 전적 정보 란입니다.`)
 
         return rating.join('');
@@ -929,7 +972,7 @@
                     <div></div>
                     <div></div>
                 </div>
-                <div class="tab-content" style="margin-bottom: 15px;">
+                <div class="tab-content" style="margin-bottom: 15px; max-width: 720px;">
                     <div id="tabOutline${matchId}" class="tab-pane coulmn-lo">
                         <div class="column-lo" style="display: flex; align-items: center; margin-bottom: 15px;">
                             ${generateOutline(detailInfo)}
@@ -1466,14 +1509,14 @@
                 build.push(`
                     <div class="column-lo" style="text-align: center; margin: 0px;">
                         <div class="row-lo" style="display: flex;justify-content: center;align-items: center">
-                            <div class="row-lo" style="align-items: center; padding: 8px; background-color: #1c1c1f;border-radius: 10px;">
+                            <div class="row-lo" style="align-items: center; padding: 4px; background-color: #1c1c1f;border-radius: 10px;">
 
                 `)
 
                 minuteItemMap[minute].forEach(item => {
                     const itemImageSrc = `${ddragon}${version}/img/item/${item.itemId}.png`;
                     build.push(`
-                        <img src='${itemImageSrc}' style='width: 40px; height: 40px; margin: 1.5px; overflow: hidden; border-radius: 10px;'>
+                        <img src='${itemImageSrc}' style='width: 30px; height: 30px; margin: 1.5px; overflow: hidden; border-radius: 10px;'>
                     `)
                 });
 
@@ -1482,7 +1525,7 @@
                 `)
 
                 if (minute != lastm){
-                    build.push(`<div style="background-color: #1c1c1f; padding: 2px;"><img src="assets/img/icon/icon-arrow.png" style="height: 20px; width: auto; color: white; margin: 3px;"></div>`);
+                    build.push(`<div style="background-color: #1c1c1f; padding: 2px;"><img src="assets/img/icon/icon-arrow.png" style="height: 15px; width: auto; color: white; margin: 3px;"></div>`);
                 }
 
                 build.push(`
@@ -1526,7 +1569,7 @@
                             build.push(`<div><img src="assets/img/icon/icon-arrow.png" style="height: 15px; width: auto; color: white; margin: 3px;"></div>`);
                         }
                         build.push(`
-                            <div style="align-items: center; padding: 8px; background-color: #1c1c1f;border-radius: 10px; position: relative;">
+                            <div style="align-items: center; padding: 4px; background-color: #1c1c1f;border-radius: 10px; position: relative;">
                                 <img src='${ddragon}${version}/img/spell/${skill[skillList[i].skillSlot-1]}.png' style="width: 30px;height: 30px; border-radius: 10px;">
                                 <div style="text-align:center; position: absolute; right: 0px;bottom: 0px; font-size: 10px; background-color: black; border-radius: 5px; width: 17px; height: 17px;">${skillKey}</div>
                             </div>
@@ -1552,7 +1595,7 @@
                 for (let i =0;i<evolveList.length;i++){
                     let skillKey = ["Q", "W", "E","R"][evolveList[i].skillSlot - 1] || "Unknown";
                     build.push(`
-                            <div style="align-items: center; padding: 8px; background-color: #5f1c1f;border-radius: 10px; position: relative;">
+                            <div style="align-items: center; padding: 4px; background-color: #5f1c1f;border-radius: 10px; position: relative;">
                                 <img src='${ddragon}${version}/img/spell/${skill[evolveList[i].skillSlot-1]}.png' style="width: 30px;height: 30px; border-radius: 10px;">
                                 <div style="text-align:center; position: absolute; right: 0px;bottom: 0px; font-size: 10px; background-color: black; border-radius: 5px; width: 17px; height: 17px;">${skillKey}</div>
                             </div>
@@ -1577,14 +1620,14 @@
                 let skillKey = ["Q", "W", "E", "R"][skillList[i].skillSlot - 1] || "Unknown";
                 build.push(`
                     <div class="row-lo" style="display: flex;justify-content: center;align-items: center;">
-                        <div style="align-items: center; padding: 8px; background-color: #1c1c1f;border-radius: 10px; margin-bottom: 10px; position: relative;">
-                            <img src='${ddragon}${version}/img/spell/${skill[skillList[i].skillSlot-1]}.png' style="width: 40px;height: 40px; border-radius: 10px;">
+                        <div style="align-items: center; padding: 4px; background-color: #1c1c1f;border-radius: 10px; margin-bottom: 10px; position: relative;">
+                            <img src='${ddragon}${version}/img/spell/${skill[skillList[i].skillSlot-1]}.png' style="width: 30px;height: 30px; border-radius: 10px;">
                             <div style="text-align:center; position: absolute; right: 0px;bottom: 0px; font-size: 10px; background-color: black; border-radius: 5px; width: 17px; height: 17px;">${skillKey}</div>
                         </div>
                 `)
 
                 if (i != (skillList.length-1)){
-                    build.push(`<div style="background-color: #1c1c1f; padding: 2px;"><img src="assets/img/icon/icon-arrow.png" style="height: 20px; width: auto; color: white; margin: 3px;"></div>`);
+                    build.push(`<div style="background-color: #1c1c1f; padding: 2px;"><img src="assets/img/icon/icon-arrow.png" style="height: 15px; width: auto; color: white; margin: 3px;"></div>`);
                 }
 
                 build.push(`
@@ -1620,11 +1663,11 @@
             build.push(`
                 <div class="itemBuild">룬 빌드</div>
             `);
-            build.push(`<div class="row-lo itemDiv" style="display: flex; justify-content: space-between;">`);
-            build.push(`<div></div>`);
+            build.push(`<div class="row-lo itemDiv" style="display: flex; justify-content: space-between; padding: 10px;">`);
+            build.push(`<div style="width: 30px;"></div>`);
 
             build.push(`
-                    <div class="column-lo" style="min-width: 180px; height: auto;">
+                    <div class="column-lo" style="min-width: 160px; height: auto;">
             `);
 
             for (let i = 0;i<mainRune.length;i++){
@@ -1660,7 +1703,7 @@
 
 
             build.push(`
-                    <div class="column-lo" style="min-width: 180px; height: auto;">
+                    <div class="column-lo" style="min-width: 160px; height: auto;">
             `);
 
             for (let i = 1;i<subRune.length;i++){
@@ -1701,10 +1744,10 @@
               5001 5002 5003*/
 
             build.push(`
-                    <div class="column-lo" style="min-width: 160px; height: auto;">
+                    <div class="column-lo" style="min-width: 140px; height: auto;">
             `);
 
-            build.push(`<div class="row-lo runeTitle" style="height: 47px;">파편</div>`);
+            build.push(`<div class="row-lo runeTitle" style="height: 37px;">파편</div>`);
 
 
             for (let i  =0;i<3;i++){
@@ -1722,7 +1765,7 @@
             }
 
             build.push(`</div>`);
-            build.push(`<div></div>`);
+            build.push(`<div style="width: 30px;"></div>`);
             build.push(`</div></div>`);
             //룬 빌드 끝
 
@@ -2052,12 +2095,50 @@
             throw error;
         }
     }
+    //랭크 요약 비동기 api요청
+    const callRating = async (summonerName) => {
+        try {
+            const response = await fetch(apiUrl + "/rating", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ summonerName: summonerName })
+            });
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error("API Error:", error);
+            throw error;
+        }
+    }
     function sds(spid) {
         document.getElementById(spid).style.display='block';
     }
     function hds(spid) {
         document.getElementById(spid).style.display='none';
     }
+    // JavaScript 함수 추가
+    function toggleSide(tabId) {
+        // 모든 탭 숨기기
+        document.getElementById('soloSideTab').style.display = 'none';
+        document.getElementById('flexSideTab').style.display = 'none';
+        document.getElementById('soloSide').style.color = 'gray';
+        document.getElementById('flexSide').style.color = 'gray';
+        document.getElementById('soloSide').style.background = '#2c2c2f';
+        document.getElementById('flexSide').style.background = '#2c2c2f';
+
+        document.getElementById(tabId).style.background = '#393a3c';
+        document.getElementById(tabId).style.color = 'white';
+        // 클릭한 탭 보이기
+        document.getElementById(tabId + 'Tab').style.display = 'block';
+    }
+
   </script>
 
 </th:block>

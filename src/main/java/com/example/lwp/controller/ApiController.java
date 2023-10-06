@@ -50,6 +50,17 @@ public class ApiController {
         return m;
     }
 
+    @PostMapping("/rating")
+    @ResponseBody
+    public List<MasteryDto> rating(@RequestBody SearchDto request) {
+        List<MasteryDto> m = apiService.FindMastery(request.getSummonerName());
+
+        if (m == null){
+            return null;
+        }
+        return m;
+    }
+
     @PostMapping("/timeline")
     @ResponseBody
     public MatchTimelineDto search(@RequestBody TimelineDto request) {

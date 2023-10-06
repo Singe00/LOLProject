@@ -60,7 +60,7 @@
 
 
             <label class="custom-input-box">
-                <input type="text" id="inputValue" class="input-field" placeholder="소환사 이름을 입력해주세요." onkeydown="handleEnterKey(event)" onclick="highlightInput()">
+                <input type="text" id="inputValue" class="input-field" placeholder="소환사 이름을 입력해주세요." onkeydown="handleEnterKey(event)" onclick="highlightInput()" autofocus="autofocus">
                 <button onclick="callApi()" class="api-button" style=""></button>
             </label>
 
@@ -104,6 +104,7 @@
                 window.location.href = `/info?summonerName=${encodeURIComponent(inputValue)}`;
             }
         }
+
 
     </script>
 
