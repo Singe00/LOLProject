@@ -32,7 +32,7 @@ public class ApiController {
     @PostMapping("/match")
     @ResponseBody
     public List<MatchDto> search(@RequestBody SearchDto request) {
-        List<MatchDto> m = apiService.FindMatch(request.getSummonerName());
+        List<MatchDto> m = apiService.FindMatch(request.getSummonerName(),request.getIndex());
         if (m == null){
             return null;
         }
@@ -42,17 +42,6 @@ public class ApiController {
     @PostMapping("/mastery")
     @ResponseBody
     public List<MasteryDto> mastery(@RequestBody SearchDto request) {
-        List<MasteryDto> m = apiService.FindMastery(request.getSummonerName());
-
-        if (m == null){
-            return null;
-        }
-        return m;
-    }
-
-    @PostMapping("/rating")
-    @ResponseBody
-    public List<MasteryDto> rating(@RequestBody SearchDto request) {
         List<MasteryDto> m = apiService.FindMastery(request.getSummonerName());
 
         if (m == null){

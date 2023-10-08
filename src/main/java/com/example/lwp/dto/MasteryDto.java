@@ -13,4 +13,5 @@ public class MasteryDto {
     private int championLevel;
     private int championPoints;
     private String championName;
+    private String championNameKr;
 }

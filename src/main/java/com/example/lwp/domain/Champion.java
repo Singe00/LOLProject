@@ -18,8 +18,15 @@ public class Champion {
 
     @Id
     @Column(name = "championid")
-    private Long championId;
+    private int championId;
 
     @Column(name = "championname")
     private String championName;
+
+    @Column(name = "championnamekr")
+    private String championNameKr;
+    @Column(name = "nickname")
+    private String nickName;
+    @Column(name = "rotation")
+    private int rotation;
 }

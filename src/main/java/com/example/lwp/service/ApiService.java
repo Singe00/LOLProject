@@ -84,7 +84,7 @@ public class ApiService {
         }
     }
 
-    public List<MatchDto> FindMatch(String sn){
+    public List<MatchDto> FindMatch(String sn,int index){
 
         try {
             //puuid 가져오기
@@ -93,8 +93,12 @@ public class ApiService {
             ResponseEntity<SummonerDto> response1= restTemplate.getForEntity(apiUrl1, SummonerDto.class);
             String puuid = response1.getBody().getPuuid();
 
+
+            int startRange = index*10;
+            int endRange = startRange+10;
+
             //matchid 가져오기
-            String apiUrl2 = "https://asia.api.riotgames.com/lol/match/v5/matches/by-puuid/"+puuid+"/ids?start=0&count=10&api_key="+RiotConstant.API_KEY;
+            String apiUrl2 = "https://asia.api.riotgames.com/lol/match/v5/matches/by-puuid/"+puuid+"/ids?start="+startRange+"&count="+endRange+"&api_key="+RiotConstant.API_KEY;
             restTemplate = new RestTemplate();
             ResponseEntity<String[]> response2= restTemplate.getForEntity(apiUrl2, String[].class);
             String[] matchIds = response2.getBody();
@@ -168,7 +172,7 @@ public class ApiService {
             for (int i = 0;i<masteryResponse.getBody().length;i++){
                 Champion c = championRepository.findChampionByChampionId(masteryResponse.getBody()[i].getChampionId());
                 masteryResponse.getBody()[i].setChampionName(c.getChampionName());
-
+                masteryResponse.getBody()[i].setChampionNameKr(c.getChampionNameKr());
             }
 
 
@@ -179,57 +183,5 @@ public class ApiService {
         }
     }
 
-    public List<MatchDto> FindRating(String sn){
-
-        try {
-            //puuid 가져오기
-            String apiUrl1 = "https://kr.api.riotgames.com/lol/summoner/v4/summoners/by-name/"+sn+"?api_key="+RiotConstant.API_KEY;
-            RestTemplate restTemplate = new RestTemplate();
-            ResponseEntity<SummonerDto> response1= restTemplate.getForEntity(apiUrl1, SummonerDto.class);
-            String puuid = response1.getBody().getPuuid();
-
-            //matchid 가져오기
-            String apiUrl2 = " https://asia.api.riotgames.com/lol/match/v5/matches/by-puuid/"+puuid+" /ids?queue=420&start=0&count=100&api_key="+RiotConstant.API_KEY;
-            restTemplate = new RestTemplate();
-            ResponseEntity<String[]> response2= restTemplate.getForEntity(apiUrl2, String[].class);
-            String[] matchIds = response2.getBody();
-
-            List<String> matchIdsList = Arrays.asList(matchIds);
-            List<MatchDto> matchDtoList = new ArrayList<>();
-
-            for(String mi : matchIdsList){
-                MatchDto matchDto = new MatchDto();
-
-                try {
-                    String apiUrl3 = "https://asia.api.riotgames.com/lol/match/v5/matches/"+mi+"?api_key="+RiotConstant.API_KEY;
-                    ObjectMapper objectMapper = new ObjectMapper();
-                    matchDto = objectMapper.readValue(new URL(apiUrl3), MatchDto.class);
-
-
-                    if (matchDto.getInfo().getGameMode().equals("CLASSIC")){
-                        if (matchDto.getInfo().getQueueId()==420){
-                            matchDto.getInfo().setGameMode("솔로 랭크");
-                        }else if (matchDto.getInfo().getQueueId()==430){
-                            matchDto.getInfo().setGameMode("일반 게임");
-                        }else if (matchDto.getInfo().getQueueId()==440){
-                            matchDto.getInfo().setGameMode("자유 랭크");
-                        }
-                    } else if (matchDto.getInfo().getGameMode().equals("ARAM")) {
-                        matchDto.getInfo().setGameMode("칼바람");
-                    } else if (matchDto.getInfo().getGameMode().equals("CHERRY")) {
-                        matchDto.getInfo().setGameMode("아레나");
-                    } else {
-                        matchDto.getInfo().setGameMode("특별 모드");
-                    }
-                    matchDtoList.add(matchDto);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            return matchDtoList;
-        }catch (HttpClientErrorException.NotFound e) {
-            return null;
-        }
-    }
 }
 

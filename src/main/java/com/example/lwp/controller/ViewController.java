@@ -23,6 +23,11 @@ public class ViewController {
         return "view/about";
     }
 
+    @GetMapping("/champion")
+    public String champion(){
+        return "view/champion";
+    }
+
     @GetMapping("//riot.txt")
     public String riot(){
         return "view/riot";

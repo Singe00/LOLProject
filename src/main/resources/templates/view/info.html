@@ -336,7 +336,19 @@
           margin-top: 5px;
           line-height: 30px;
       }
-
+      .more{
+          width: 100%;
+          height: 40px;
+          border-width: 1px;
+          border-style: solid;
+          border-color: #4d5154;
+          background-color: #31313c;
+          border-radius: 5px;
+          display: none;
+          font-weight: bold;
+          color: white;
+          text-align: center;
+      }
 
   </style>
 
@@ -380,8 +392,12 @@
       </div>
         <div class="row-lo" style="width: 100%; display: flex; justify-content: space-between; margin-top: 15px;">
             <div class="column-lo" id="most-info" style="width: 360px; display: flex;justify-content: center;align-items: center;"><div class="spinner" id="sp3"></div></div>
-            <div class="column-lo" id="match-history" style="min-width: 730px; display: flex;justify-content: center;align-items: center;"><div class="spinner" id="sp2"></div></div>
+            <div class="column-lo" id="match-history" style="min-width: 730px; display: flex;justify-content: center;align-items: center;">
+                <button id="more" class="more" onclick="secondFunction(matchIndex)">더 보기</button>
+                <div class="spinner" id="sp2"></div>
+            </div>
         </div>
+
     </main>
 
 
@@ -398,6 +414,7 @@
 
     const jsonUrl = 'https://ddragon.leagueoflegends.com/cdn/'+version+'/data/ko_KR/runesReforged.json';
 
+    let matchIndex = 0;
     //솔로, 자유 랭크 리스트
     const ranks = [
       { rank: ".", tier: ".", wins: 0, losses: 0 },
@@ -432,7 +449,7 @@
     const rankOptions = document.getElementById("rankOptions");
     const soloRank = document.getElementById("soloRank");
     const flexRank = document.getElementById("flexRank");
-    const matchHistoryContainer = document.getElementById('match-history');
+    const matchHistoryContainer = document.getElementById('more');
     const errorAppend = document.getElementById('errorAppend');
     const sideInfoContainer = document.getElementById('most-info');
 
@@ -495,34 +512,6 @@
       }
       firstFunction();
 
-      // 두 번째 함수 실행, 전적 리스트 생성
-      function secondFunction() {
-          sds("sp2");
-          // URL에서 summonerName 쿼리 파라미터 값을 가져옴
-          var summonerNameParam = new URLSearchParams(window.location.search).get("summonerName");
-          // summonerName 요소가 존재하는지 확인
-          if (summonerNameParam) {
-              var userApiUrl = apiUrl + "/match"; // URL 파라미터를 제외한 URL
-
-              fetch(userApiUrl, {
-                  method: "POST",
-                  headers: {
-                      "Content-Type": "application/json"
-                  },
-                  body: JSON.stringify({ summonerName: summonerNameParam }) // 요청 데이터를 JSON 형식으로 전달
-              })
-                  .then(response => response.json())
-                  .then(md => {
-                      matchData.push(...md);
-                      console.log("MatchData Response:", md);
-                      generateMatchHistory();
-                      hds("sp2");
-                  })
-                  .catch(error => {
-                      console.error("MatchData Error:", error);
-                  });
-          }
-      }
       secondFunction();
 
       // 세 번째 함수 실행, 숙련도 리스트 생성
@@ -531,7 +520,6 @@
 
           // URL에서 summonerName 쿼리 파라미터 값을 가져옴
           var summonerNameParam = new URLSearchParams(window.location.search).get("summonerName");
-          console.log("너의 이름은 / ",summonerNameParam);
           await generateSideContainer(summonerNameParam);
           hds("sp3");
         }
@@ -572,119 +560,146 @@
         errorAppend.after(matchElement);
 
     }
-    //전적 리스트 생성
-    async function generateMatchHistory() {
-        // JSON 데이터를 기반으로 동적으로 레이아웃 생성
-        for (const match of matchData) {
-            const matchElement = document.createElement('div');
-            // gameCreation 값 변환 (에포크 시간 -> 날짜와 시간)
-            const gameCreationDate = new Date(match.info.gameCreation);
-            const month = gameCreationDate.getMonth() + 1; // 월은 0부터 시작하므로 1을 더해줍니다
-            const day = gameCreationDate.getDate();
-            const min = Math.floor(match.info.gameDuration / 60);
-            const sec = match.info.gameDuration % 60;
-            var summonerNameParam = new URLSearchParams(window.location.search).get("summonerName");
+
+    // 두 번째 함수 실행, 전적 리스트 생성
+    async function secondFunction() {
+        document.getElementById("more").style.display = "none";
+        sds("sp2");
 
 
-            // 특정 닉네임의 win 값을 가져오기
-            const targetParticipant = findParticipantBySummonerId(userId[0], match.info.participants);
-            targetId = targetParticipant.teamId;
-            const targetWin = targetParticipant
-                ? match.info.teams[targetParticipant.teamId === 100 ? 0 : 1].win ? '승리' : '패배'
-                : null;
+        await callMatchHistory();
 
-            const summoner1Id = targetParticipant.summoner1Id;
-            const summoner1Name = summonerSpells[summoner1Id] || "Unknown Spell";
+        await generateMatchHistory(0);
+        hds("sp2");
 
-            const summoner2Id = targetParticipant.summoner2Id;
-            const summoner2Name = summonerSpells[summoner2Id] || "Unknown Spell";
-
-            matchElement.innerHTML = `
-        <div id="B${match.metadata.matchId}" style="width: 100%;" class="${targetWin === '승리' ? 'winBox' : 'lossBox'}">
-          <div class="row-lo" style="width: 100%; justify-content: space-between;">
-              <div class="row-lo">
-                <!--게임 정보-->
-                <div class="column-lo" style="margin: 5px; margin-right: 15px; min-width: 70px;">
-                  <div style="font-weight: bold">${match.info.gameMode}</div>
-                  <div style="color: lightgray; font-size: 13px">${month}월 ${day}일</div>
-                  <div style="margin-top: 20px; font-weight: bold; color: ${targetWin === '승리' ? 'skyblue' : 'orangered'}">${targetWin}</div>
-                  <div style="color: lightgray; font-size: 13px;">${min}분 ${sec}초</div>
-                </div>
-                <div class="column-lo" style="margin-right: 15px; min-width:380px">
-                  <div class="row-lo" style="min-width: 350px; display: flex; justify-content: space-between;">
-                        <div class="row-lo" style="max-width: 220px;">
-                            <!--챔피언 초상화/레벨 부분-->
-                            <div class="row-lo" style="position: relative">
-                                  <div style="position: absolute; right: 0; bottom: 0; z-index: 1;">
-                                    <div style="display: inline-block; background-color: black; border-radius: 50%; text-align: center; padding: 5px; width: 25px; height: 25px; font-size: 13px; font-weight: bold;">${targetParticipant.champLevel}</div>
-                                  </div>
-                                  <img src='${ddragon}${version}/img/champion/${targetParticipant.championName}.png' style='width: 70px; height: 70px; overflow: hidden; border-radius: 50%; clip-path: inset(3px);'>
-                                </div>
-                            <div class="row-lo" style="margin: 5px;">
-                              <!--스펠 부분-->
-                              <div class="column-lo" style="margin: 5px; max-width: 30px">
-                                <div><img src='${ddragon}${version}/img/spell/${summoner1Name}.png' style='width: 25px; height: 25px; overflow: hidden; border-radius: 50%;'></div>
-                                <div><img src='${ddragon}${version}/img/spell/${summoner2Name}.png' style='width: 25px; height: 25px; overflow: hidden; border-radius: 50%;'></div>
-                              </div>
-                              <!--룬 부분-->
-                              <div class="column-lo" style="margin: 5px; max-width: 30px">
-                                ${await generateRuneInfo(match.info.gameMode,targetParticipant)}
-                              </div>
-                              <!--KDA 부분-->
-                              <div class="column-lo" style="min-width: 80px">
-                                <div class="row-lo">
-                                  <div class="ka-st">${targetParticipant.kills}&nbsp;/&nbsp;</div>
-                                  <div class="d-st">${targetParticipant.deaths}</div>
-                                  <div class="ka-st">&nbsp;/&nbsp;${targetParticipant.assists}</div>
-                                </div>
-                                <div class="row-lo">
-                                  <div class="kda-st">${((targetParticipant.kills + targetParticipant.assists) / Math.max(targetParticipant.deaths, 1)).toFixed(2)}&nbsp;평점</div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        <div class="row-lo">
-                             ${generateLine(targetParticipant)}
-                            <!--기타 정보 와드/시야점수/cs-->
-                            <div class="column-lo" style="min-width: 90px">
-                              <div>제어와드 : ${targetParticipant.visionWardsBoughtInGame}</div>
-                              <div>시야점수 : ${targetParticipant.visionScore}</div>
-                              <div>CS ${(targetParticipant.totalMinionsKilled + targetParticipant.neutralMinionsKilled)} (${((targetParticipant.totalMinionsKilled+targetParticipant.neutralMinionsKilled) / min).toFixed(1)})</div>
-                            </div>
-                        </div>
-                  </div>
-                  <!--아이템 부분-->
-                  <div class="row-lo" style="margin: 5px; margin-top: 15px; width: 100%; min-width: 350px">
-                    <div class="row-lo" style="max-width: 220px;">${generateItemInfo(targetParticipant)}</div>
-                    <div class="row-lo">${generateSlayer(targetParticipant,min)}</div>
-                  </div>
-                </div>
-
-              </div>
-              <!--플레이어 정보-->
-              <div class="row-lo">
-                <div class="row-lo" style="justify-content: space-between; width:100%;">
-                    <div class="column-lo" style="margin: 5px; font-size: 12px; min-width: 83px; max-width: 83px;">
-                        ${generatePlayerInfo1(match)}
-                    </div>
-                    <div class="column-lo" style="margin: 5px; font-size: 12px; min-width: 83px; max-width: 83px;">
-                        ${generatePlayerInfo2(match)}
-                    </div>
-                </div>
-
-                </div>
-
-          </div>
-          ${await generateArrow(targetParticipant,match)}
-        </div>
-        <div style="position: relative; height: 550px; width: 100%; text-align: center; display: none;" id="sp${match.metadata.matchId}">
-            <div class="spinner" style="position: absolute;top: 50%;left: 50%;"></div>
-        </div>
-      `;
-            matchHistoryContainer.appendChild(matchElement);
+        if (matchIndex < 3){
+            document.getElementById("more").style.display='block';
+            matchIndex += 1;
         }
     }
-    //숙련도 리스트 생성
+    async function generateMatchHistory() {
+        const fragment = document.createDocumentFragment();
+
+        for (let i = 0; i < 10; i++) {
+            const match = matchData[matchIndex * 10 + i];
+            const matchElement = await createMatchElement(match);
+            fragment.appendChild(matchElement);
+        }
+
+        matchHistoryContainer.before(fragment);
+    }
+    //전적 리스트 생성
+    async function createMatchElement(match) {
+
+        const matchElement = document.createElement('div');
+        // gameCreation 값 변환 (에포크 시간 -> 날짜와 시간)
+        const gameCreationDate = new Date(match.info.gameCreation);
+        const month = gameCreationDate.getMonth() + 1; // 월은 0부터 시작하므로 1을 더해줍니다
+        const day = gameCreationDate.getDate();
+        const min = Math.floor(match.info.gameDuration / 60);
+        const sec = match.info.gameDuration % 60;
+        var summonerNameParam = new URLSearchParams(window.location.search).get("summonerName");
+
+
+        // 특정 닉네임의 win 값을 가져오기
+        const targetParticipant = findParticipantBySummonerId(userId[0], match.info.participants);
+        targetId = targetParticipant.teamId;
+        const targetWin = targetParticipant
+            ? match.info.teams[targetParticipant.teamId === 100 ? 0 : 1].win ? '승리' : '패배'
+            : null;
+
+        const summoner1Id = targetParticipant.summoner1Id;
+        const summoner1Name = summonerSpells[summoner1Id] || "Unknown Spell";
+
+        const summoner2Id = targetParticipant.summoner2Id;
+        const summoner2Name = summonerSpells[summoner2Id] || "Unknown Spell";
+
+        matchElement.innerHTML = `
+    <div id="B${match.metadata.matchId}" style="width: 100%;" class="${targetWin === '승리' ? 'winBox' : 'lossBox'}">
+      <div class="row-lo" style="width: 100%; justify-content: space-between;">
+          <div class="row-lo">
+            <!--게임 정보-->
+            <div class="column-lo" style="margin: 5px; margin-right: 15px; min-width: 70px;">
+              <div style="font-weight: bold">${match.info.gameMode}</div>
+              <div style="color: lightgray; font-size: 13px">${month}월 ${day}일</div>
+              <div style="margin-top: 20px; font-weight: bold; color: ${targetWin === '승리' ? 'skyblue' : 'orangered'}">${targetWin}</div>
+              <div style="color: lightgray; font-size: 13px;">${min}분 ${sec}초</div>
+            </div>
+            <div class="column-lo" style="margin-right: 15px; min-width:380px">
+              <div class="row-lo" style="min-width: 350px; display: flex; justify-content: space-between;">
+                    <div class="row-lo" style="max-width: 220px;">
+                        <!--챔피언 초상화/레벨 부분-->
+                        <div class="row-lo" style="position: relative">
+                              <div style="position: absolute; right: 0; bottom: 0; z-index: 1;">
+                                <div style="display: inline-block; background-color: black; border-radius: 50%; text-align: center; padding: 5px; width: 25px; height: 25px; font-size: 13px; font-weight: bold;">${targetParticipant.champLevel}</div>
+                              </div>
+                              <img src='${ddragon}${version}/img/champion/${targetParticipant.championName}.png' style='width: 70px; height: 70px; overflow: hidden; border-radius: 50%; clip-path: inset(3px);'>
+                            </div>
+                        <div class="row-lo" style="margin: 5px;">
+                          <!--스펠 부분-->
+                          <div class="column-lo" style="margin: 5px; max-width: 30px">
+                            <div><img src='${ddragon}${version}/img/spell/${summoner1Name}.png' style='width: 25px; height: 25px; overflow: hidden; border-radius: 50%;'></div>
+                            <div><img src='${ddragon}${version}/img/spell/${summoner2Name}.png' style='width: 25px; height: 25px; overflow: hidden; border-radius: 50%;'></div>
+                          </div>
+                          <!--룬 부분-->
+                          <div class="column-lo" style="margin: 5px; max-width: 30px">
+                            ${await generateRuneInfo(match.info.gameMode,targetParticipant)}
+                          </div>
+                          <!--KDA 부분-->
+                          <div class="column-lo" style="min-width: 80px">
+                            <div class="row-lo">
+                              <div class="ka-st">${targetParticipant.kills}&nbsp;/&nbsp;</div>
+                              <div class="d-st">${targetParticipant.deaths}</div>
+                              <div class="ka-st">&nbsp;/&nbsp;${targetParticipant.assists}</div>
+                            </div>
+                            <div class="row-lo">
+                              <div class="kda-st">${((targetParticipant.kills + targetParticipant.assists) / Math.max(targetParticipant.deaths, 1)).toFixed(2)}&nbsp;평점</div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    <div class="row-lo">
+                         ${generateLine(targetParticipant)}
+                        <!--기타 정보 와드/시야점수/cs-->
+                        <div class="column-lo" style="min-width: 90px">
+                          <div>제어와드 : ${targetParticipant.visionWardsBoughtInGame}</div>
+                          <div>시야점수 : ${targetParticipant.visionScore}</div>
+                          <div>CS ${(targetParticipant.totalMinionsKilled + targetParticipant.neutralMinionsKilled)} (${((targetParticipant.totalMinionsKilled+targetParticipant.neutralMinionsKilled) / min).toFixed(1)})</div>
+                        </div>
+                    </div>
+              </div>
+              <!--아이템 부분-->
+              <div class="row-lo" style="margin: 5px; margin-top: 15px; width: 100%; min-width: 350px">
+                <div class="row-lo" style="max-width: 220px;">${generateItemInfo(targetParticipant)}</div>
+                <div class="row-lo">${generateSlayer(targetParticipant,min)}</div>
+              </div>
+            </div>
+
+          </div>
+          <!--플레이어 정보-->
+          <div class="row-lo">
+            <div class="row-lo" style="justify-content: space-between; width:100%;">
+                <div class="column-lo" style="margin: 5px; font-size: 12px; min-width: 83px; max-width: 83px;">
+                    ${generatePlayerInfo1(match)}
+                </div>
+                <div class="column-lo" style="margin: 5px; font-size: 12px; min-width: 83px; max-width: 83px;">
+                    ${generatePlayerInfo2(match)}
+                </div>
+            </div>
+
+            </div>
+
+      </div>
+      ${await generateArrow(targetParticipant,match)}
+    </div>
+    <div style="position: relative; height: 550px; width: 100%; text-align: center; display: none;" id="sp${match.metadata.matchId}">
+        <div class="spinner" style="position: absolute;top: 50%;left: 50%;"></div>
+    </div>
+  `;
+
+        return matchElement;
+    }
+    //사이드 정보 창 생성
     async function generateSideContainer(summonerName){
 
         const sideElement = document.createElement('div');
@@ -699,7 +714,7 @@
                     ${await generateMastery(summonerName)}
                 </div>
                 <div class="column-lo sideDiv" style="margin-top: 15px;">
-                    <div style="font-size: 17px; font-weight: bold; text-align: left; margin-left: 35px; width: 100%;">최근 랭크 정보</div>
+                    <div style="font-size: 17px; font-weight: bold; text-align: left; margin-left: 35px; width: 100%;">랭크 정보 (최근 20게임)</div>
                     <div style="background: white; width: 90%; height: 1px;margin: 5px;"></div>
                     ${await generateRating(summonerName)}
                 </div>
@@ -708,11 +723,11 @@
 
         sideInfoContainer.appendChild(sideElement)
     }
+    //숙련도 리스트 생성
     async function generateMastery(summonerName){
         const mastery = [];
         const data = await callMastery(summonerName);
 
-        console.log(data);
         for (let i = 0;i<data.length;i++){
 
             const gameCreationDate = new Date(data[i].lastPlayTime);
@@ -725,7 +740,7 @@
                         <img src='${ddragon}${version}/img/champion/${data[i].championName}.png' style='width: 45px; height: 45px; overflow: hidden; border-radius: 50%; margin-right: 13px; clip-path: inset(3px);'>
                         <div class="column-lo">
                             <div class="row-lo" style="text-align: center; justify-content: space-between; width:150px;">
-                                <div style="font-size: 15px; font-weight: bold;">${data[i].championName}</div>
+                                <div style="font-size: 15px; font-weight: bold;">${data[i].championNameKr}</div>
                                 <div>${addCommasToNumber(data[i].championPoints)}점</div>
                             </div>
                             <div style="font-size: 12px; text-align: left;">마지막 플레이 : ${month}월 ${day}일</div>
@@ -738,12 +753,10 @@
 
         return mastery.join('');
     }
+    //랭크 정보 리스트 생성 - 개발 예정
     async function generateRating(summonerName){
         const rating = [];
 
-        const data = await callRating(summonerName);
-
-        console.log(data);
 
         rating.push(`
             <div class="column-lo">
@@ -751,11 +764,27 @@
                     <div class="sideSelect" style="margin-right: 20px; background-color: #393a3c;" id="soloSide" onclick="toggleSide('soloSide')">솔로랭크</div>
                     <div class="sideSelect" style="color:gray;" id="flexSide" onclick="toggleSide('flexSide')">자유랭크</div>
                 </div>
-                <div id="soloSideTab">솔로탭</div>
-                <div id="flexSideTab" style="display: none;">자유탭</div>
+                <div id="soloSideTab">${await generateSoloRating(summonerName)}</div>
+                <div id="flexSideTab" style="display: none;">${await generateFlexRating(summonerName)}</div>
             </div>
         `)
         rating.push(`여기는 랭크 전적 정보 란입니다.`)
+
+        return rating.join('');
+    }
+    async function generateSoloRating(sn){
+        const rating = [];/*
+        const data = await callSoloRating(sn)
+        console.log("solo rating data = ",data);*/
+        rating.push("솔로 랭크 요약 탭 / 개발중")
+
+        return rating.join('');
+    }
+    async function generateFlexRating(sn){
+        const rating = [];/*
+        const data = await callFlexRating(sn);
+        console.log("flex rating data = ",data);*/
+        rating.push("자유 랭크 요약 탭 / 개발중")
 
         return rating.join('');
     }
@@ -1581,10 +1610,6 @@
                 }
             }
 
-            if (countMap.length > 1){
-                console.log(countMap);
-            }
-
             build.push(`</div>`);
             build.push(`</div>`);
 
@@ -2095,10 +2120,10 @@
             throw error;
         }
     }
-    //랭크 요약 비동기 api요청
-    const callRating = async (summonerName) => {
+/*    //솔로 랭크 요약 비동기 api요청
+    const callSoloRating = async (summonerName) => {
         try {
-            const response = await fetch(apiUrl + "/rating", {
+            const response = await fetch(apiUrl + "/solo", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -2117,6 +2142,28 @@
             throw error;
         }
     }
+    //자유 랭크 요약 비동기 api요청
+    const callFlexRating = async (summonerName) => {
+        try {
+            const response = await fetch(apiUrl + "/flex", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ summonerName: summonerName })
+            });
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error("API Error:", error);
+            throw error;
+        }
+    }*/
     function sds(spid) {
         document.getElementById(spid).style.display='block';
     }
@@ -2139,6 +2186,34 @@
         document.getElementById(tabId + 'Tab').style.display = 'block';
     }
 
+    // 두 번째 함수 실행, 전적 리스트 생성
+    async function callMatchHistory() {
+        // URL에서 summonerName 쿼리 파라미터 값을 가져옴
+        var summonerNameParam = new URLSearchParams(window.location.search).get("summonerName");
+        // summonerName 요소가 존재하는지 확인
+        if (summonerNameParam) {
+            var userApiUrl = apiUrl + "/match"; // URL 파라미터를 제외한 URL
+
+            try {
+                const response = await fetch(userApiUrl, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ summonerName: summonerNameParam, index: matchIndex }) // 요청 데이터를 JSON 형식으로 전달
+                });
+
+                if (response.ok) {
+                    const md = await response.json();
+                    matchData.push(...md);
+                } else {
+                    throw new Error("MatchData Error: " + response.statusText);
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        }
+    }
   </script>
 
 </th:block>

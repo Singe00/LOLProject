@@ -5,6 +5,7 @@ import com.example.lwp.dto.MasteryDto;
 import com.example.lwp.dto.MatchTimelineDto;
 import com.example.lwp.repository.ChampionRepository;
 import com.example.lwp.service.ApiService;
+import com.example.lwp.service.Update;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,6 +19,9 @@ class LwpApplicationTests {
 
     @Autowired
     private ApiService apiService;
+
+    @Autowired
+    private Update update;
 
     @Autowired
     private ChampionRepository championRepository;
@@ -40,6 +44,12 @@ class LwpApplicationTests {
         for (int i = 0;i<5;i++){
             System.out.println(champList.get(i).getChampionName());
         }
+
+    }
+
+    @Test
+    void test3() {
+        update.updateChampionRotation();
 
     }
 }
