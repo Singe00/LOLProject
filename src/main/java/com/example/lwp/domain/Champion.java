@@ -29,4 +29,6 @@ public class Champion {
     private String nickName;
     @Column(name = "rotation")
     private int rotation;
+    @Column(name = "position")
+    private String position;
 }
