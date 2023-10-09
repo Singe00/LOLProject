@@ -133,6 +133,16 @@
             margin-top: 5px;
             margin-bottom: 5px;
         }
+      .reBox {
+          background: #2c2c2f;
+          border-left: 5px solid rgba(72, 72, 76, 0.7); /* Adjust the width as needed */
+          border-radius: 4px;
+          display: flex;
+          position: relative;
+          padding: 10px 18px 10px 18px;
+          margin-top: 5px;
+          margin-bottom: 5px;
+      }
       .champImgS{
             width: 25px;
             height: 25px;
@@ -600,12 +610,19 @@
         var summonerNameParam = new URLSearchParams(window.location.search).get("summonerName");
 
 
+        let targetWin;
         // 특정 닉네임의 win 값을 가져오기
         const targetParticipant = findParticipantBySummonerId(userId[0], match.info.participants);
         targetId = targetParticipant.teamId;
-        const targetWin = targetParticipant
-            ? match.info.teams[targetParticipant.teamId === 100 ? 0 : 1].win ? '승리' : '패배'
-            : null;
+        if (targetParticipant.gameEndedInEarlySurrender){
+            targetWin = '다시하기'
+        }else {
+            targetWin = targetParticipant
+                ? match.info.teams[targetParticipant.teamId === 100 ? 0 : 1].win ? '승리' : '패배'
+                : null;
+        }
+
+
 
         const summoner1Id = targetParticipant.summoner1Id;
         const summoner1Name = summonerSpells[summoner1Id] || "Unknown Spell";
@@ -613,15 +630,16 @@
         const summoner2Id = targetParticipant.summoner2Id;
         const summoner2Name = summonerSpells[summoner2Id] || "Unknown Spell";
 
+
         matchElement.innerHTML = `
-    <div id="B${match.metadata.matchId}" style="width: 100%;" class="${targetWin === '승리' ? 'winBox' : 'lossBox'}">
+    <div id="B${match.metadata.matchId}" style="width: 100%;" class="${targetWin === '다시하기' ? 'reBox' : (targetWin === '승리' ? 'winBox' : 'lossBox')}">
       <div class="row-lo" style="width: 100%; justify-content: space-between;">
           <div class="row-lo">
             <!--게임 정보-->
             <div class="column-lo" style="margin: 5px; margin-right: 15px; min-width: 70px;">
               <div style="font-weight: bold">${match.info.gameMode}</div>
               <div style="color: lightgray; font-size: 13px">${month}월 ${day}일</div>
-              <div style="margin-top: 20px; font-weight: bold; color: ${targetWin === '승리' ? 'skyblue' : 'orangered'}">${targetWin}</div>
+              <div style="margin-top: 20px; font-weight: bold; color: ${targetWin === '다시하기' ? 'grey' : (targetWin === '승리' ? 'skyblue' : 'orangered')}">${targetWin}</div>
               <div style="color: lightgray; font-size: 13px;">${min}분 ${sec}초</div>
             </div>
             <div class="column-lo" style="margin-right: 15px; min-width:380px">
@@ -905,8 +923,14 @@
                 <img src='${itemImageSrc}' style='width: 30px; height: 30px; overflow: hidden; border-radius: 50%;'>
             `);
             } else {
+                let backgroundColor;
                 // 아이템 ID가 0인 경우, 빈 칸 추가
-                const backgroundColor = targetParticipant.win ? 'rgba(49, 142, 239, 0.2)' : 'rgba(244, 88, 78, 0.2)';
+                if (targetParticipant.gameEndedInEarlySurrender){
+                    backgroundColor = 'rgba(74, 74, 77, 0.7)'
+                }else {
+                    backgroundColor = targetParticipant.win ? 'rgba(49, 142, 239, 0.2)' : 'rgba(244, 88, 78, 0.2)';
+                }
+
                 itemInfoHtml.push(`
                 <div style='width: 30px; height: 30px; border-radius: 50%; background:${backgroundColor};'></div>
             `);
@@ -1000,7 +1024,7 @@
                     <div></div>
                     <div></div>
                 </div>
-                <div class="tab-content" style="margin-bottom: 15px; max-width: 720px;">
+                <div class="tab-content" style="margin-bottom: 15px; max-width: 722px;">
                     <div id="tabOutline${matchId}" class="tab-pane coulmn-lo">
                         <div class="column-lo" style="display: flex; align-items: center; margin-bottom: 15px;">
                             ${generateOutline(detailInfo)}
@@ -1336,8 +1360,8 @@
             }
 
             info.push(`
-                <div class="row-lo" style="">
-                    <div class="row-lo" style="height: 90px; min-width:365px;max-widthwidth: 365px; padding: 4px; display: flex;justify-content: space-between; align-items: center; background-color: rgba(49, 142, 239, 0.1);">
+                <div class="row-lo">
+                    <div class="row-lo" style="height: 90px; min-width:355px;max-widthwidth: 355px; padding: 4px; display: flex;justify-content: space-between; align-items: center; background-color: rgba(49, 142, 239, 0.1);">
                         <div class="column-lo">
                             <div class="column-lo">
                                 <div class="row-lo">
@@ -1402,10 +1426,10 @@
                         </div>
                     </div>
 
-                    <div class="column-lo" style="min-width: 20px; max-width: 20px; background: linear-gradient(to right, rgba(49, 142, 239, 0.1), rgba(244, 88, 78, 0.1));">
+                    <div class="column-lo" style="min-width: 14px; max-width: 14px; background: linear-gradient(to right, rgba(49, 142, 239, 0.1), rgba(244, 88, 78, 0.1));">
 
                     </div>
-                    <div class="row-lo" style="height: 90px; min-width:365px;max-widthwidth: 365px; padding: 4px; display: flex;justify-content: space-between; align-items: center; background-color: rgba(244, 88, 78, 0.1);">
+                    <div class="row-lo" style="height: 90px; min-width:355px;max-widthwidth: 355px; padding: 4px; display: flex;justify-content: space-between; align-items: center; background-color: rgba(244, 88, 78, 0.1);">
                         <div class="column-lo" style="min-width: 100px;">
                             <div class="row-lo" style="display: flex; align-items: center; justify-content: left">
                                 <div class="row-lo" style="position: relative; width: 45px; height: 45px">

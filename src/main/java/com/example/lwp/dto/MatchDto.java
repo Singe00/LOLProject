@@ -85,6 +85,7 @@ public class MatchDto {
         private boolean win;
         private Perks perks;
         private String puuid;
+        private boolean gameEndedInEarlySurrender;
     }
 
     @Data
