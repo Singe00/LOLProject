@@ -11,4 +11,10 @@ public interface ChampionRepository extends JpaRepository<Champion,Long> {
     Champion findChampionByChampionId(long championId);
 
     List<Champion> findByChampionIdIn(List<Long> championIds);
+
+    List<Champion> findAllByChampionNameKrContainingAndPositionContaining(String championNameKr, String position);
+    List<Champion> findAllByChampionNameContainingAndPositionContaining(String championName, String position);
+
+    List<Champion> findAllByNickNameAndPositionContaining(String championNameKr, String position);
+    List<Champion> findAllByInitialContainingAndPositionContaining(String championNameKr, String position);
 }

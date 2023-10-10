@@ -7,5 +7,6 @@ CREATE TABLE champion (
                           nickName varchar(50),
                           rotation boolean,
                           position varchar(50),
+                          initial varchar(50),
                           PRIMARY KEY (championId)
 );

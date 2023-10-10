@@ -18,19 +18,19 @@
   
 > 주요 기능
   <p align="left">
-    <img src="https://user-images.githubusercontent.com/103260185/267306986-ed169ea7-97fe-4407-ae8f-d5234e198e1d.png" width="650" height="350">
+    <img loading='lazy' decoding='async' src="https://user-images.githubusercontent.com/103260185/267306986-ed169ea7-97fe-4407-ae8f-d5234e198e1d.png" width="650" height="350">
   </p>
   <br/>
   <p align="left">
-    <img src="https://user-images.githubusercontent.com/103260185/267307069-60ce8519-4740-4db1-b8cf-4ad0e61cf1ee.png" width="650" height="350">
+    <img loading='lazy' decoding='async' src="https://user-images.githubusercontent.com/103260185/267307069-60ce8519-4740-4db1-b8cf-4ad0e61cf1ee.png" width="650" height="350">
   </p>
   <br/>
   <p align="left">
-    <img src="https://user-images.githubusercontent.com/103260185/271411385-3c203e43-f6ce-4681-ae96-4674bff58fba.png" width="650" height="350">
+    <img loading='lazy' decoding='async' src="https://user-images.githubusercontent.com/103260185/271411385-3c203e43-f6ce-4681-ae96-4674bff58fba.png" width="650" height="350">
   </p>
   <br/>
   <p align="left">
-    <img src="https://user-images.githubusercontent.com/103260185/271411468-e2d3a54e-b983-4cab-bfac-16e1aa4f7172.png" width="650" height="350">
+    <img loading='lazy' decoding='async' src="https://user-images.githubusercontent.com/103260185/271411468-e2d3a54e-b983-4cab-bfac-16e1aa4f7172.png" width="650" height="350">
   </p>
 
 

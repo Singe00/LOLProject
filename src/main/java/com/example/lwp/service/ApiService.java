@@ -183,5 +183,36 @@ public class ApiService {
         }
     }
 
+
+    public List<Champion> ReturnChampionList(){
+        List<Champion> championList = new ArrayList<>();
+
+        championList = championRepository.findAll();
+
+        return championList;
+    }
+
+    public List<Champion> SearchChampionWithOptions(String inputValue, String selectedRole){
+        List<Champion> championList;
+
+        // 한글 유니코드 범위 확인
+        boolean isKorean = inputValue.chars().anyMatch(ch -> ch >= 0xAC00 && ch <= 0xD7A3);
+
+        if (isKorean) {
+            championList = championRepository.findAllByChampionNameKrContainingAndPositionContaining(inputValue,selectedRole);
+            System.out.println(championList);
+            if (championList.isEmpty()){
+                championList = championRepository.findAllByNickNameAndPositionContaining(inputValue,selectedRole);
+                if (championList.isEmpty()){
+                    championList = championRepository.findAllByInitialContainingAndPositionContaining(inputValue,selectedRole);
+                }
+            }
+        } else {
+            championList = championRepository.findAllByChampionNameContainingAndPositionContaining(inputValue,selectedRole);
+            System.out.println(championList);
+        }
+
+        return championList;
+    }
 }
 

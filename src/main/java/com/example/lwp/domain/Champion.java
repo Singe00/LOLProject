@@ -19,10 +19,8 @@ public class Champion {
     @Id
     @Column(name = "championid")
     private int championId;
-
     @Column(name = "championname")
     private String championName;
-
     @Column(name = "championnamekr")
     private String championNameKr;
     @Column(name = "nickname")
@@ -31,4 +29,6 @@ public class Champion {
     private int rotation;
     @Column(name = "position")
     private String position;
+    @Column(name = "initial")
+    private String initial;
 }

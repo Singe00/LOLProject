@@ -415,15 +415,6 @@
 
   <script>
 
-    // API 공통 URL 설정
-    var apiUrl = "/api";
-    // 링크 설정
-    var ddragon = "http://ddragon.leagueoflegends.com/cdn/"
-    // Version
-    var version = "13.19.1";
-
-    const jsonUrl = 'https://ddragon.leagueoflegends.com/cdn/'+version+'/data/ko_KR/runesReforged.json';
-
     let matchIndex = 0;
     //솔로, 자유 랭크 리스트
     const ranks = [
@@ -431,21 +422,6 @@
       { rank: ".", tier: ".", wins: 0, losses: 0 }
     ];
 
-    const summonerSpells = {
-        1: "SummonerBoost",
-        3: "SummonerExhaust",
-        4: "SummonerFlash",
-        6: "SummonerHaste",
-        7: "SummonerHeal",
-        11: "SummonerSmite",
-        12: "SummonerTeleport",
-        13: "SummonerMana",
-        14: "SummonerDot",
-        21: "SummonerBarrier",
-        32: "SummonerSnowURFSnowball_Mark",
-        2201: "SummonerCherryHold",
-        2202: "SummonerCherryFlash"
-    };
 
     // 응답 데이터를 화면에 출력
     const summonerNameElement = document.getElementById("summonerName");
@@ -494,7 +470,7 @@
                   .then(data => {
                     userId.push(data.id);
                     summonerNameElement.textContent = data.summonerName;
-                    profileIconElement.innerHTML = "<img src='http://ddragon.leagueoflegends.com/cdn/"+version+"/img/profileicon/" + data.profileIcon + ".png' alt='Profile Icon' style='width: 100%; height: 100%; object-fit: cover; border-radius: 10px;'>";
+                    profileIconElement.innerHTML = "<img loading='lazy' decoding='async' src='http://ddragon.leagueoflegends.com/cdn/"+version+"/img/profileicon/" + data.profileIcon + ".png' alt='Profile Icon' style='width: 100%; height: 100%; object-fit: cover; border-radius: 10px;'>";
                     summonerLevelElement.textContent = data.summonerLevel;
 
                     ranks[0].rank = data.ranks[0].rank;
@@ -507,7 +483,7 @@
                     ranks[1].wins = data.ranks[1].wins;
                     ranks[1].losses = data.ranks[1].losses
 
-                    emblemElement.innerHTML = "<img src=\"assets/img/emblem/"+ranks[0].tier+".png\" style='width: 100%; height: auto; object-fit: cover; border-radius: 10px;'>";
+                    emblemElement.innerHTML = "<img loading='lazy' decoding='async' src=\"assets/img/emblem/"+ranks[0].tier+".png\" style='width: 100%; height: auto; object-fit: cover; border-radius: 10px;'>";
                     rankElement.textContent = data.ranks[0].rank;
                     tierElement.textContent = data.ranks[0].tier;
                     winsElement.textContent = data.ranks[0].wins+"승 ";
@@ -561,7 +537,7 @@
 
         matchElement.innerHTML = `
             <div class="column-lo" style="text-align: center; align-items: center; display: flex;">
-            <img src="assets/img/icon/error.png" style='width: 250px; height: auto;'>
+            <img loading='lazy' decoding='async' src="assets/img/icon/error.png" style='width: 250px; height: auto;'>
             <h2>존재 하지 않는 소환사 정보 입니다!</h2>
             <h3>오탈자를 확인 후 재검색해주세요.</h3>
             </div>
@@ -623,14 +599,6 @@
         }
 
 
-
-        const summoner1Id = targetParticipant.summoner1Id;
-        const summoner1Name = summonerSpells[summoner1Id] || "Unknown Spell";
-
-        const summoner2Id = targetParticipant.summoner2Id;
-        const summoner2Name = summonerSpells[summoner2Id] || "Unknown Spell";
-
-
         matchElement.innerHTML = `
     <div id="B${match.metadata.matchId}" style="width: 100%;" class="${targetWin === '다시하기' ? 'reBox' : (targetWin === '승리' ? 'winBox' : 'lossBox')}">
       <div class="row-lo" style="width: 100%; justify-content: space-between;">
@@ -650,17 +618,17 @@
                               <div style="position: absolute; right: 0; bottom: 0; z-index: 1;">
                                 <div style="display: inline-block; background-color: black; border-radius: 50%; text-align: center; padding: 5px; width: 25px; height: 25px; font-size: 13px; font-weight: bold;">${targetParticipant.champLevel}</div>
                               </div>
-                              <img src='${ddragon}${version}/img/champion/${targetParticipant.championName}.png' style='width: 70px; height: 70px; overflow: hidden; border-radius: 50%; clip-path: inset(3px);'>
+                              <img loading='lazy' decoding='async' src='assets/img/champion/${targetParticipant.championName}.png' style='width: 70px; height: 70px; overflow: hidden; border-radius: 50%; clip-path: inset(3px);'>
                             </div>
                         <div class="row-lo" style="margin: 5px;">
                           <!--스펠 부분-->
                           <div class="column-lo" style="margin: 5px; max-width: 30px">
-                            <div><img src='${ddragon}${version}/img/spell/${summoner1Name}.png' style='width: 25px; height: 25px; overflow: hidden; border-radius: 50%;'></div>
-                            <div><img src='${ddragon}${version}/img/spell/${summoner2Name}.png' style='width: 25px; height: 25px; overflow: hidden; border-radius: 50%;'></div>
+                            <div><img loading='lazy' decoding='async' src='assets/img/spell/${targetParticipant.summoner1Id}.png' style='width: 25px; height: 25px; overflow: hidden; border-radius: 50%;'></div>
+                            <div><img loading='lazy' decoding='async' src='assets/img/spell/${targetParticipant.summoner2Id}.png' style='width: 25px; height: 25px; overflow: hidden; border-radius: 50%;'></div>
                           </div>
                           <!--룬 부분-->
                           <div class="column-lo" style="margin: 5px; max-width: 30px">
-                            ${await generateRuneInfo(match.info.gameMode,targetParticipant)}
+                            ${generateRuneInfo(match.info.gameMode,targetParticipant)}
                           </div>
                           <!--KDA 부분-->
                           <div class="column-lo" style="min-width: 80px">
@@ -754,7 +722,7 @@
             mastery.push(`
                 <div class="row-lo" style="width: 90%; height: 55px; align-items: center; justify-content: space-between;">
                     <div class="row-lo">
-                        <img src='${ddragon}${version}/img/champion/${data[i].championName}.png' style='width: 45px; height: 45px; overflow: hidden; border-radius: 50%; margin-right: 13px; clip-path: inset(3px);'>
+                        <img loading='lazy' decoding='async' src='assets/img/champion/${data[i].championName}.png' style='width: 45px; height: 45px; overflow: hidden; border-radius: 50%; margin-right: 13px; clip-path: inset(3px);'>
                         <div class="column-lo">
                             <div class="row-lo" style="text-align: center; justify-content: space-between; width:150px;">
                                 <div style="font-size: 15px; font-weight: bold;">${data[i].championNameKr}</div>
@@ -763,7 +731,7 @@
                             <div style="font-size: 12px; text-align: left;">마지막 플레이 : ${month}월 ${day}일</div>
                         </div>
                     </div>
-                    <img src="assets/img/mastery/lv${data[i].championLevel}.png" style='width: 45px; height: auto;'>
+                    <img loading='lazy' decoding='async' src="assets/img/mastery/lv${data[i].championLevel}.png" style='width: 45px; height: auto;'>
                 </div>
             `)
         }
@@ -773,7 +741,6 @@
     //랭크 정보 리스트 생성 - 개발 예정
     async function generateRating(summonerName){
         const rating = [];
-
 
         rating.push(`
             <div class="column-lo">
@@ -810,33 +777,36 @@
         const playerInfoHtml = [];
         const maxPlayers = match.info.gameMode === "아레나" ? 4 : 5;
 
-        // 플레이어 정보를 생성하고 배열에 추가 (인덱스 0부터 maxPlayers-1까지)
+        const arenaMode = match.info.gameMode === "아레나";
+
         for (let i = 0; i < maxPlayers; i++) {
             const participant = match.info.participants[i];
-            let participantChampionName = participant.championName;
-            const participantSummonerName = participant.summonerName;
 
-            if (participantChampionName == "FiddleSticks"){
-                participantChampionName = "Fiddlesticks"
+            if (!participant) {
+                break; // Stop if no more participants
             }
 
-            // 특정 닉네임과 같은 플레이어 정보인 경우에만 추가
-            playerInfoHtml.push(`
+            const participantChampionName = participant.championName;
+            const participantSummonerName = participant.summonerName;
+
+            const championImg = `<img loading='lazy' decoding='async' src='assets/img/champion/${participantChampionName}.png' class="champImgS">`;
+
+            const participantInfoHtml = `
             <div class="row-lo">
-                <img src='${ddragon}${version}/img/champion/${participantChampionName}.png' class="champImgS">
+                ${championImg}
                 <a class="custom-link" href="/info?summonerName=${participantSummonerName}" target="_blank">
                     ${participantSummonerName}
                 </a>
             </div>
-        `);
+        `;
 
-            // i가 1이고 아레나 모드인 경우 1개 크기의 빈 공간 추가
-            if (i === 1 && match.info.gameMode === "아레나") {
+            playerInfoHtml.push(participantInfoHtml);
+
+            if (i === 1 && arenaMode) {
                 playerInfoHtml.push('<div style="width: 30px; height: 30px;"></div>');
             }
         }
 
-        // 배열에 있는 플레이어 정보를 문자열로 변환하여 반환
         return playerInfoHtml.join('');
     }
     //레드팀 플레이어 리스트 생성
@@ -845,67 +815,66 @@
         const startIndex = match.info.gameMode === "아레나" ? 4 : 5;
         const maxPlayers = match.info.gameMode === "아레나" ? 8 : 10;
 
-        // 플레이어 정보를 생성하고 배열에 추가 (인덱스 0부터 maxPlayers-1까지)
+        const arenaMode = match.info.gameMode === "아레나";
+
         for (let i = startIndex; i < maxPlayers; i++) {
             const participant = match.info.participants[i];
-            let participantChampionName = participant.championName;
-            const participantSummonerName = participant.summonerName;
 
-            if (participantChampionName == "FiddleSticks"){
-                participantChampionName = "Fiddlesticks"
+            if (!participant) {
+                break; // Stop if no more participants
             }
 
-            // 특정 닉네임과 같은 플레이어 정보인 경우에만 추가
-            playerInfoHtml.push(`
+            const participantChampionName = participant.championName;
+            const participantSummonerName = participant.summonerName;
+
+            const championImg = `<img loading='lazy' decoding='async' src='assets/img/champion/${participantChampionName}.png' class="champImgS">`;
+
+            const participantInfoHtml = `
             <div class="row-lo">
-                <img src='${ddragon}${version}/img/champion/${participantChampionName}.png' class="champImgS">
+                ${championImg}
                 <a class="custom-link" href="/info?summonerName=${participantSummonerName}" target="_blank">
                     ${participantSummonerName}
                 </a>
             </div>
-        `);
+        `;
 
-            // i가 1이고 아레나 모드인 경우 1개 크기의 빈 공간 추가
-            if (i === 5 && match.info.gameMode === "아레나") {
+            playerInfoHtml.push(participantInfoHtml);
+
+            if (i === 5 && arenaMode) {
                 playerInfoHtml.push('<div style="width: 30px; height: 30px;"></div>');
             }
         }
 
-        // 배열에 있는 플레이어 정보를 문자열로 변환하여 반환
         return playerInfoHtml.join('');
     }
     //플레이어 킬 리스트 생성
-    function generateSlayer(targetParticipant,min) {
+    function generateSlayer(targetParticipant, min) {
+        const slayerList = [
+            targetParticipant.pentaKills,
+            targetParticipant.quadraKills,
+            targetParticipant.tripleKills,
+            targetParticipant.doubleKills
+        ];
+
+        const slayerListLabels = ["펜타킬", "쿼드라킬", "트리플킬", "더블킬"];
         const Slayer = [];
 
-        const slayerList = [];
-        slayerList.push(targetParticipant.pentaKills)
-        slayerList.push(targetParticipant.quadraKills)
-        slayerList.push(targetParticipant.tripleKills)
-        slayerList.push(targetParticipant.doubleKills)
-        const slayerList2 = ["펜타킬", "쿼드라킬", "트리플킬", "더블킬"];
-
         for (let i = 0; i < 4; i++) {
-            if (slayerList[i] > 0){
-                Slayer.push(`
-                    <div style="height: 25px; background-color: #b02a37; border-radius: 15px; text-align: center; margin-left: 10px;">
-                        &nbsp;&nbsp;${slayerList2[i]}&nbsp;&nbsp;
-                    </div>
-                `);
-                break
+            if (slayerList[i] > 0) {
+                Slayer.push(`<div style="height: 25px; background-color: #b02a37; border-radius: 15px; text-align: center; margin-left: 10px;">
+                            &nbsp;&nbsp;${slayerListLabels[i]}&nbsp;&nbsp;
+                        </div>`);
+                break;
             }
         }
 
-        if (((targetParticipant.totalMinionsKilled+targetParticipant.neutralMinionsKilled) / min).toFixed(1) > 9.0){
-            Slayer.push(`
-                    <div style="height: 25px; background-color: #b02a37; border-radius: 15px; text-align: center; margin-left: 10px;">
+        const farmRate = ((targetParticipant.totalMinionsKilled + targetParticipant.neutralMinionsKilled) / min).toFixed(1);
+        if (farmRate > 9.0) {
+            Slayer.push(`<div style="height: 25px; background-color: #b02a37; border-radius: 15px; text-align: center; margin-left: 10px;">
                         &nbsp;&nbsp;파밍왕&nbsp;&nbsp;
-                    </div>
-                `);
+                    </div>`);
         }
 
-
-        // 배열에 있는 플레이어 정보를 문자열로 변환하여 반환
         return Slayer.join('');
     }
     //플레이어 아이템 리스트 생성
@@ -918,9 +887,9 @@
 
             // 아이템 ID가 0인 경우에는 빈 칸으로 처리
             if (itemImageId !== 0) {
-                const itemImageSrc = `${ddragon}${version}/img/item/${itemImageId}.png`;
+                const itemImageSrc = `assets/img/item/${itemImageId}.png`;
                 itemInfoHtml.push(`
-                <img src='${itemImageSrc}' style='width: 30px; height: 30px; overflow: hidden; border-radius: 50%;'>
+                <img loading='lazy' decoding='async' src='${itemImageSrc}' style='width: 30px; height: 30px; overflow: hidden; border-radius: 50%;'>
             `);
             } else {
                 let backgroundColor;
@@ -941,13 +910,13 @@
         return itemInfoHtml.join('');
     }
     //플레이어 룬 정보 리스트 생성
-    async function generateRuneInfo(gameMode, targetParticipant) {
+    function generateRuneInfo(gameMode, targetParticipant) {
         const runeInfoHtml = [];
 
         if (gameMode != "아레나") {
                 runeInfoHtml.push(`
-                <div><img src='${await getIconUrl(targetParticipant.perks.styles[0].selections[0].perk)}' style="width: 25px; height: 25px; overflow: hidden; border-radius: 50%; margin-right: 15px;"></div>
-                <div><img src='${await getIconUrl(targetParticipant.perks.styles[1].style)}' style="width: 25px; height: 25px; overflow: hidden; border-radius: 50%; margin-right: 15px;"></div>
+                <div><img loading='lazy' decoding='async' src='assets/img/runes/${targetParticipant.perks.styles[0].selections[0].perk}.png' style="width: 25px; height: 25px; overflow: hidden; border-radius: 50%; margin-right: 15px;"></div>
+                <div><img loading='lazy' decoding='async' src='assets/img/runes/${targetParticipant.perks.styles[1].style}.png' style="width: 25px; height: 25px; overflow: hidden; border-radius: 50%; margin-right: 15px;"></div>
             `);
             } else {
                 // 아이템 ID가 0인 경우, 빈 칸 추가
@@ -1087,9 +1056,6 @@
                 continue;
             }
 
-            if (hsa[i].champion == "FiddleSticks"){
-                hsa[i].champion = "Fiddlesticks"
-            }
 
             if (i == 1 || i == 4 || i == 7 || i ==10){
                 outline.push(`
@@ -1130,8 +1096,8 @@
                         <div class="row-lo" style="width:100%; margin:0px; justify-content: space-between;">
                             <div class="detailValue">${addCommasToNumber(hsa[i].value)}</div>
                             <div class="column-lo" style="margin-right: 10px;">
-                                <div style="font-size: 15px; font-weight: bold"><img src="assets/img/icon/VW.png" style='width: 20px; height: auto; object-fit: cover;'> ${(hsa[i].wp)}</div>
-                                <div style="font-size: 15px; font-weight: bold"><img src="assets/img/icon/DW.png" style='width: 20px; height: auto; object-fit: cover;'> ${(hsa[i].dp)}</div>
+                                <div style="font-size: 15px; font-weight: bold"><img loading='lazy' decoding='async' src="assets/img/icon/VW.png" style='width: 20px; height: auto; object-fit: cover;'> ${(hsa[i].wp)}</div>
+                                <div style="font-size: 15px; font-weight: bold"><img loading='lazy' decoding='async' src="assets/img/icon/DW.png" style='width: 20px; height: auto; object-fit: cover;'> ${(hsa[i].dp)}</div>
                             </div>
                         </div>
                 `);
@@ -1156,10 +1122,10 @@
 
                     <div class="row-lo" style="display: flex; justify-content: space-between">
                         <div class="row-lo" style="margin-left: 10px">
-                            <div><img src='${ddragon}${version}/img/champion/${hsa[i].champion}.png' class="detailChampImg"></div>
+                            <div><img loading='lazy' decoding='async' src='assets/img/champion/${hsa[i].champion}.png' class="detailChampImg"></div>
                             <div><a class="custom-link" href="/info?summonerName=${hsa[i].playerName}" target="_blank" style="font-size: 13px;">${hsa[i].playerName}</a></div>
                         </div>
-                        <div style="margin-right: 10px;"><img src="assets/img/position/${hsa[i].teamPosition}.png" class="detailImg"></div>
+                        <div style="margin-right: 10px;"><img loading='lazy' decoding='async' src="assets/img/position/${hsa[i].teamPosition}.png" class="detailImg"></div>
                     </div>
                 </div>
             `);
@@ -1351,14 +1317,6 @@
             const p2 = teamRoles[i][1];
 
 
-            if (p1.championName == "FiddleSticks"){
-                p1.championName = "Fiddlesticks";
-            }
-
-            if (p2.championName == "FiddleSticks"){
-                p2.championName = "Fiddlesticks";
-            }
-
             info.push(`
                 <div class="row-lo">
                     <div class="row-lo" style="height: 90px; min-width:355px;max-widthwidth: 355px; padding: 4px; display: flex;justify-content: space-between; align-items: center; background-color: rgba(49, 142, 239, 0.1);">
@@ -1404,16 +1362,16 @@
                             <div class="row-lo" style="display: flex; align-items: center; justify-content: right">
                                 <div class="row-lo">
                                     <div class="column-lo">
-                                        <img src='${await getIconUrl(p1.perks.styles[0].selections[0].perk)}' style="width: 20px; height: 20px; overflow: hidden; border-radius: 50%;">
-                                        <img src='${await getIconUrl(p1.perks.styles[1].style)}' style="width: 20px; height: 20px; overflow: hidden; border-radius: 50%;">
+                                        <img loading='lazy' decoding='async' src='assets/img/runes/${p1.perks.styles[0].selections[0].perk}.png' style="width: 20px; height: 20px; overflow: hidden; border-radius: 50%;">
+                                        <img loading='lazy' decoding='async' src='assets/img/runes/${p1.perks.styles[1].style}.png' style="width: 20px; height: 20px; overflow: hidden; border-radius: 50%;">
                                     </div>
                                     <div class="column-lo">
-                                        <img src='${ddragon}${version}/img/spell/${summonerSpells[p1.summoner1Id]}.png' style='width: 20px; height: 20px; overflow: hidden; border-radius: 50%;'>
-                                        <img src='${ddragon}${version}/img/spell/${summonerSpells[p1.summoner2Id]}.png' style='width: 20px; height: 20px; overflow: hidden; border-radius: 50%;'>
+                                        <img loading='lazy' decoding='async' src='assets/img/spell/${p1.summoner1Id}.png' style='width: 20px; height: 20px; overflow: hidden; border-radius: 50%;'>
+                                        <img loading='lazy' decoding='async' src='assets/img/spell/${p1.summoner2Id}.png' style='width: 20px; height: 20px; overflow: hidden; border-radius: 50%;'>
                                     </div>
                                 </div>
                                 <div class="row-lo" style="position: relative; width: 45px; height: 45px">
-                                    <img src='${ddragon}${version}/img/champion/${p1.championName}.png' style='width: 45px; height: 45px; overflow: hidden; border-radius: 50%; clip-path: inset(3px);'>
+                                    <img loading='lazy' decoding='async' src='assets/img/champion/${p1.championName}.png' style='width: 45px; height: 45px; overflow: hidden; border-radius: 50%; clip-path: inset(3px);'>
                                     <div style="position: absolute; width: 15px;height: 15px; right: 0; bottom: 0; z-index: 1;">
                                         <div style="background-color: black; border-radius: 50%; width: 15px; text-align: center; height: 15px; font-size: 10px; font-weight: bold;">${participants[i].champLevel}</div>
                                     </div>
@@ -1433,19 +1391,19 @@
                         <div class="column-lo" style="min-width: 100px;">
                             <div class="row-lo" style="display: flex; align-items: center; justify-content: left">
                                 <div class="row-lo" style="position: relative; width: 45px; height: 45px">
-                                    <img src='${ddragon}${version}/img/champion/${p2.championName}.png' style='width: 45px; height: 45px; overflow: hidden; border-radius: 50%; clip-path: inset(3px);'>
+                                    <img loading='lazy' decoding='async' src='assets/img/champion/${p2.championName}.png' style='width: 45px; height: 45px; overflow: hidden; border-radius: 50%; clip-path: inset(3px);'>
                                     <div style="position: absolute;width: 15px;height: 15px; left: 0; bottom: 0; z-index: 1;">
                                         <div style="background-color: black; border-radius: 50%; width: 15px; text-align: center; height: 15px; font-size: 10px; font-weight: bold;">${participants[i].champLevel}</div>
                                     </div>
                                 </div>
                                 <div class="row-lo">
                                     <div class="column-lo">
-                                        <img src='${ddragon}${version}/img/spell/${summonerSpells[p1.summoner1Id]}.png' style='width: 20px; height: 20px; overflow: hidden; border-radius: 50%;'>
-                                        <img src='${ddragon}${version}/img/spell/${summonerSpells[p1.summoner2Id]}.png' style='width: 20px; height: 20px; overflow: hidden; border-radius: 50%;'>
+                                        <img loading='lazy' decoding='async' src='assets/img/spell/${p2.summoner1Id}.png' style='width: 20px; height: 20px; overflow: hidden; border-radius: 50%;'>
+                                        <img loading='lazy' decoding='async' src='assets/img/spell/${p2.summoner2Id}.png' style='width: 20px; height: 20px; overflow: hidden; border-radius: 50%;'>
                                     </div>
                                     <div class="column-lo">
-                                        <img src='${await getIconUrl(p2.perks.styles[0].selections[0].perk)}' style="width: 20px; height: 20px; overflow: hidden; border-radius: 50%;">
-                                        <img src='${await getIconUrl(p2.perks.styles[1].style)}' style="width: 20px; height: 20px; overflow: hidden; border-radius: 50%;">
+                                        <img loading='lazy' decoding='async' src='assets/img/runes/${p2.perks.styles[0].selections[0].perk}.png' style="width: 20px; height: 20px; overflow: hidden; border-radius: 50%;">
+                                        <img loading='lazy' decoding='async' src='assets/img/runes/${p2.perks.styles[1].style}.png' style="width: 20px; height: 20px; overflow: hidden; border-radius: 50%;">
                                     </div>
                                 </div>
                             </div>
@@ -1585,9 +1543,9 @@
                 `)
 
                 minuteItemMap[minute].forEach(item => {
-                    const itemImageSrc = `${ddragon}${version}/img/item/${item.itemId}.png`;
+                    const itemImageSrc = `assets/img/item/${item.itemId}.png`;
                     build.push(`
-                        <img src='${itemImageSrc}' style='width: 30px; height: 30px; margin: 1.5px; overflow: hidden; border-radius: 10px;'>
+                        <img loading='lazy' decoding='async' src='${itemImageSrc}' style='width: 30px; height: 30px; margin: 1.5px; overflow: hidden; border-radius: 10px;'>
                     `)
                 });
 
@@ -1596,7 +1554,7 @@
                 `)
 
                 if (minute != lastm){
-                    build.push(`<div style="background-color: #1c1c1f; padding: 2px;"><img src="assets/img/icon/icon-arrow.png" style="height: 15px; width: auto; color: white; margin: 3px;"></div>`);
+                    build.push(`<div style="background-color: #1c1c1f; padding: 2px;"><img loading='lazy' decoding='async' src="assets/img/icon/icon-arrow.png" style="height: 15px; width: auto; color: white; margin: 3px;"></div>`);
                 }
 
                 build.push(`
@@ -1637,11 +1595,11 @@
                     countMap[skillSlot]++;
                     if (countMap[skillSlot] >= 5){
                         if (Object.keys(countMap).length<3){
-                            build.push(`<div><img src="assets/img/icon/icon-arrow.png" style="height: 15px; width: auto; color: white; margin: 3px;"></div>`);
+                            build.push(`<div><img loading='lazy' decoding='async' src="assets/img/icon/icon-arrow.png" style="height: 15px; width: auto; color: white; margin: 3px;"></div>`);
                         }
                         build.push(`
                             <div style="align-items: center; padding: 4px; background-color: #1c1c1f;border-radius: 10px; position: relative;">
-                                <img src='${ddragon}${version}/img/spell/${skill[skillList[i].skillSlot-1]}.png' style="width: 30px;height: 30px; border-radius: 10px;">
+                                <img loading='lazy' decoding='async' src='${ddragon}${version}/img/spell/${skill[skillList[i].skillSlot-1]}.png' style="width: 30px;height: 30px; border-radius: 10px;">
                                 <div style="text-align:center; position: absolute; right: 0px;bottom: 0px; font-size: 10px; background-color: black; border-radius: 5px; width: 17px; height: 17px;">${skillKey}</div>
                             </div>
                         `);
@@ -1663,12 +1621,12 @@
                     let skillKey = ["Q", "W", "E","R"][evolveList[i].skillSlot - 1] || "Unknown";
                     build.push(`
                             <div style="align-items: center; padding: 4px; background-color: #5f1c1f;border-radius: 10px; position: relative;">
-                                <img src='${ddragon}${version}/img/spell/${skill[evolveList[i].skillSlot-1]}.png' style="width: 30px;height: 30px; border-radius: 10px;">
+                                <img loading='lazy' decoding='async' src='${ddragon}${version}/img/spell/${skill[evolveList[i].skillSlot-1]}.png' style="width: 30px;height: 30px; border-radius: 10px;">
                                 <div style="text-align:center; position: absolute; right: 0px;bottom: 0px; font-size: 10px; background-color: black; border-radius: 5px; width: 17px; height: 17px;">${skillKey}</div>
                             </div>
                     `);
                     if (i+1 < evolveList.length){
-                        build.push(`<div><img src="assets/img/icon/icon-arrow.png" style="height: 15px; width: auto; color: white; margin: 3px;"></div>`);
+                        build.push(`<div><img loading='lazy' decoding='async' src="assets/img/icon/icon-arrow.png" style="height: 15px; width: auto; color: white; margin: 3px;"></div>`);
                     }
                 }
                 build.push(`</div>`);
@@ -1688,13 +1646,13 @@
                 build.push(`
                     <div class="row-lo" style="display: flex;justify-content: center;align-items: center;">
                         <div style="align-items: center; padding: 4px; background-color: #1c1c1f;border-radius: 10px; margin-bottom: 10px; position: relative;">
-                            <img src='${ddragon}${version}/img/spell/${skill[skillList[i].skillSlot-1]}.png' style="width: 30px;height: 30px; border-radius: 10px;">
+                            <img loading='lazy' decoding='async' src='${ddragon}${version}/img/spell/${skill[skillList[i].skillSlot-1]}.png' style="width: 30px;height: 30px; border-radius: 10px;">
                             <div style="text-align:center; position: absolute; right: 0px;bottom: 0px; font-size: 10px; background-color: black; border-radius: 5px; width: 17px; height: 17px;">${skillKey}</div>
                         </div>
                 `)
 
                 if (i != (skillList.length-1)){
-                    build.push(`<div style="background-color: #1c1c1f; padding: 2px;"><img src="assets/img/icon/icon-arrow.png" style="height: 15px; width: auto; color: white; margin: 3px;"></div>`);
+                    build.push(`<div style="background-color: #1c1c1f; padding: 2px;"><img loading='lazy' decoding='async' src="assets/img/icon/icon-arrow.png" style="height: 15px; width: auto; color: white; margin: 3px;"></div>`);
                 }
 
                 build.push(`
@@ -1740,7 +1698,7 @@
             for (let i = 0;i<mainRune.length;i++){
                 if(i==0){
                     build.push(`
-                    <div class="row-lo runeTitle"><img src="https://ddragon.leagueoflegends.com/cdn/img/${mainRuneInfo[0]}" class="runeImg">&nbsp;${mainRuneInfo[1]}</div>
+                    <div class="row-lo runeTitle"><img loading='lazy' decoding='async' src="assets/img/runes/${targetParticipant.perks.styles[0].style}.png" class="runeImg">&nbsp;${mainRuneInfo[1]}</div>
                     `);
                 }
                 build.push(`
@@ -1750,12 +1708,12 @@
                 for (let j = 0;j<mainRune[i].runes.length;j++) {
                     if (ppi.includes(mainRune[i].runes[j].id)) {
                         build.push(`
-                        <img src="https://ddragon.leagueoflegends.com/cdn/img/${mainRune[i].runes[j].icon}" class="runeImg">
+                        <img loading='lazy' decoding='async' src="assets/img/runes/${mainRune[i].runes[j].id}.png" class="runeImg">
                         `);
                     }
                     else{
                         build.push(`
-                        <img src="https://ddragon.leagueoflegends.com/cdn/img/${mainRune[i].runes[j].icon}" class="runeImg" style="filter: grayscale(1)">
+                        <img loading='lazy' decoding='async' src="assets/img/runes/${mainRune[i].runes[j].id}.png" class="runeImg" style="filter: grayscale(1)">
                         `);
                     }
 
@@ -1776,7 +1734,7 @@
             for (let i = 1;i<subRune.length;i++){
                 if(i==1){
                     build.push(`
-                    <div class="row-lo runeTitle"><img src="https://ddragon.leagueoflegends.com/cdn/img/${subRuneInfo[0]}" class="runeImg">&nbsp;${subRuneInfo[1]}</div>
+                    <div class="row-lo runeTitle"><img loading='lazy' decoding='async' src="assets/img/runes/${targetParticipant.perks.styles[1].style}.png" class="runeImg">&nbsp;${subRuneInfo[1]}</div>
                     `);
                 }
 
@@ -1788,12 +1746,12 @@
                 for (let j = 0;j<subRune[i].runes.length;j++) {
                     if (spi.includes(subRune[i].runes[j].id)) {
                         build.push(`
-                        <img src="https://ddragon.leagueoflegends.com/cdn/img/${subRune[i].runes[j].icon}" class="runeImg">
+                        <img loading='lazy' decoding='async' src="assets/img/runes/${subRune[i].runes[j].id}.png" class="runeImg">
                         `);
                     }
                     else{
                         build.push(`
-                        <img src="https://ddragon.leagueoflegends.com/cdn/img/${subRune[i].runes[j].icon}" class="runeImg" style="filter: grayscale(1)">
+                        <img loading='lazy' decoding='async' src="assets/img/runes/${subRune[i].runes[j].id}.png" class="runeImg" style="filter: grayscale(1)">
                         `);
                     }
 
@@ -1821,10 +1779,10 @@
                 build.push(`<div class="row-lo" style="width: auto; display: flex;justify-content: space-between;align-items: center;">`);
                 for (let j = 0;j<3;j++){
                     if (statP[i] == stat[i*3+j]){
-                        build.push(`<img src="assets/img/icon/${stat[i*3+j]}.png" class="runeImg">`);
+                        build.push(`<img loading='lazy' decoding='async' src="assets/img/icon/${stat[i*3+j]}.png" class="runeImg">`);
                     }
                     else {
-                        build.push(`<img src="assets/img/icon/${stat[i*3+j]}.png" class="runeImg" style="filter: grayscale(1)">`);
+                        build.push(`<img loading='lazy' decoding='async' src="assets/img/icon/${stat[i*3+j]}.png" class="runeImg" style="filter: grayscale(1)">`);
                     }
 
                 }
@@ -1850,9 +1808,9 @@
 
         // 아이템 ID가 0인 경우에는 빈 칸으로 처리
         if (itemImageId !== 0) {
-            const itemImageSrc = `${ddragon}${version}/img/item/${itemImageId}.png`;
+            const itemImageSrc = `assets/img/item/${itemImageId}.png`;
             itemslot.push(`
-                <img src='${itemImageSrc}' style='width: 22px; height: 22px; overflow: hidden; margin: 1px;'>
+                <img loading='lazy' decoding='async' src='${itemImageSrc}' style='width: 22px; height: 22px; overflow: hidden; margin: 1px;'>
             `);
         } else {
             // 아이템 ID가 0인 경우, 빈 칸 추가
@@ -1864,27 +1822,9 @@
 
         return itemslot.join('');
     }
-    //룬 정보 획득
-    async function getIconUrl(trid){
-
-        const data = await getRuneInfo()
-
-        for (let i =0;i<5;i++){
-            if (data[i].id === trid){
-                return `https://ddragon.leagueoflegends.com/cdn/img/${data[i].icon}`
-            }
-        }
-
-        for (const slot of data.slice(0, 5).flatMap(style => style.slots).flatMap(slot => slot.runes)) {
-            if (slot.id === trid) {
-                return `https://ddragon.leagueoflegends.com/cdn/img/${slot.icon}`
-                break;  // 이미 찾았으므로 더 이상 검사할 필요가 없음
-            }
-        }
-    }
     //솔로,자유랭크 생성
     function updateRankDisplay(rankData) {
-        emblemElement.innerHTML = `<img src="assets/img/emblem/${rankData.tier}.png" style='width: 100%; height: auto; object-fit: cover; border-radius: 10px;'>`;
+        emblemElement.innerHTML = `<img loading='lazy' decoding='async' src="assets/img/emblem/${rankData.tier}.png" style='width: 100%; height: auto; object-fit: cover; border-radius: 10px;'>`;
         rankElement.textContent = rankData.rank;
         tierElement.textContent = rankData.tier;
         winsElement.textContent = `${rankData.wins}승 `;

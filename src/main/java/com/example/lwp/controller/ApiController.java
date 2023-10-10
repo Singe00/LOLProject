@@ -1,5 +1,6 @@
 package com.example.lwp.controller;
 
+import com.example.lwp.domain.Champion;
 import com.example.lwp.dto.*;
 import com.example.lwp.service.ApiService;
 import lombok.RequiredArgsConstructor;
@@ -58,4 +59,19 @@ public class ApiController {
 
     }
 
+    @PostMapping("/champion")
+    @ResponseBody
+    public List<Champion> champion() {
+        List<Champion> championList = apiService.ReturnChampionList();
+        return championList;
+
+    }
+
+    @PostMapping("/champion2")
+    @ResponseBody
+    public List<Champion> champion2(@RequestBody SearchChampionDto request) {
+        List<Champion> championList = apiService.SearchChampionWithOptions(request.getInputValue(),request.getSelectedRole());
+        return championList;
+
+    }
 }

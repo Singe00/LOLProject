@@ -9,22 +9,108 @@
 
   </style>
 
-
   <div class="main-box bg-dark">
     <div class="column-lo">
       <div class="column-lo">
-        <div>검색창</div>
-        <div>옵션창</div>
-        <div>챔피언창</div>
+        <div>
+          <input type="text" id="inputValue" class="input-field" placeholder="챔피언 이름을 입력해주세요." autofocus="autofocus" onkeyup="searchChampion()">
+        </div>
+        <div>
+          <!-- Add radio buttons for champion roles -->
+          옵션창 라디오 버튼:
+          <label><input type="radio" name="role" value="A" checked="checked" onclick="searchChampion()">전체</label>
+          <label><input type="radio" name="role" value="T" onclick="searchChampion()">탑</label>
+          <label><input type="radio" name="role" value="J" onclick="searchChampion()">정글</label>
+          <label><input type="radio" name="role" value="M" onclick="searchChampion()">미드</label>
+          <label><input type="radio" name="role" value="B" onclick="searchChampion()">원딜</label>
+          <label><input type="radio" name="role" value="U" onclick="searchChampion()">서폿</label>
+        </div>
+        <div id="championList">챔피언 목록 리스트 위치</div>
       </div>
       <div>
-        <div>챔피언 상세 정보
-        </div>
+        <div id="championDetails">챔피언 상세 정보</div>
       </div>
     </div>
-
   </div>
 
+  <script>
+    let championsData = [];
+
+    // 페이지가 로드되면 실행되는 함수
+    document.addEventListener("DOMContentLoaded", async function() {
+      championsData = await callChampion();
+      console.log("championData: ", championsData);
+
+      // Display Korean champion names initially
+      displayKoreanChampionList();
+    });
+
+    function isKorean(text) {
+      const koreanRegex = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/;
+      return koreanRegex.test(text);
+    }
+
+    function displayKoreanChampionList() {
+      // Display the Korean champion names initially
+      const championList = document.getElementById('championList');
+      const koreanChampionNames = championsData.map(champion => champion.championNameKr).join('\n');
+      championList.innerText = `챔피언 목록:\n${koreanChampionNames}`;
+    }
+
+    async function searchChampion() {
+      const inputValue = document.getElementById('inputValue').value.toLowerCase(); // 입력된 검색어 가져오기
+      const selectedRole = document.querySelector('input[name="role"]:checked').value; // 선택된 라디오 버튼 값 가져오기
+
+      const data = await callChampionWithOptions(inputValue,selectedRole);
+      console.log("data = ",inputValue," and = ", selectedRole);
+    }
+
+    //숙련도 비동기 api요청
+    const callChampion = async () => {
+      try {
+        const response = await fetch(apiUrl + "/champion", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({})
+        });
+
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        console.error("API Error:", error);
+        throw error;
+      }
+    }
+
+    //숙련도 비동기 api요청
+    const callChampionWithOptions = async (inputValue,selectedRole) => {
+      try {
+        const response = await fetch(apiUrl + "/champion2", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ input: inputValue,option: selectedRole})
+        });
+
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        console.error("API Error:", error);
+        throw error;
+      }
+    }
+  </script>
 
 </th:block>
 

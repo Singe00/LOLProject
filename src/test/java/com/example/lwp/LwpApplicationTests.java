@@ -52,4 +52,21 @@ class LwpApplicationTests {
         update.updateChampionRotation();
 
     }
+
+    @Test
+    void test4() {
+        List<Champion> championList = apiService.ReturnChampionList();
+
+        System.out.println(championList.get(0).getChampionNameKr());
+        System.out.println(championList.get(1).getChampionNameKr());
+        System.out.println(championList.get(2).getChampionNameKr());
+    }
+    @Test
+    void test5() {
+        List<Champion> championList = apiService.SearchChampionWithOptions("ㅌㄹ","A");
+
+        System.out.println(championList.get(0).getChampionNameKr());
+        System.out.println(championList.get(1).getChampionNameKr());
+    }
+
 }
