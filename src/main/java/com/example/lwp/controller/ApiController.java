@@ -71,7 +71,7 @@ public class ApiController {
     @ResponseBody
     public List<Champion> champion2(@RequestBody SearchChampionDto request) {
         List<Champion> championList = apiService.SearchChampionWithOptions(request.getInputValue(),request.getSelectedRole());
-        return championList;
 
+        return championList;
     }
 }

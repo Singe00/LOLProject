@@ -15,9 +15,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -189,6 +187,8 @@ public class ApiService {
 
         championList = championRepository.findAll();
 
+        Collections.sort(championList, Comparator.comparing(Champion::getChampionNameKr));
+
         return championList;
     }
 
@@ -200,17 +200,17 @@ public class ApiService {
 
         if (isKorean) {
             championList = championRepository.findAllByChampionNameKrContainingAndPositionContaining(inputValue,selectedRole);
-            System.out.println(championList);
             if (championList.isEmpty()){
                 championList = championRepository.findAllByNickNameAndPositionContaining(inputValue,selectedRole);
-                if (championList.isEmpty()){
-                    championList = championRepository.findAllByInitialContainingAndPositionContaining(inputValue,selectedRole);
-                }
             }
         } else {
             championList = championRepository.findAllByChampionNameContainingAndPositionContaining(inputValue,selectedRole);
-            System.out.println(championList);
+            if (championList.isEmpty()){
+                championList = championRepository.findAllByInitialContainingAndPositionContaining(inputValue,selectedRole);
+            }
         }
+
+        Collections.sort(championList, Comparator.comparing(Champion::getChampionNameKr));
 
         return championList;
     }

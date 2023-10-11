@@ -67,6 +67,19 @@ class LwpApplicationTests {
 
         System.out.println(championList.get(0).getChampionNameKr());
         System.out.println(championList.get(1).getChampionNameKr());
+        System.out.println(championList.get(2).getChampionNameKr());
+        System.out.println(championList.get(4).getChampionNameKr());
+        System.out.println(championList.get(5).getChampionNameKr());
     }
 
+    @Test
+    void test6() {
+        List<Champion> championList = championRepository.findAllByInitialContaining("ㅌㄹㄷㅁㅇ");
+
+        System.out.println(championList.get(0).getChampionNameKr());
+        System.out.println(championList.get(0).getInitial());
+        if (championList.get(0).getInitial().equals("ㅌㄹㄷㅁㅇ")){
+            System.out.println(championList.get(0).getInitial());
+        }
+    }
 }

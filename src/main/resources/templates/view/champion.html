@@ -5,32 +5,177 @@
 
 <th:block layout:fragment="content">
   <style>
+    #roleSelection {
+      display: flex;
+      align-items: center;
+      width: 80%;
+      justify-content: space-between;
+    }
+    .radio-label {
+      position: relative;
+      margin-right: 10px;
+    }
+    .radio-label input {
+      position: absolute;
+      opacity: 0;
+      cursor: pointer;
+    }
+    .radio-label img {
+      width: 35px;
+      height: 35px;
+      cursor: pointer;
+    }
+    .radio-label input:checked + img {
+      filter: grayscale(0%);
+    }
+    .radio-label input:not(:checked) + img {
+      filter: grayscale(100%);
+    }
 
+    .innerDiv{
+      width: 1300px;
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+    }
+    .searchBox{
+      width: 380px;
+      background-color: #2c2c2f;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 10px;
+      border-radius: 10px;
+    }
+    .championInfoBox{
+      width: 70%;
+      border-radius: 10px;
+    }
+    .champion-list{
+      display: flex;
+      width: 100%;
+      min-height: 30px;
+      flex-wrap: wrap;
+      white-space: pre-wrap;
+      justify-content: flex-start;
+    }
+    .noresult{
+      width: 100%;
+      height: 100px;
+      font-size: 20px;
+      color: gray;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      margin: 0px;
+    }
 
+    .api-button {
+      background-image: url('/assets/img/icon/icon-search.png');
+      background-position: center;
+      filter: invert(100%);
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-color: transparent;
+      background-size: 25px auto;
+      padding: 15px 15px;
+      border: none;
+      border-radius: 5px;
+    }
+    .input-field {
+      flex: 1;
+      padding: 8px;
+      border: none;
+      border-radius: 5px;
+      background-color: #1c1c1f;
+      outline: none;
+      width: 100%;
+      height: 25px;
+      font-size: 15px;
+      color: white;
+    }
+    .custom-input-box {
+      background-color: #1c1c1f;
+      border: none;
+      border-radius: 13px;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+      display: flex;
+      align-items: center;
+      width: 100%;
+      border: 3px solid #1c1c1f;
+      transition: border-color 0.3s;
+      margin: 0px 0px 10px 0px;
+    }
+
+    .champion-image {
+      display: inline-block;
+      margin: 4px;
+      max-width: 52px;
+    }
+    .champion-image img {
+      width: 52px;
+      height: 52px;
+      clip-path: inset(3px);
+    }
+    .champion-image.hidden {
+      display: none;
+    }
+    .champion-name{
+      text-align: center;
+      font-size: 12px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap
+    }
   </style>
 
   <div class="main-box bg-dark">
-    <div class="column-lo">
-      <div class="column-lo">
-        <div>
+    <div class="row-lo innerDiv">
+      <div class="column-lo searchBox">
+        <label class="custom-input-box">
+          <div class="api-button"></div>
           <input type="text" id="inputValue" class="input-field" placeholder="챔피언 이름을 입력해주세요." autofocus="autofocus" onkeyup="searchChampion()">
+        </label>
+        <div id="roleSelection">
+          <label class="radio-label">
+            <input type="radio" name="role" value="A" checked="checked" onclick="searchChampion()">
+            <img class="positionImg" src="assets/img/position/FILL.png" alt="전체">
+          </label>
+          <label class="radio-label">
+            <input type="radio" name="role" value="T" onclick="searchChampion()">
+            <img class="positionImg" src="assets/img/position/TOP.png" alt="탑">
+          </label>
+          <label class="radio-label">
+            <input type="radio" name="role" value="J" onclick="searchChampion()">
+            <img class="positionImg" src="assets/img/position/JUNGLE.png" alt="정글">
+          </label>
+          <label class="radio-label">
+            <input type="radio" name="role" value="M" onclick="searchChampion()">
+            <img class="positionImg" src="assets/img/position/MIDDLE.png" alt="미드">
+          </label>
+          <label class="radio-label">
+            <input type="radio" name="role" value="B" onclick="searchChampion()">
+            <img class="positionImg" src="assets/img/position/BOTTOM.png" alt="바텀">
+          </label>
+          <label class="radio-label">
+            <input type="radio" name="role" value="U" onclick="searchChampion()">
+            <img class="positionImg" src="assets/img/position/UTILITY.png" alt="서폿">
+          </label>
         </div>
-        <div>
-          <!-- Add radio buttons for champion roles -->
-          옵션창 라디오 버튼:
-          <label><input type="radio" name="role" value="A" checked="checked" onclick="searchChampion()">전체</label>
-          <label><input type="radio" name="role" value="T" onclick="searchChampion()">탑</label>
-          <label><input type="radio" name="role" value="J" onclick="searchChampion()">정글</label>
-          <label><input type="radio" name="role" value="M" onclick="searchChampion()">미드</label>
-          <label><input type="radio" name="role" value="B" onclick="searchChampion()">원딜</label>
-          <label><input type="radio" name="role" value="U" onclick="searchChampion()">서폿</label>
+        <div id="championList" class="champion-list">
         </div>
-        <div id="championList">챔피언 목록 리스트 위치</div>
+        <div class="column-lo noresult" id="noresult" style="display: none;">
+          <img style="color:gray;" src="assets/img/icon/noresult.png">
+          <div style="color: gray; font-weight: bold; font-size: 17px;">No Result!</div>
+        </div>
       </div>
-      <div>
-        <div id="championDetails">챔피언 상세 정보</div>
+      <div class="column-lo championInfoBox">
+        <div>
+          <div id="championDetails">챔피언 상세 정보</div>
+        </div>
       </div>
     </div>
+
   </div>
 
   <script>
@@ -40,29 +185,68 @@
     document.addEventListener("DOMContentLoaded", async function() {
       championsData = await callChampion();
       console.log("championData: ", championsData);
-
+      console.log("championData: ", championsData.length);
+      console.log("championData: ", championsData[0]);
+      console.log("championData: ", championsData[1]);
+      console.log("championData: ", championsData[2]);
       // Display Korean champion names initially
-      displayKoreanChampionList();
+      inputChampion();
     });
 
-    function isKorean(text) {
-      const koreanRegex = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/;
-      return koreanRegex.test(text);
-    }
 
-    function displayKoreanChampionList() {
-      // Display the Korean champion names initially
-      const championList = document.getElementById('championList');
-      const koreanChampionNames = championsData.map(champion => champion.championNameKr).join('\n');
-      championList.innerText = `챔피언 목록:\n${koreanChampionNames}`;
-    }
-
+    //챔피언 검색 함수
     async function searchChampion() {
       const inputValue = document.getElementById('inputValue').value.toLowerCase(); // 입력된 검색어 가져오기
       const selectedRole = document.querySelector('input[name="role"]:checked').value; // 선택된 라디오 버튼 값 가져오기
 
       const data = await callChampionWithOptions(inputValue,selectedRole);
-      console.log("data = ",inputValue," and = ", selectedRole);
+      championsData = data;
+      displayChampionList();
+
+    }
+    //검색된 챔피언 display함수
+    function displayChampionList() {
+      document.getElementById("noresult").style.display = "none";
+      // 모든 챔피언 이미지 숨김
+      const championImages = document.querySelectorAll('.champion-image');
+      championImages.forEach(imageDiv => imageDiv.classList.add('hidden'));
+
+      if (championsData.length>0){
+        // 검색된 챔피언 이미지만 표시
+        championsData.forEach(champion => {
+          const championImage = document.querySelector(`img[alt="c${champion.championId}"]`);
+          if (championImage) {
+            const parentDiv = championImage.parentElement;
+            parentDiv.classList.remove('hidden');
+          }
+        });
+      }else {
+        document.getElementById("noresult").style.display = "block";
+      }
+
+    }
+
+    //검색된 챔피언 display함수
+    function inputChampion() {
+
+      const championList = document.getElementById('championList');
+
+      for (let i = 0; i < championsData.length; i++) {
+        const championImageDiv = document.createElement('div');
+        championImageDiv.classList.add('champion-image');
+
+        const img = document.createElement('img');
+        img.src = `assets/img/champion/${championsData[i].championName}.png`;
+        img.alt = `c${championsData[i].championId}`;
+
+        const nameDiv = document.createElement('div');
+        nameDiv.classList.add('champion-name');
+        nameDiv.textContent = championsData[i].championNameKr;  // 챔피언 이름 설정
+
+        championImageDiv.appendChild(img);
+        championImageDiv.appendChild(nameDiv);
+        championList.appendChild(championImageDiv);
+      }
     }
 
     //숙련도 비동기 api요청
@@ -87,7 +271,6 @@
         throw error;
       }
     }
-
     //숙련도 비동기 api요청
     const callChampionWithOptions = async (inputValue,selectedRole) => {
       try {
@@ -96,7 +279,7 @@
           headers: {
             "Content-Type": "application/json"
           },
-          body: JSON.stringify({ input: inputValue,option: selectedRole})
+          body: JSON.stringify({ inputValue: inputValue,selectedRole: selectedRole})
         });
 
         if (!response.ok) {
