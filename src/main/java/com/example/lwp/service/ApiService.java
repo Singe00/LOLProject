@@ -2,8 +2,10 @@ package com.example.lwp.service;
 
 import com.example.lwp.config.RiotConstant;
 import com.example.lwp.domain.Champion;
+import com.example.lwp.domain.Ranking;
 import com.example.lwp.dto.*;
 import com.example.lwp.repository.ChampionRepository;
+import com.example.lwp.repository.RankingRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +26,9 @@ public class ApiService {
 
     @Autowired
     private final ChampionRepository championRepository;
+
+    @Autowired
+    private final RankingRepository rankingRepository;
 
     public SummonerInfoDto FindSummonerInfo(String sn){
 
@@ -155,7 +160,6 @@ public class ApiService {
 
     public List<MasteryDto> FindMastery(String sn){
 
-
         try {
             //puuid 가져오기
             String apiUrl1 = "https://kr.api.riotgames.com/lol/summoner/v4/summoners/by-name/"+sn+"?api_key="+RiotConstant.API_KEY;
@@ -190,6 +194,12 @@ public class ApiService {
         Collections.sort(championList, Comparator.comparing(Champion::getChampionNameKr));
 
         return championList;
+    }
+
+    public List<Ranking> ReturnRankingList(int gametype){
+        List<Ranking> rankings = rankingRepository.findAllByGametypeOrderByLeaguePointsDesc(gametype);
+
+        return rankings;
     }
 
     public List<Champion> SearchChampionWithOptions(String inputValue, String selectedRole){

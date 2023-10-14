@@ -546,9 +546,9 @@
         errorAppend.after(matchElement);
 
     }
-
     // 두 번째 함수 실행, 전적 리스트 생성
     async function secondFunction() {
+        console.log("메인 호출 함수 시작");
         document.getElementById("more").style.display = "none";
         sds("sp2");
 
@@ -561,21 +561,27 @@
             document.getElementById("more").style.display='block';
             matchIndex += 1;
         }
+
+        console.log("메인 호출 함수 끝");
     }
     async function generateMatchHistory() {
+        console.log("히스토리 생성 시작");
         const fragment = document.createDocumentFragment();
 
         for (let i = 0; i < 10; i++) {
+            console.log(`${i}번 생성 시작`);
             const match = matchData[matchIndex * 10 + i];
             const matchElement = await createMatchElement(match);
             fragment.appendChild(matchElement);
+            console.log(`${i}번 생성 끝`);
         }
 
         matchHistoryContainer.before(fragment);
+        console.log("히스토리 생성 끝");
     }
     //전적 리스트 생성
     async function createMatchElement(match) {
-
+        console.log("생성중");
         const matchElement = document.createElement('div');
         // gameCreation 값 변환 (에포크 시간 -> 날짜와 시간)
         const gameCreationDate = new Date(match.info.gameCreation);
@@ -682,6 +688,7 @@
     </div>
   `;
 
+        console.log("생성완");
         return matchElement;
     }
     //사이드 정보 창 생성
@@ -2187,8 +2194,8 @@
 
                 if (response.ok) {
                     const md = await response.json();
-                    console.log(md)
                     matchData.push(...md);
+                    console.log("api 호출 완료");
                 } else {
                     throw new Error("MatchData Error: " + response.statusText);
                 }

@@ -1,6 +1,7 @@
 package com.example.lwp.controller;
 
 import com.example.lwp.domain.Champion;
+import com.example.lwp.domain.Ranking;
 import com.example.lwp.dto.*;
 import com.example.lwp.service.ApiService;
 import lombok.RequiredArgsConstructor;
@@ -49,6 +50,14 @@ public class ApiController {
             return null;
         }
         return m;
+    }
+
+    @PostMapping("/ranking")
+    @ResponseBody
+    public List<Ranking> ranking(@RequestBody RankingDto request) {
+        List<Ranking> ranking = apiService.ReturnRankingList(request.getGametype());
+
+        return ranking;
     }
 
     @PostMapping("/timeline")

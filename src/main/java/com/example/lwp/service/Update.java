@@ -52,4 +52,45 @@ public class Update {
         }
 
     }
+
+
+    @Scheduled(cron = "0 0 5 ? * TUE")
+    public void updateRanking() {
+        // 실행할 작업 내용을 여기에 작성
+        System.out.println("소환사 랭킹 업데이트 : " + new Date());
+
+
+        //챌린져
+        String apiUrl = "https://kr.api.riotgames.com/lol/league/v4/challengerleagues/by-queue/RANKED_SOLO_5x5?api_key="+ RiotConstant.API_KEY;
+        String apiUrl2 = "https://kr.api.riotgames.com/lol/league/v4/challengerleagues/by-queue/RANKED_FLEX_SR?api_key="+ RiotConstant.API_KEY;
+        //그마
+        String apiUrl3 = "https://kr.api.riotgames.com/lol/league/v4/grandmasterleagues/by-queue/RANKED_SOLO_5x5?api_key="+ RiotConstant.API_KEY;
+        String apiUrl4 = "https://kr.api.riotgames.com/lol/league/v4/grandmasterleagues/by-queue/RANKED_FLEX_SR?api_key="+ RiotConstant.API_KEY;
+        //마스터
+        String apiUrl5 = "https://kr.api.riotgames.com/lol/league/v4/masterleagues/by-queue/RANKED_SOLO_5x5?api_key="+ RiotConstant.API_KEY;
+        String apiUrl6 = "https://kr.api.riotgames.com/lol/league/v4/masterleagues/by-queue/RANKED_FLEX_SR?api_key="+ RiotConstant.API_KEY;
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<RotationDto> rotationResponse = restTemplate.getForEntity(apiUrl, RotationDto.class);
+
+        if (rotationResponse.getStatusCode() == HttpStatus.OK) {
+            RotationDto rotationDto = rotationResponse.getBody();
+            if (rotationDto != null) {
+
+                List<Integer> freeChampionIds = rotationDto.getFreeChampionIds();
+
+                System.out.println(freeChampionIds);
+                // Fetch all champions from the database
+                List<Champion> champions = championRepository.findAll();
+
+                for (Champion champion : champions) {
+                    int championId = champion.getChampionId();
+                    champion.setRotation(freeChampionIds.contains(championId) ? 1 : 0);
+                }
+
+                // Save the updated champions with rotation info
+                championRepository.saveAll(champions);
+            }
+        }
+
+    }
 }

@@ -28,6 +28,16 @@ public class ViewController {
         return "view/champion";
     }
 
+    @GetMapping("/statistics")
+    public String statistics(){
+        return "view/statistics";
+    }
+
+    @GetMapping("/ranking")
+    public String ranking(){
+        return "view/ranking";
+    }
+
     @GetMapping("//riot.txt")
     public String riot(){
         return "view/riot";

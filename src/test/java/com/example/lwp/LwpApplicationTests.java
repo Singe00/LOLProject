@@ -1,9 +1,11 @@
 package com.example.lwp;
 
 import com.example.lwp.domain.Champion;
+import com.example.lwp.domain.Ranking;
 import com.example.lwp.dto.MasteryDto;
 import com.example.lwp.dto.MatchTimelineDto;
 import com.example.lwp.repository.ChampionRepository;
+import com.example.lwp.repository.RankingRepository;
 import com.example.lwp.service.ApiService;
 import com.example.lwp.service.Update;
 import org.junit.jupiter.api.Test;
@@ -25,6 +27,9 @@ class LwpApplicationTests {
 
     @Autowired
     private ChampionRepository championRepository;
+
+    @Autowired
+    private RankingRepository rankingRepository;
 
     @Test
     void test() {
@@ -81,5 +86,12 @@ class LwpApplicationTests {
         if (championList.get(0).getInitial().equals("ㅌㄹㄷㅁㅇ")){
             System.out.println(championList.get(0).getInitial());
         }
+    }
+
+    @Test
+    void test7() {
+        List<Ranking> a = apiService.ReturnRankingList(1);
+
+        System.out.println(a.get(0).getSummonerName());
     }
 }
