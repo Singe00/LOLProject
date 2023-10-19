@@ -10,3 +10,5 @@ CREATE TABLE champion (
                           initial varchar(50),
                           PRIMARY KEY (championId)
 );
+
+

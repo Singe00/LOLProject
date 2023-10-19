@@ -196,8 +196,14 @@ public class ApiService {
         return championList;
     }
 
-    public List<Ranking> ReturnRankingList(int gametype){
+/*    public List<Ranking> ReturnRankingList(int gametype){
         List<Ranking> rankings = rankingRepository.findAllByGametypeOrderByLeaguePointsDesc(gametype);
+
+        return rankings;
+    }*/
+
+    public List<Object[]> ReturnRankingList(int gametype){
+        List<Object[]> rankings = rankingRepository.findData(gametype);
 
         return rankings;
     }
@@ -221,6 +227,12 @@ public class ApiService {
         }
 
         Collections.sort(championList, Comparator.comparing(Champion::getChampionNameKr));
+
+        return championList;
+    }
+
+    public List<Champion> ReturnChampions(){
+        List<Champion> championList = championRepository.findAll();
 
         return championList;
     }

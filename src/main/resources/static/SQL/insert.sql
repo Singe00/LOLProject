@@ -6,3 +6,5 @@ insert into user_authority (USER_ID, AUTHORITY_NAME) values (1, 'ROLE_USER');
 insert into user_authority (USER_ID, AUTHORITY_NAME) values (1, 'ROLE_ADMIN');
 
 SELECT * FROM champion ORDER BY championNameKr ASC;
+
+DELETE FROM ranking WHERE gametype = 1;

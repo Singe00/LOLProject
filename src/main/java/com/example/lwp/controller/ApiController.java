@@ -54,8 +54,8 @@ public class ApiController {
 
     @PostMapping("/ranking")
     @ResponseBody
-    public List<Ranking> ranking(@RequestBody RankingDto request) {
-        List<Ranking> ranking = apiService.ReturnRankingList(request.getGametype());
+    public List<Object[]> ranking(@RequestBody RankingDto request) {
+        List<Object[]> ranking = apiService.ReturnRankingList(request.getGametype());
 
         return ranking;
     }
@@ -73,13 +73,20 @@ public class ApiController {
     public List<Champion> champion() {
         List<Champion> championList = apiService.ReturnChampionList();
         return championList;
-
     }
 
     @PostMapping("/champion2")
     @ResponseBody
     public List<Champion> champion2(@RequestBody SearchChampionDto request) {
         List<Champion> championList = apiService.SearchChampionWithOptions(request.getInputValue(),request.getSelectedRole());
+
+        return championList;
+    }
+
+    @PostMapping("/champion3")
+    @ResponseBody
+    public List<Champion> champion3() {
+        List<Champion> championList = apiService.ReturnChampions();
 
         return championList;
     }

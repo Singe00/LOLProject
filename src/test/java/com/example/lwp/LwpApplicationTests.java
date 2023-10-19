@@ -3,7 +3,6 @@ package com.example.lwp;
 import com.example.lwp.domain.Champion;
 import com.example.lwp.domain.Ranking;
 import com.example.lwp.dto.MasteryDto;
-import com.example.lwp.dto.MatchTimelineDto;
 import com.example.lwp.repository.ChampionRepository;
 import com.example.lwp.repository.RankingRepository;
 import com.example.lwp.service.ApiService;
@@ -12,7 +11,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -88,10 +86,37 @@ class LwpApplicationTests {
         }
     }
 
+
     @Test
     void test7() {
-        List<Ranking> a = apiService.ReturnRankingList(1);
+        List<Object[]> resultList = rankingRepository.findData(1);
 
-        System.out.println(a.get(0).getSummonerName());
+        for (Object[] result : resultList) {
+            String summonerName = (String) result[0];
+            int wins = (int) result[1];
+            int losses = (int) result[2];
+            String tier = (String) result[3];
+            int leaguePoints = (int) result[4];
+            int profileIconId = (int) result[5];
+            String championNameKr1 = (String) result[6];
+            String championNameKr2 = (String) result[7];
+            String championNameKr3 = (String) result[8];
+            int gametype = (int) result[9];
+
+            // Print the values
+            System.out.println("Summoner Name: " + summonerName);
+            System.out.println("Wins: " + wins);
+            System.out.println("Losses: " + losses);
+            System.out.println("Tier: " + tier);
+            System.out.println("League Points: " + leaguePoints);
+            System.out.println("Profile Icon ID: " + profileIconId);
+            System.out.println("Champion 1 Name (KR): " + championNameKr1);
+            System.out.println("Champion 2 Name (KR): " + championNameKr2);
+            System.out.println("Champion 3 Name (KR): " + championNameKr3);
+            System.out.println("Game Type: " + gametype);
+            System.out.println("---------------------");
+
+            break;
+        }
     }
 }

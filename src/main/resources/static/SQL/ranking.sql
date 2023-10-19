@@ -1,15 +1,19 @@
 drop table if exists ranking CASCADE;
 
-create table ranking(
-    summonerName varchar(100),
-    wins int,
-    losses int,
-    tier varchar(30),
-    leaguePoints int,
-    profileIconId int,
-    championId1 int,
-    championId2 int,
-    championId3 int,
-    gametype int,
-    primary key (summonerName)
+
+CREATE TABLE ranking (
+                         summonerName VARCHAR(100),
+                         wins INT,
+                         losses INT,
+                         tier VARCHAR(30),
+                         leaguePoints INT,
+                         profileIconId INT,
+                         championId1 INT,
+                         championId2 INT,
+                         championId3 INT,
+                         gametype INT,
+                         PRIMARY KEY (summonerName),
+                         FOREIGN KEY (championId1) REFERENCES champion(championId),
+                         FOREIGN KEY (championId2) REFERENCES champion(championId),
+                         FOREIGN KEY (championId3) REFERENCES champion(championId)
 );
