@@ -7,12 +7,12 @@
 
 <br/>
 
-> 풀스택 개발
-  <p>Front  : HTML (SSR)</p>
+> 풀스택 개발 (Full Stack)
+  <p>Front  : HTML (SSR), JavaScript</p>
   
   <p>Back   : Java, Spring Boot</p>
   
-  <p>DB     : H2 DB</p>
+  <p>DB     : MySQL</p>
   <br/>
 
   
