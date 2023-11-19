@@ -1,9 +1,10 @@
 package com.example.lwp;
 
 import com.example.lwp.domain.Champion;
-import com.example.lwp.domain.Ranking;
+import com.example.lwp.domain.Dataset;
 import com.example.lwp.dto.MasteryDto;
 import com.example.lwp.repository.ChampionRepository;
+import com.example.lwp.repository.DatasetRepository;
 import com.example.lwp.repository.RankingRepository;
 import com.example.lwp.service.ApiService;
 import com.example.lwp.service.Update;
@@ -19,15 +20,14 @@ class LwpApplicationTests {
 
     @Autowired
     private ApiService apiService;
-
     @Autowired
     private Update update;
-
     @Autowired
     private ChampionRepository championRepository;
-
     @Autowired
     private RankingRepository rankingRepository;
+    @Autowired
+    private DatasetRepository datasetRepository;
 
     @Test
     void test() {
@@ -118,5 +118,14 @@ class LwpApplicationTests {
 
             break;
         }
+    }
+
+    @Test
+    void test8() {
+        List<Dataset> t = datasetRepository.findAllByChampionName("Annie");
+        System.out.println(t.get(0).getChampionName());
+        System.out.println(t.get(1).getTeamPosition());
+        System.out.println(t.get(2).getStartItems());
+
     }
 }
