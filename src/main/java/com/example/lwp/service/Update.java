@@ -21,7 +21,7 @@ public class Update {
     @Autowired
     private ChampionRepository championRepository;
     // 매주 화요일 5시에 실행
-    @Scheduled(cron = "0 0 5 ? * TUE")
+    @Scheduled(cron = "0 0 4 ? * 2")
     public void updateChampionRotation() {
         // 실행할 작업 내용을 여기에 작성
         System.out.println("챔피언 로테이션 업데이트 : " + new Date());
@@ -53,7 +53,7 @@ public class Update {
 
     }
 
-
+/*
     @Scheduled(cron = "0 0 5 ? * TUE")
     public void updateRanking() {
         // 실행할 작업 내용을 여기에 작성
@@ -92,5 +92,5 @@ public class Update {
             }
         }
 
-    }
+    }*/
 }

@@ -548,7 +548,6 @@
     }
     // 두 번째 함수 실행, 전적 리스트 생성
     async function secondFunction() {
-        console.log("메인 호출 함수 시작");
         document.getElementById("more").style.display = "none";
         sds("sp2");
 
@@ -561,27 +560,20 @@
             document.getElementById("more").style.display='block';
             matchIndex += 1;
         }
-
-        console.log("메인 호출 함수 끝");
     }
     async function generateMatchHistory() {
-        console.log("히스토리 생성 시작");
         const fragment = document.createDocumentFragment();
 
         for (let i = 0; i < 10; i++) {
-            console.log(`${i}번 생성 시작`);
             const match = matchData[matchIndex * 10 + i];
             const matchElement = await createMatchElement(match);
             fragment.appendChild(matchElement);
-            console.log(`${i}번 생성 끝`);
         }
 
         matchHistoryContainer.before(fragment);
-        console.log("히스토리 생성 끝");
     }
     //전적 리스트 생성
     async function createMatchElement(match) {
-        console.log("생성중");
         const matchElement = document.createElement('div');
         // gameCreation 값 변환 (에포크 시간 -> 날짜와 시간)
         const gameCreationDate = new Date(match.info.gameCreation);
@@ -688,7 +680,6 @@
     </div>
   `;
 
-        console.log("생성완");
         return matchElement;
     }
     //사이드 정보 창 생성
@@ -1187,7 +1178,7 @@
             [] // 인덱스 5: 예외
         ];
 
-        if (targetMatch.gameMode == "칼바람"){
+        if (targetMatch.gameMode == "칼바람" || targetMatch.gameMode == "특별 모드"){
             // 각 포지션에 플레이어 추가
             for (let i = 0; i < 5; i++) {
                 teamRoles[i].push(participants[i]);
@@ -1313,16 +1304,15 @@
                         teamRoles[i].push(teamRoles[i][0])
                         teamRoles[i][0] = teamRoles[5][0]
                     }
-                    console.log(teamRoles[i])
                 }
             }
         }
 
         for (let i = 0;i<5;i++){
 
+
             const p1 = teamRoles[i][0];
             const p2 = teamRoles[i][1];
-
 
             info.push(`
                 <div class="row-lo">
@@ -2195,7 +2185,6 @@
                 if (response.ok) {
                     const md = await response.json();
                     matchData.push(...md);
-                    console.log("api 호출 완료");
                 } else {
                     throw new Error("MatchData Error: " + response.statusText);
                 }
