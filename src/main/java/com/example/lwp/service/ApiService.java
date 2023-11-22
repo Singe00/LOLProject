@@ -45,8 +45,23 @@ public class ApiService {
             SummonerRankInfoDto dto2 = new SummonerRankInfoDto();
             summonerRankInfoDtos.add(dto2);
 
+            String riotIdandTag = sn;
+            if (sn.contains("#")) {
+                riotIdandTag = sn.replace("#", "/");
+            }
+            else {
+                return null;
+            }
+
+
             //User Info
-            String apiUrl1 = "https://kr.api.riotgames.com/lol/summoner/v4/summoners/by-name/"+sn+"?api_key="+RiotConstant.API_KEY;
+            String apiUrl0 = "https://asia.api.riotgames.com/riot/account/v1/accounts/by-riot-id/"+riotIdandTag+"?api_key="+RiotConstant.API_KEY;
+            RestTemplate restTemplate0 = new RestTemplate();
+            ResponseEntity<RiotDto> response0= restTemplate0.getForEntity(apiUrl0, RiotDto.class);
+
+
+            //User Info
+            String apiUrl1 = "https://kr.api.riotgames.com/lol/summoner/v4/summoners/by-puuid/"+response0.getBody().puuid+"?api_key="+RiotConstant.API_KEY;
             RestTemplate restTemplate = new RestTemplate();
             ResponseEntity<SummonerDto> response1= restTemplate.getForEntity(apiUrl1, SummonerDto.class);
 
@@ -90,10 +105,19 @@ public class ApiService {
     public List<MatchDto> FindMatch(String sn,int index){
 
         try {
+
+            String riotIdandTag = sn;
+            if (sn.contains("#")) {
+                riotIdandTag = sn.replace("#", "/");
+            }
+            else {
+                return null;
+            }
+
             //puuid 가져오기
-            String apiUrl1 = "https://kr.api.riotgames.com/lol/summoner/v4/summoners/by-name/"+sn+"?api_key="+RiotConstant.API_KEY;
+            String apiUrl1 = "https://asia.api.riotgames.com/riot/account/v1/accounts/by-riot-id/"+riotIdandTag+"?api_key="+RiotConstant.API_KEY;
             RestTemplate restTemplate = new RestTemplate();
-            ResponseEntity<SummonerDto> response1= restTemplate.getForEntity(apiUrl1, SummonerDto.class);
+            ResponseEntity<RiotDto> response1= restTemplate.getForEntity(apiUrl1, RiotDto.class);
             String puuid = response1.getBody().getPuuid();
 
 
@@ -161,8 +185,17 @@ public class ApiService {
     public List<MasteryDto> FindMastery(String sn){
 
         try {
+
+            String riotIdandTag = sn;
+            if (sn.contains("#")) {
+                riotIdandTag = sn.replace("#", "/");
+            }
+            else {
+                return null;
+            }
+
             //puuid 가져오기
-            String apiUrl1 = "https://kr.api.riotgames.com/lol/summoner/v4/summoners/by-name/"+sn+"?api_key="+RiotConstant.API_KEY;
+            String apiUrl1 = "https://asia.api.riotgames.com/riot/account/v1/accounts/by-riot-id/"+riotIdandTag+"?api_key="+RiotConstant.API_KEY;
             RestTemplate restTemplate = new RestTemplate();
             ResponseEntity<SummonerDto> response1= restTemplate.getForEntity(apiUrl1, SummonerDto.class);
             String puuid = response1.getBody().getPuuid();

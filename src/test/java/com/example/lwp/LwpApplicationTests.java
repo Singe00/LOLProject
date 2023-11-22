@@ -3,6 +3,7 @@ package com.example.lwp;
 import com.example.lwp.domain.Champion;
 import com.example.lwp.domain.Dataset;
 import com.example.lwp.dto.MasteryDto;
+import com.example.lwp.dto.SummonerInfoDto;
 import com.example.lwp.repository.ChampionRepository;
 import com.example.lwp.repository.DatasetRepository;
 import com.example.lwp.repository.RankingRepository;
@@ -31,8 +32,8 @@ class LwpApplicationTests {
 
     @Test
     void test() {
-        String a = "뷔빅휴칙휜";
-        List<MasteryDto>aa = apiService.FindMastery(a);
+        String a = "아이유#ashe";
+        SummonerInfoDto aa = apiService.FindSummonerInfo(a);
 
         System.out.println(aa);
     }
