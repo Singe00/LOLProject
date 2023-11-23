@@ -123,10 +123,19 @@ class LwpApplicationTests {
 
     @Test
     void test8() {
-        List<Dataset> t = datasetRepository.findAllByChampionName("Annie");
-        System.out.println(t.get(0).getChampionName());
+        List<Dataset> t = datasetRepository.findAll();
+        System.out.println(t.get(0).getTeamPosition());
         System.out.println(t.get(1).getTeamPosition());
-        System.out.println(t.get(2).getStartItems());
+        System.out.println(t.get(2).getTeamPosition());
 
+    }
+
+    @Test
+    void test9() {
+        Dataset t = apiService.ReturnDataset2("Gwen","UTILITY");
+
+        System.out.println(t.getChampionName());
+        System.out.println(t.getTeamPosition());
+        System.out.println(t.getCore1());
     }
 }

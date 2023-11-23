@@ -2,9 +2,11 @@ package com.example.lwp.service;
 
 import com.example.lwp.config.RiotConstant;
 import com.example.lwp.domain.Champion;
+import com.example.lwp.domain.Dataset;
 import com.example.lwp.domain.Ranking;
 import com.example.lwp.dto.*;
 import com.example.lwp.repository.ChampionRepository;
+import com.example.lwp.repository.DatasetRepository;
 import com.example.lwp.repository.RankingRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +31,9 @@ public class ApiService {
 
     @Autowired
     private final RankingRepository rankingRepository;
+
+    @Autowired
+    private final DatasetRepository datasetRepository;
 
     public SummonerInfoDto FindSummonerInfo(String sn){
 
@@ -268,6 +273,22 @@ public class ApiService {
         List<Champion> championList = championRepository.findAll();
 
         return championList;
+    }
+
+    public List<Dataset> ReturnDataset(String cn){
+        List<Dataset> dataList = datasetRepository.findAllByChampionName(cn);
+
+        return dataList;
+    }
+
+    public Dataset ReturnDataset2(String cn, String lane){
+
+        Dataset dataSet = datasetRepository.findByChampionNameAndTeamPosition(cn,lane);
+
+        if (dataSet == null){
+            return new Dataset();
+        }
+        return dataSet;
     }
 }
 

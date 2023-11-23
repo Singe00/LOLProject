@@ -1,6 +1,7 @@
 package com.example.lwp.controller;
 
 import com.example.lwp.domain.Champion;
+import com.example.lwp.domain.Dataset;
 import com.example.lwp.domain.Ranking;
 import com.example.lwp.dto.*;
 import com.example.lwp.service.ApiService;
@@ -89,5 +90,24 @@ public class ApiController {
         List<Champion> championList = apiService.ReturnChampions();
 
         return championList;
+    }
+
+    @PostMapping("/dataset")
+    @ResponseBody
+    public List<Dataset> dataset(@RequestBody DatasetDto request) {
+        List<Dataset> datasetList = apiService.ReturnDataset(request.getChampionName());
+
+        return datasetList;
+    }
+
+    @PostMapping("/dataset2")
+    @ResponseBody
+    public Dataset dataset2(@RequestBody DatasetDto request) {
+        Dataset dataSet = apiService.ReturnDataset2(request.getChampionName(),request.getLane());
+
+        if (dataSet == null){
+            return null;
+        }
+        return dataSet;
     }
 }

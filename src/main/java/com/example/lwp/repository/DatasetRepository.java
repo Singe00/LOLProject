@@ -8,6 +8,6 @@ import java.util.List;
 
 @Repository
 public interface DatasetRepository extends JpaRepository<Dataset,Long> {
-    List<Dataset> findAllByChampionName(String cname);
-
+    List<Dataset> findAllByChampionName(String cn);
+    Dataset findByChampionNameAndTeamPosition(String cn, String lane);
 }

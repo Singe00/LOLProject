@@ -1,6 +1,7 @@
 DROP TABLE IF EXISTS dataset CASCADE;
 
-CREATE TABLE championData (
+CREATE TABLE dataset (
+                          dataId int,
                           championId INT,
                           championName VARCHAR(50),
                           teamPosition varchar(8),
@@ -18,7 +19,7 @@ CREATE TABLE championData (
                           fragment varchar(150),
                           mr varchar(200),
                           sr varchar(150),
-                          FOREIGN KEY (championId) REFERENCES champion (championId)
+                          primary key (dataId)
 );
 
 

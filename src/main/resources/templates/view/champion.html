@@ -75,8 +75,9 @@
       margin: 0px;
     }
 
-    .championDetails{
+    #championDetails{
       width: 90%;
+      margin-top: 25px;
     }
 
     .api-button {
@@ -187,6 +188,39 @@
       border: 3px solid #ccc;
       transition: border-color 0.3s;
       margin: 20px;
+    }
+
+    .infoImg{
+      width: 115px;
+      height: 115px;
+      clip-path: inset(5px round 10px);
+    }
+
+    .infoPosition{
+      min-width: 55px;
+      min-height: 62px;
+      margin: 5px;
+      display: flex;
+      align-items: center;
+      text-align: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+    .infoPosition:hover{
+      transform: scale(1.1); /* 마우스를 올렸을 때 크기를 확대합니다. */
+    }
+
+    .infoPositionImg{
+      width: 40px;
+      height: 40px;
+    }
+
+    .dataShowTab{
+      background-color: #31313c;
+      min-height: 500px;
+      margin-top: -65px;
+      width: 100%;
+      border-radius: 13px;
     }
   </style>
 
@@ -317,6 +351,123 @@
       }
     }
 
+    async function showChampionInfo(champName){
+      let name = champName
+      if (name == 'FiddleSticks'){
+        name = 'Fiddlesticks'
+      }
+      const championInfo = await callChampionInfo(name);
+      const infoData = championInfo['data'][name]
+      const dataSet = await callDataset(champName);
+      console.log(infoData)
+      console.log(dataSet)
+      const infoBox = document.getElementById("championDetails");
+      infoBox.removeChild(infoBox.firstChild);
+
+      let winrateList = [0.0, 0.0, 0.0, 0.0, 0.0];
+
+      for (let i = 0; i < dataSet.length; i++) {
+        const winrate = ((dataSet[i]["win"] / (dataSet[i]["win"] + dataSet[i]["lose"])) * 100).toFixed(2);
+
+        switch (dataSet[i]["teamPosition"]) {
+          case "TOP":
+            winrateList[0] = parseFloat(winrate);
+            break;
+          case "JUNGLE":
+            winrateList[1] = parseFloat(winrate);
+            break;
+          case "MIDDLE":
+            winrateList[2] = parseFloat(winrate);
+            break;
+          case "BOTTOM":
+            winrateList[3] = parseFloat(winrate);
+            break;
+          case "UTILITY":
+            winrateList[4] = parseFloat(winrate);
+            break;
+          default:
+            // 다른 포지션에 대한 처리가 필요하다면 추가하세요.
+            break;
+        }
+      }
+      // 출력 시 "50.00%" 형식으로 변환
+      const formattedWinrateList = winrateList.map(winrate => winrate.toFixed(2) + "%");
+
+      infoBox.innerHTML = `
+            <div class="column-lo" style="width: 100%; display: flex;align-items: center; justify-content: center">
+                <div class="row-lo" style="width: 95%;">
+                    <img src="assets/img/champion/${champName}.png" class="infoImg">
+                    <div class="column-lo">
+                        <div class="row-lo" style="justify-content: center; text-align: center; padding-top: 10px; margin-left: 15px;">
+                            <div style="font-size: 24px;">${infoData['name']}&nbsp;&nbsp;</div>
+                            <div style="font-size: 20px; color: darkgray; padding: 3px">${infoData['title']}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="column-lo dataShowTab">
+                   <div class="row-lo" style="margin-left: 145px;">
+                      <div class="column-lo infoPosition" onclick="showDatasetEachLane('${name}','TOP')">
+                          <img class="infoPositionImg" src="assets/img/position/TOP.png">
+                          <div style="font-size: 14px;">${formattedWinrateList[0]}</div>
+                      </div>
+                      <div class="column-lo infoPosition" onclick="showDatasetEachLane('${name}','JUNGLE')">
+                          <img class="infoPositionImg" src="assets/img/position/JUNGLE.png">
+                          <div style="font-size: 14px;">${formattedWinrateList[1]}</div>
+                      </div>
+                      <div class="column-lo infoPosition" onclick="showDatasetEachLane('${name}','MIDDLE')">
+                          <img class="infoPositionImg" src="assets/img/position/MIDDLE.png">
+                          <div style="font-size: 14px;">${formattedWinrateList[2]}</div>
+                      </div>
+                      <div class="column-lo infoPosition" onclick="showDatasetEachLane('${name}','BOTTOM')">
+                          <img class="infoPositionImg" src="assets/img/position/BOTTOM.png">
+                          <div style="font-size: 14px;">${formattedWinrateList[3]}</div>
+                      </div>
+                      <div class="column-lo infoPosition" onclick="showDatasetEachLane('${name}','UTILITY')">
+                          <img class="infoPositionImg" src="assets/img/position/UTILITY.png">
+                          <div style="font-size: 14px;">${formattedWinrateList[4]}</div>
+                      </div>
+                  </div>
+                  <div class="column-lo" id="laneDataTab">
+
+                  </div>
+                  <div class="column-lo" style="display: none;" id="noDataTab">
+                    <div>통계자료가 없습니다.</div>
+                  </div>
+                  <div class="column-lo">
+                    ${generateSkins(infoData['skins'],name)}
+                  </div>
+                </div>
+            </div>
+        `;
+    }
+
+    async function showDatasetEachLane(cn,lane) {
+      const laneData = await callDataset2(cn,lane)
+      if (laneData["championName"] == null){
+        document.getElementById("noDataTab").style.display = "block";
+      }
+      else {
+        console.log(laneData);
+        document.getElementById("noDataTab").style.display = "none";
+        const lanetab = document.getElementById("laneDataTab");
+
+      }
+    }
+
+    function generateSkins(skins,cn){
+      const skin = []
+
+      console.log(skins)
+      for (let i = 0;i<skins.length;i++){
+        skin.push(`
+          <img class="positionImg" src="${ddragon}img/champion/loading/${cn}_${skins[i]["num"]}.jpg">
+        `)
+      }
+
+
+      return skin.join('');
+    }
+
     //숙련도 비동기 api요청
     const callChampion = async () => {
       try {
@@ -384,6 +535,7 @@
         inputLabel.style.borderColor = '#1c1c1f';
       }
     });
+
     function callApi() {
       const inputValue = document.getElementById('inputValue2').value;
 
@@ -393,7 +545,7 @@
       }
     }
 
-    //룬정보 api요청
+    //챔피언 정보 api요청
     async function callChampionInfo(cname) {
       const jsonUrl = `${ddragon}${version}/data/ko_KR/champion/${cname}.json`;
 
@@ -410,22 +562,48 @@
         throw error; // Re-throw the error to be caught by the caller, if needed
       }
     }
+    //통계 비동기 api요청
+    const callDataset = async (cn) => {
+      try {
+        const response = await fetch(apiUrl + "/dataset", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ championName: cn })
+        });
 
-    async function showChampionInfo(champName){
-      let name = champName
-      if (name == 'FiddleSticks'){
-        name = 'Fiddlesticks'
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        console.error("API Error:", error);
+        throw error;
       }
-      const championInfo = await callChampionInfo(name);
+    }
+    const callDataset2 = async (cn,lane) => {
+      try {
+        const response = await fetch(apiUrl + "/dataset2", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ championName: cn, lane:lane })
+        });
 
-      console.log(championInfo['data'])
-      const infoBox = document.getElementById("championDetails");
-      infoBox.removeChild(infoBox.firstChild);
-      infoBox.innerHTML = `
-            <div class="column-lo">
-                <p>${championInfo['data'][name]['id']}</p>
-            </div>
-        `;
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        console.error("API Error:", error);
+        throw error;
+      }
     }
   </script>
 

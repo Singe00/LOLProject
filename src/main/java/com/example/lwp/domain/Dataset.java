@@ -17,6 +17,8 @@ import lombok.*;
 public class Dataset {
 
     @Id
+    @Column(name = "dataid")
+    private int dataId;
     @Column(name = "championid")
     private int championId;
     @Column(name = "championname")
