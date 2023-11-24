@@ -222,6 +222,48 @@
       width: 100%;
       border-radius: 13px;
     }
+
+    .skinImg{
+      width: 150px;
+      height: auto;
+      clip-path: inset(5px round 10px);
+    }
+
+    .slider-container {
+      width: 770px;
+      background-color: #1c1c1f;
+      border-radius: 13px;
+      display: flex;
+      justify-content: start;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .slider {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      transition: transform 0.5s ease-in-out;
+    }
+
+    .slide {
+      margin: 2px;
+      height: 305px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+
+    .skinBtn{
+      margin: 2px;
+      cursor: pointer;
+    }
+
+    .skinBtnImg{
+      width: 20px;
+      height: 20px;
+    }
   </style>
 
   <div class="main-box bg-dark">
@@ -282,6 +324,8 @@
 <!--  <div class="spinner" id="sp1"></div>-->
   <script>
     let championsData = [];
+    let currentIndex = 5;
+    let positionDistance = 0;
 
     // 페이지가 로드되면 실행되는 함수
     document.addEventListener("DOMContentLoaded", async function() {
@@ -363,6 +407,8 @@
       console.log(dataSet)
       const infoBox = document.getElementById("championDetails");
       infoBox.removeChild(infoBox.firstChild);
+      currentIndex=5;
+      positionDistance = 0;
 
       let winrateList = [0.0, 0.0, 0.0, 0.0, 0.0];
 
@@ -433,8 +479,8 @@
                   <div class="column-lo" style="display: none;" id="noDataTab">
                     <div>통계자료가 없습니다.</div>
                   </div>
-                  <div class="column-lo">
-                    ${generateSkins(infoData['skins'],name)}
+                  <div class="column-lo" style="display: flex; align-items: center; justify-content: center;">
+                    ${generateSkins(infoData['skins'],name,infoData["name"])}
                   </div>
                 </div>
             </div>
@@ -447,25 +493,64 @@
         document.getElementById("noDataTab").style.display = "block";
       }
       else {
-        console.log(laneData);
         document.getElementById("noDataTab").style.display = "none";
         const lanetab = document.getElementById("laneDataTab");
 
       }
     }
 
-    function generateSkins(skins,cn){
+    function generateSkins(skins,cn,name){
       const skin = []
 
-      console.log(skins)
+      skin.push(`
+        <div class="column-lo slider-container">
+          <div class="row-lo" style="width: 95%; display:flex; justify-content: space-between; margin-top: 10px; margin-bottom: 10px;">
+              <div style="font-size: 16px;">${name}&nbsp;스킨</div>
+              <div class="row-lo">
+                <div class="skinBtn" onclick="slideLeft()"><img class="skinBtnImg" src="assets/img/icon/left.png"></div>
+                <div style="width: 20px;"></div>
+                <div class="skinBtn" onclick="slideRight('${skins.length}')"><img class="skinBtnImg" src="assets/img/icon/right.png"></div>
+              </div>
+          </div>
+        <div class="row-lo slider" id="slider">
+
+      `)
+
       for (let i = 0;i<skins.length;i++){
         skin.push(`
-          <img class="positionImg" src="${ddragon}img/champion/loading/${cn}_${skins[i]["num"]}.jpg">
+            <div class="column-lo slide">
+                <img class="skinImg" src="${ddragon}img/champion/loading/${cn}_${skins[i]["num"]}.jpg">
+                <div style="font-size: 14px; min-height: 43px; margin-bottom: 10px;">${i === 0 ? name : skins[i]["name"].replace(name, `<br>${name}`)}</div>
+            </div>
         `)
       }
 
+      skin.push(`
+        </div>
+        </div>
+      `)
 
       return skin.join('');
+    }
+
+    function slideLeft() {
+      if (currentIndex > 5) {
+        currentIndex--;
+        updateSlider(1);
+      }
+    }
+
+    function slideRight(len) {
+      if (currentIndex < len) {
+        currentIndex++;
+        updateSlider(-1);
+      }
+    }
+
+    function updateSlider(vector) {
+      const imageList = document.getElementById("slider")
+      positionDistance += vector*154;
+      imageList.style.transform = `translateX(${positionDistance}px)`;
     }
 
     //숙련도 비동기 api요청
