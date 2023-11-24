@@ -190,6 +190,13 @@
       margin: 20px;
     }
 
+    #laneDataTab{
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
     .infoImg{
       width: 115px;
       height: 115px;
@@ -209,10 +216,10 @@
     .infoPosition:hover{
       transform: scale(1.1); /* 마우스를 올렸을 때 크기를 확대합니다. */
     }
-
     .infoPositionImg{
       width: 40px;
       height: 40px;
+      filter: grayscale(100%);
     }
 
     .dataShowTab{
@@ -222,7 +229,6 @@
       width: 100%;
       border-radius: 13px;
     }
-
     .skinImg{
       width: 150px;
       height: auto;
@@ -230,22 +236,23 @@
     }
 
     .slider-container {
-      width: 770px;
+      width: 774px;
       background-color: #1c1c1f;
+      padding-left: 2px;
+      padding-right: 2px;
       border-radius: 13px;
       display: flex;
+      margin: 5px;
       justify-content: start;
       align-items: center;
       overflow: hidden;
     }
-
     .slider {
       width: 100%;
       height: 100%;
       display: flex;
       transition: transform 0.5s ease-in-out;
     }
-
     .slide {
       margin: 2px;
       height: 305px;
@@ -254,15 +261,35 @@
       align-items: center;
       text-align: center;
     }
-
     .skinBtn{
       margin: 2px;
       cursor: pointer;
     }
-
     .skinBtnImg{
       width: 20px;
       height: 20px;
+    }
+    .runeImg{
+      width: 30px;
+      height: 30px;
+      margin: 3px;
+    }
+    #buildTab{
+      width: 774px;
+      margin: 5px;
+      background-color: #1c1c1f;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 13px;
+    }
+    #buildComb{
+      width: 90%;
+      min-height: 110px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 10px;
     }
   </style>
 
@@ -334,7 +361,6 @@
       inputChampion();
     });
 
-
     //챔피언 검색 함수
     async function searchChampion() {
       const inputValue = document.getElementById('inputValue').value.toLowerCase(); // 입력된 검색어 가져오기
@@ -405,6 +431,16 @@
       const dataSet = await callDataset(champName);
       console.log(infoData)
       console.log(dataSet)
+
+      let played = 0;
+      let defaultLane = null;
+      for (let i  = 0;i<dataSet.length;i++){
+        let temp = dataSet[i]['win'] + dataSet[i]['lose'];
+        if (played<temp){
+          defaultLane = dataSet[i]['teamPosition'];
+        }
+      }
+
       const infoBox = document.getElementById("championDetails");
       infoBox.removeChild(infoBox.firstChild);
       currentIndex=5;
@@ -445,60 +481,163 @@
                     <img src="assets/img/champion/${champName}.png" class="infoImg">
                     <div class="column-lo">
                         <div class="row-lo" style="justify-content: center; text-align: center; padding-top: 10px; margin-left: 15px;">
-                            <div style="font-size: 24px;">${infoData['name']}&nbsp;&nbsp;</div>
-                            <div style="font-size: 20px; color: darkgray; padding: 3px">${infoData['title']}</div>
+                            <div style="font-size: 24px; font-weight: bold; font-style: oblique;">${infoData['name']}&nbsp;&nbsp;</div>
+                            <div style="font-size: 20px; color: darkgray; padding: 3px; font-style: oblique;">${infoData['title']}</div>
                         </div>
                     </div>
                 </div>
                 <div class="column-lo dataShowTab">
                    <div class="row-lo" style="margin-left: 145px;">
                       <div class="column-lo infoPosition" onclick="showDatasetEachLane('${name}','TOP')">
-                          <img class="infoPositionImg" src="assets/img/position/TOP.png">
+                          <img class="infoPositionImg" src="assets/img/position/TOP.png" id="TOPBtn">
                           <div style="font-size: 14px;">${formattedWinrateList[0]}</div>
                       </div>
                       <div class="column-lo infoPosition" onclick="showDatasetEachLane('${name}','JUNGLE')">
-                          <img class="infoPositionImg" src="assets/img/position/JUNGLE.png">
+                          <img class="infoPositionImg" src="assets/img/position/JUNGLE.png" id="JUNGLEBtn">
                           <div style="font-size: 14px;">${formattedWinrateList[1]}</div>
                       </div>
                       <div class="column-lo infoPosition" onclick="showDatasetEachLane('${name}','MIDDLE')">
-                          <img class="infoPositionImg" src="assets/img/position/MIDDLE.png">
+                          <img class="infoPositionImg" src="assets/img/position/MIDDLE.png" id="MIDDLEBtn">
                           <div style="font-size: 14px;">${formattedWinrateList[2]}</div>
                       </div>
                       <div class="column-lo infoPosition" onclick="showDatasetEachLane('${name}','BOTTOM')">
-                          <img class="infoPositionImg" src="assets/img/position/BOTTOM.png">
+                          <img class="infoPositionImg" src="assets/img/position/BOTTOM.png" id="BOTTOMBtn">
                           <div style="font-size: 14px;">${formattedWinrateList[3]}</div>
                       </div>
                       <div class="column-lo infoPosition" onclick="showDatasetEachLane('${name}','UTILITY')">
-                          <img class="infoPositionImg" src="assets/img/position/UTILITY.png">
+                          <img class="infoPositionImg" src="assets/img/position/UTILITY.png" id="UTILITYBtn">
                           <div style="font-size: 14px;">${formattedWinrateList[4]}</div>
                       </div>
                   </div>
                   <div class="column-lo" id="laneDataTab">
 
                   </div>
-                  <div class="column-lo" style="display: none;" id="noDataTab">
-                    <div>통계자료가 없습니다.</div>
+                  <div class="column-lo" style="display: none; width: 100%;" id="noDataTab">
+                    <div class="column-lo" style="width: 100%; height: 400px; display: flex; justify-content: center; align-items: center;">
+                        <div style="font-size: 20px; font-weight: bold;">통계 자료가 부족합니다!</div>
+                        <div><img src="assets/img/icon/rip.png" style="width: 250px;"></div>
+                    </div>
                   </div>
-                  <div class="column-lo" style="display: flex; align-items: center; justify-content: center;">
+                  <div class="column-lo" style="display: flex; align-items: center; justify-content: center; margin-bottom: 15px;">
                     ${generateSkins(infoData['skins'],name,infoData["name"])}
                   </div>
                 </div>
             </div>
         `;
+
+      showDatasetEachLane(name,defaultLane);
     }
 
     async function showDatasetEachLane(cn,lane) {
       const laneData = await callDataset2(cn,lane)
+      updateLaneStyles(lane);
+      const lanetab = document.getElementById("laneDataTab");
+      lanetab.innerHTML = "";
+      console.log(laneData);
+
       if (laneData["championName"] == null){
         document.getElementById("noDataTab").style.display = "block";
       }
       else {
-        document.getElementById("noDataTab").style.display = "none";
-        const lanetab = document.getElementById("laneDataTab");
 
+        const mr = convertStringToArray(laneData['mr']);
+        const sr = convertStringToArray(laneData['sr']);
+        const fr = convertStringToArray(laneData['fragment']);
+        const spell = convertStringToArray(laneData['spell']);
+
+        const skev = eval(laneData['skevole']);
+        const skill = eval(laneData['skill']);
+
+        const si = eval(laneData['startItems']);
+        const core1 = eval(laneData['core1']);
+        const core2 = eval(laneData['core2']);
+        const core3 = eval(laneData['core3']);
+        const core4 = eval(laneData['core4']);
+
+
+        console.log("mr ",mr);
+        console.log("sr ",sr);
+        console.log("fr ",fr);
+        console.log("spell ",spell);
+
+        console.log("skev ",skev);
+        console.log("skill ",skill);
+
+        console.log("si ",si);
+        console.log("c1 ",core1);
+        console.log("c2 ",core2);
+        console.log("c3 ",core3);
+        console.log("c4 ",core4);
+
+/*        //룬 빌드 시작
+        const runeData = await getRuneInfo();
+
+        let mainRuneInfo = [];
+        let mainRune;
+        let subRuneInfo = [];
+        let subRune;
+        const stat = [5008, 5005, 5007, 5008, 5002, 5003, 5001, 5002, 5003];
+
+        for (let i = 0; i <5;i++){
+          if (runeData[i].id == targetParticipant.perks.styles[0].style){
+            mainRune = runeData[i].slots;
+            mainRuneInfo.push(runeData[i].icon);
+            mainRuneInfo.push(runeData[i].name);
+          }
+          else if (runeData[i].id == targetParticipant.perks.styles[1].style){
+            subRune = runeData[i].slots;
+            subRuneInfo.push(runeData[i].icon);
+            subRuneInfo.push(runeData[i].name);
+          }
+        }*/
+
+        let heightsize = 30*mr.length;
+
+        document.getElementById("noDataTab").style.display = "none";
+
+        lanetab.innerHTML = `
+          <div class="column-lo" id="summaryTab">
+
+          </div>
+          <div class="column-lo" id="buildTab">
+            <div style="width: 90%;text-align: left; font-weight: bold;font-size: 16px; margin: 7px;">스펠, 시작 아이템 선택</div>
+            <div style="width: 90%; height: 2px; background: #2c2c2f;"></div>
+            <div class="row-lo" id="buildComb">
+                    ${generateSpell(spell)}
+                    <div style="width: 1px; height: ${heightsize}px; background: #2c2c2f;"></div>
+                    ${generateSI(si)}
+                    <div style="width: 1px; height: ${heightsize}px; background: #2c2c2f;"></div>
+            </div>
+          </div>
+          <div class="column-lo" id="buildTab">
+            <div style="width: 90%;text-align: left; font-weight: bold;font-size: 16px; margin: 7px;">코어 아이템 조합 (구매 순서)</div>
+            <div style="width: 90%; height: 2px; background: #2c2c2f;"></div>
+            <div class="row-lo" id="buildComb">
+                    ${generateCore(core2,2)}
+                    <div style="width: 1px; height: ${heightsize}px; background: #2c2c2f;"></div>
+                    ${generateCore(core3,3)}
+                    <div style="width: 1px; height: ${heightsize}px; background: #2c2c2f;"></div>
+                    ${generateCore(core4,4)}
+            </div>
+          </div>
+          <div class="column-lo" id="buildTab">
+            <div style="width: 90%;text-align: left; font-weight: bold;font-size: 16px; margin: 7px;">룬 조합</div>
+            <div style="width: 90%; height: 2px; background: #2c2c2f;"></div>
+            <div class="row-lo" id="buildComb">
+                    ${generateMrComb(mr)}
+                    <div style="width: 1px; height: ${heightsize}px; background: #2c2c2f;"></div>
+                    ${generateSrComb(sr)}
+                    <div style="width: 1px; height: ${heightsize}px; background: #2c2c2f;"></div>
+                    ${generateFrComb(fr)}
+            </div>
+          </div>
+
+
+        `;
       }
     }
 
+    //스킨 탭 생성
     function generateSkins(skins,cn,name){
       const skin = []
 
@@ -512,6 +651,7 @@
                 <div class="skinBtn" onclick="slideRight('${skins.length}')"><img class="skinBtnImg" src="assets/img/icon/right.png"></div>
               </div>
           </div>
+          <div style="width: 95%; height: 2px; background: #2c2c2f; margin-top: 5px; margin-bottom: 20px;"></div>
         <div class="row-lo slider" id="slider">
 
       `)
@@ -532,27 +672,182 @@
 
       return skin.join('');
     }
+    //룬 탭 생성
+    function generateMrComb(mr){
+      const rc = []
+      rc.push(`<div class="column-lo">`);
+      for (let i = 0;i<mr.length;i++){
+        rc.push(`
+          <div class="row-lo">
+            <div><img class="runeImg" src="assets/img/runes/${mr[i][0][0]}.png"></div>
+            <div><img class="runeImg" src="assets/img/runes/${mr[i][0][1]}.png"></div>
+            <div><img class="runeImg" src="assets/img/runes/${mr[i][0][2]}.png"></div>
+            <div><img class="runeImg" src="assets/img/runes/${mr[i][0][3]}.png"></div>
+            <div><img class="runeImg" src="assets/img/runes/${mr[i][0][4]}.png"></div>
+            <div style="min-width: 60px; text-align: right; line-height: 36px;">${mr[i][1]} 회</div>
+          </div>
+        `);
+      }
 
+      rc.push(`</div>`);
+      return rc.join('');
+    }
+    function generateSrComb(sr){
+      const rc = []
+      rc.push(`<div class="column-lo">`);
+      for (let i = 0;i<sr.length;i++){
+        rc.push(`
+          <div class="row-lo">
+            <div><img class="runeImg" src="assets/img/runes/${sr[i][0][0]}.png"></div>
+            <div><img class="runeImg" src="assets/img/runes/${sr[i][0][1]}.png"></div>
+            <div><img class="runeImg" src="assets/img/runes/${sr[i][0][2]}.png"></div>
+            <div style="min-width: 60px; text-align: right; line-height: 36px;">${sr[i][1]} 회</div>
+          </div>
+        `);
+      }
+
+      rc.push(`</div>`);
+      return rc.join('');
+    }
+    function generateFrComb(fr){
+      const rc = []
+      rc.push(`<div class="column-lo">`);
+      for (let i = 0;i<fr.length;i++){
+        rc.push(`
+          <div class="row-lo">
+            <div><img class="runeImg" src="assets/img/icon/${fr[i][0][0]}.png"></div>
+            <div><img class="runeImg" src="assets/img/icon/${fr[i][0][1]}.png"></div>
+            <div><img class="runeImg" src="assets/img/icon/${fr[i][0][2]}.png"></div>
+            <div style="min-width: 60px; text-align: right; line-height: 36px;">${fr[i][1]} 회</div>
+          </div>
+        `);
+      }
+
+      rc.push(`</div>`);
+      return rc.join('');
+    }
+    function generateCore(cr,count){
+      const rc = []
+      rc.push(`<div class="column-lo">`);
+      for (let i = 0;i<cr.length;i++){
+
+        const itemList = cr[i][0].split(", ")
+
+        rc.push(`
+          <div class="row-lo">
+
+        `);
+
+        for (let j=0;j<count;j++){
+          rc.push(`
+            <div><img class="runeImg" src="assets/img/item/${itemList[j]}.png"></div>
+        `);
+        }
+
+        rc.push(`
+            <div style="min-width: 60px; text-align: right; line-height: 36px;">${cr[i][1]} 회</div>
+          </div>
+        `);
+      }
+
+      rc.push(`</div>`);
+      return rc.join('');
+    }
+    function generateSpell(sp){
+      const rc = []
+      rc.push(`<div class="column-lo">`);
+      for (let i = 0;i<sp.length;i++){
+        rc.push(`
+          <div class="row-lo">
+            <div><img class="runeImg" src="assets/img/spell/${sp[i][0][0]}.png"></div>
+            <div><img class="runeImg" src="assets/img/spell/${sp[i][0][1]}.png"></div>
+            <div style="min-width: 60px; text-align: right; line-height: 36px;">${sp[i][1]} 회</div>
+          </div>
+        `);
+      }
+
+      rc.push(`</div>`);
+      return rc.join('');
+    }
+    function generateSI(si){
+      const rc = []
+      rc.push(`<div class="column-lo">`);
+      for (let i = 0;i<si.length;i++){
+
+        var sil = (si[i][0].slice(1,-1)).split(", ");
+        console.log(sil)
+
+        rc.push(`
+          <div class="row-lo">
+            <div class="row-lo" style="min-width: 120px;">
+        `);
+
+        for (let j=0;j<sil.length;j++){
+          rc.push(`
+            <div><img class="runeImg" src="assets/img/item/${sil[j]}.png"></div>
+        `);
+        }
+
+        rc.push(`
+            </div>
+            <div style="min-width: 60px; text-align: right; line-height: 36px;">${si[i][1]} 회</div>
+          </div>
+        `);
+
+      }
+
+      rc.push(`</div>`);
+      return rc.join('');
+    }
+
+    //이미지 슬라이드 함수
     function slideLeft() {
       if (currentIndex > 5) {
         currentIndex--;
         updateSlider(1);
       }
     }
-
     function slideRight(len) {
       if (currentIndex < len) {
         currentIndex++;
         updateSlider(-1);
       }
     }
-
     function updateSlider(vector) {
       const imageList = document.getElementById("slider")
       positionDistance += vector*154;
       imageList.style.transform = `translateX(${positionDistance}px)`;
     }
 
+    //통계 데이터 전처리
+    function convertStringToArray(inputString) {
+      // 문자열을 파싱하여 데이터 추출
+      const extractedData = JSON.parse(inputString
+              .replace(/\(/g, '[')
+              .replace(/\)/g, ']')
+              .replace(/(\d+),/g, '$1,')
+              .replace(/(\d+)\]/g, '$1]')
+      );
+
+      // 추출된 데이터를 이용하여 배열 생성
+      const resultArray = extractedData.map(item => [item[0], item[1]]);
+
+      return resultArray;
+    }
+    //선택 라인 grayscale조정
+    function updateLaneStyles(selectedLane) {
+      const lanes = ["TOP", "JUNGLE", "MIDDLE", "BOTTOM", "UTILITY"];
+
+      lanes.forEach(lane => {
+        const element = document.getElementById(lane+"Btn");
+
+        if (lane === selectedLane) {
+          element.style.filter = "grayscale(0%)";
+        } else {
+          element.style.filter = "grayscale(100%)";
+        }
+      });
+    }
     //숙련도 비동기 api요청
     const callChampion = async () => {
       try {
@@ -603,6 +898,7 @@
     function hds(spid) {
       document.getElementById(spid).style.display='none';
     }
+
 
     //소환사 검색 함수
     function highlightInput() {
@@ -688,6 +984,24 @@
       } catch (error) {
         console.error("API Error:", error);
         throw error;
+      }
+    }
+
+    //룬정보 api요청
+    async function getRuneInfo() {
+      const jsonUrl = `https://ddragon.leagueoflegends.com/cdn/${version}/data/ko_KR/runesReforged.json`;
+
+      try {
+        const response = await fetch(jsonUrl);
+
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        throw error; // Re-throw the error to be caught by the caller, if needed
       }
     }
   </script>

@@ -11,7 +11,7 @@ CREATE TABLE dataset (
                           spell varchar(50),
                           skill varchar(250),
                           skEvole varchar(60),
-                          startItems varchar(50),
+                          startItems varchar(70),
                           core1 varchar(100),
                           core2 varchar(100),
                           core3 varchar(150),
