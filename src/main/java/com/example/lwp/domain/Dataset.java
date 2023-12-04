@@ -53,5 +53,7 @@ public class Dataset {
     private String mr;
     @Column(name = "sr")
     private String sr;
+    @Column(name = "shoes")
+    private String shoes;
 
 }

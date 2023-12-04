@@ -19,6 +19,7 @@ CREATE TABLE dataset (
                           fragment varchar(150),
                           mr varchar(200),
                           sr varchar(150),
+                          shoes varchar(80),
                           primary key (dataId)
 );
 

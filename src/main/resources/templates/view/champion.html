@@ -437,6 +437,7 @@
       for (let i  = 0;i<dataSet.length;i++){
         let temp = dataSet[i]['win'] + dataSet[i]['lose'];
         if (played<temp){
+          played = temp;
           defaultLane = dataSet[i]['teamPosition'];
         }
       }
@@ -544,6 +545,8 @@
         const sr = convertStringToArray(laneData['sr']);
         const fr = convertStringToArray(laneData['fragment']);
         const spell = convertStringToArray(laneData['spell']);
+        const shoes = "shoes";
+        //const shoes = convertStringToArray(laneData['shoes']);
 
         const skev = eval(laneData['skevole']);
         const skill = eval(laneData['skill']);
@@ -559,6 +562,7 @@
         console.log("sr ",sr);
         console.log("fr ",fr);
         console.log("spell ",spell);
+        console.log("shoes ",shoes);
 
         console.log("skev ",skev);
         console.log("skill ",skill);
@@ -607,6 +611,7 @@
                     <div style="width: 1px; height: ${heightsize}px; background: #2c2c2f;"></div>
                     ${generateSI(si)}
                     <div style="width: 1px; height: ${heightsize}px; background: #2c2c2f;"></div>
+                    ${generateShoes(shoes)}
             </div>
           </div>
           <div class="column-lo" id="buildTab">
@@ -799,7 +804,21 @@
       rc.push(`</div>`);
       return rc.join('');
     }
+    function generateShoes(shoes){
+      const rc = []
+      rc.push(`<div class="column-lo">`);
+      for (let i = 0;i<2;i++){
+        rc.push(`
+          <div class="row-lo">
+            <div><img class="runeImg" src="assets/img/item/${1001}.png"></div>
+            <div style="min-width: 60px; text-align: right; line-height: 36px;">${1} 회</div>
+          </div>
+        `);
+      }
 
+      rc.push(`</div>`);
+      return rc.join('');
+    }
     //이미지 슬라이드 함수
     function slideLeft() {
       if (currentIndex > 5) {
