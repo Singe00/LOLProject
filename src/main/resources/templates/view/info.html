@@ -786,13 +786,14 @@
 
             const participantChampionName = participant.championName;
             const participantSummonerName = participant.summonerName;
+            const participantTagline = participant.riotIdTagline;
 
             const championImg = `<img loading='lazy' decoding='async' src='assets/img/champion/${participantChampionName}.png' class="champImgS">`;
 
             const participantInfoHtml = `
             <div class="row-lo">
                 ${championImg}
-                <a class="custom-link" href="/info?summonerName=${participantSummonerName}" target="_blank">
+                <a class="custom-link" href="/info?summonerName=${participantSummonerName}#${participantTagline}" target="_blank">
                     ${participantSummonerName}
                 </a>
             </div>
@@ -824,13 +825,14 @@
 
             const participantChampionName = participant.championName;
             const participantSummonerName = participant.summonerName;
+            const participantTagline = participant.riotIdTagline;
 
             const championImg = `<img loading='lazy' decoding='async' src='assets/img/champion/${participantChampionName}.png' class="champImgS">`;
 
             const participantInfoHtml = `
             <div class="row-lo">
                 ${championImg}
-                <a class="custom-link" href="/info?summonerName=${participantSummonerName}" target="_blank">
+                <a class="custom-link" href="/info?summonerName=${participantSummonerName}%23${participantTagline}" target="_blank">
                     ${participantSummonerName}
                 </a>
             </div>

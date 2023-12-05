@@ -3,6 +3,7 @@ drop table if exists ranking CASCADE;
 
 CREATE TABLE ranking (
                          summonerName VARCHAR(100),
+                         riotTagline varchar(50),
                          wins INT,
                          losses INT,
                          tier VARCHAR(30),

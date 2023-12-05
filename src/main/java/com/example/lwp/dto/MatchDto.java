@@ -84,6 +84,8 @@ public class MatchDto {
         private int neutralMinionsKilled;
         private boolean win;
         private Perks perks;
+        private String riotIdName;
+        private String riotIdTagline;
         private String puuid;
         private boolean gameEndedInEarlySurrender;
     }
