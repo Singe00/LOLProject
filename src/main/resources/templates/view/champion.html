@@ -274,7 +274,7 @@
       height: 30px;
       margin: 3px;
     }
-    #buildTab{
+    .buildTab{
       width: 774px;
       margin: 5px;
       background-color: #1c1c1f;
@@ -283,11 +283,20 @@
       align-items: center;
       border-radius: 13px;
     }
-    #buildComb{
+    .buildComb{
       width: 90%;
       min-height: 110px;
       display: flex;
       justify-content: space-between;
+      align-items: center;
+      margin: 10px;
+    }
+
+    #graphTab{
+      width: 90%;
+      min-height: 110px;
+      display: flex;
+      justify-content: center;
       align-items: center;
       margin: 10px;
     }
@@ -447,26 +456,33 @@
       currentIndex=5;
       positionDistance = 0;
 
-      let winrateList = [0.0, 0.0, 0.0, 0.0, 0.0];
+      let totalGameCount = 0;
 
       for (let i = 0; i < dataSet.length; i++) {
-        const winrate = ((dataSet[i]["win"] / (dataSet[i]["win"] + dataSet[i]["lose"])) * 100).toFixed(2);
+        totalGameCount+=dataSet[i]['win'];
+        totalGameCount+=dataSet[i]['lose'];
+      }
+
+      let pickrateList = [0.0, 0.0, 0.0, 0.0, 0.0];
+
+      for (let i = 0; i < dataSet.length; i++) {
+        const gameCountRate = (((dataSet[i]["win"] + dataSet[i]["lose"]) / totalGameCount) * 100).toFixed(2);
 
         switch (dataSet[i]["teamPosition"]) {
           case "TOP":
-            winrateList[0] = parseFloat(winrate);
+            pickrateList[0] = parseFloat(gameCountRate);
             break;
           case "JUNGLE":
-            winrateList[1] = parseFloat(winrate);
+            pickrateList[1] = parseFloat(gameCountRate);
             break;
           case "MIDDLE":
-            winrateList[2] = parseFloat(winrate);
+            pickrateList[2] = parseFloat(gameCountRate);
             break;
           case "BOTTOM":
-            winrateList[3] = parseFloat(winrate);
+            pickrateList[3] = parseFloat(gameCountRate);
             break;
           case "UTILITY":
-            winrateList[4] = parseFloat(winrate);
+            pickrateList[4] = parseFloat(gameCountRate);
             break;
           default:
             // 다른 포지션에 대한 처리가 필요하다면 추가하세요.
@@ -474,7 +490,7 @@
         }
       }
       // 출력 시 "50.00%" 형식으로 변환
-      const formattedWinrateList = winrateList.map(winrate => winrate.toFixed(2) + "%");
+      const formattedPickrateList = pickrateList.map(gameCountRate => gameCountRate.toFixed(2) + "%");
 
       infoBox.innerHTML = `
             <div class="column-lo" style="width: 100%; display: flex;align-items: center; justify-content: center">
@@ -491,23 +507,23 @@
                    <div class="row-lo" style="margin-left: 145px;">
                       <div class="column-lo infoPosition" onclick="showDatasetEachLane('${name}','TOP')">
                           <img class="infoPositionImg" src="assets/img/position/TOP.png" id="TOPBtn">
-                          <div style="font-size: 14px;">${formattedWinrateList[0]}</div>
+                          <div style="font-size: 14px;">${formattedPickrateList[0]}</div>
                       </div>
                       <div class="column-lo infoPosition" onclick="showDatasetEachLane('${name}','JUNGLE')">
                           <img class="infoPositionImg" src="assets/img/position/JUNGLE.png" id="JUNGLEBtn">
-                          <div style="font-size: 14px;">${formattedWinrateList[1]}</div>
+                          <div style="font-size: 14px;">${formattedPickrateList[1]}</div>
                       </div>
                       <div class="column-lo infoPosition" onclick="showDatasetEachLane('${name}','MIDDLE')">
                           <img class="infoPositionImg" src="assets/img/position/MIDDLE.png" id="MIDDLEBtn">
-                          <div style="font-size: 14px;">${formattedWinrateList[2]}</div>
+                          <div style="font-size: 14px;">${formattedPickrateList[2]}</div>
                       </div>
                       <div class="column-lo infoPosition" onclick="showDatasetEachLane('${name}','BOTTOM')">
                           <img class="infoPositionImg" src="assets/img/position/BOTTOM.png" id="BOTTOMBtn">
-                          <div style="font-size: 14px;">${formattedWinrateList[3]}</div>
+                          <div style="font-size: 14px;">${formattedPickrateList[3]}</div>
                       </div>
                       <div class="column-lo infoPosition" onclick="showDatasetEachLane('${name}','UTILITY')">
                           <img class="infoPositionImg" src="assets/img/position/UTILITY.png" id="UTILITYBtn">
-                          <div style="font-size: 14px;">${formattedWinrateList[4]}</div>
+                          <div style="font-size: 14px;">${formattedPickrateList[4]}</div>
                       </div>
                   </div>
                   <div class="column-lo" id="laneDataTab">
@@ -545,8 +561,8 @@
         const sr = convertStringToArray(laneData['sr']);
         const fr = convertStringToArray(laneData['fragment']);
         const spell = convertStringToArray(laneData['spell']);
-        const shoes = "shoes";
-        //const shoes = convertStringToArray(laneData['shoes']);
+        const timeS = Object.entries(JSON.parse(laneData['timeS'].replace(/'/g, '"')));
+        const shoes = (JSON.parse(laneData['shoes'].replace(/'/g, '"'))).map(item => [parseInt(item[0]), item[1]]);
 
         const skev = eval(laneData['skevole']);
         const skill = eval(laneData['skill']);
@@ -558,42 +574,7 @@
         const core4 = eval(laneData['core4']);
 
 
-        console.log("mr ",mr);
-        console.log("sr ",sr);
-        console.log("fr ",fr);
-        console.log("spell ",spell);
-        console.log("shoes ",shoes);
 
-        console.log("skev ",skev);
-        console.log("skill ",skill);
-
-        console.log("si ",si);
-        console.log("c1 ",core1);
-        console.log("c2 ",core2);
-        console.log("c3 ",core3);
-        console.log("c4 ",core4);
-
-/*        //룬 빌드 시작
-        const runeData = await getRuneInfo();
-
-        let mainRuneInfo = [];
-        let mainRune;
-        let subRuneInfo = [];
-        let subRune;
-        const stat = [5008, 5005, 5007, 5008, 5002, 5003, 5001, 5002, 5003];
-
-        for (let i = 0; i <5;i++){
-          if (runeData[i].id == targetParticipant.perks.styles[0].style){
-            mainRune = runeData[i].slots;
-            mainRuneInfo.push(runeData[i].icon);
-            mainRuneInfo.push(runeData[i].name);
-          }
-          else if (runeData[i].id == targetParticipant.perks.styles[1].style){
-            subRune = runeData[i].slots;
-            subRuneInfo.push(runeData[i].icon);
-            subRuneInfo.push(runeData[i].name);
-          }
-        }*/
 
         let heightsize = 30*mr.length;
 
@@ -603,10 +584,20 @@
           <div class="column-lo" id="summaryTab">
 
           </div>
-          <div class="column-lo" id="buildTab">
+          <div class="column-lo buildTab">
+            <div class="row-lo" style="display: flex;justify-content: space-between; width: 90%">
+                <div style="font-weight: bold;font-size: 16px; margin: 7px;">시간대별 승률</div>
+                <div style="font-weight: bold;font-size: 16px; margin: 7px;">${laneData['win']}&nbsp;승&nbsp;&nbsp;${laneData['lose']}&nbsp;패</div>
+            </div>
+
+            <div style="width: 90%; height: 2px; background: #2c2c2f;"></div>
+            <div class="row-lo" id="graphTab">
+            </div>
+          </div>
+          <div class="column-lo buildTab">
             <div style="width: 90%;text-align: left; font-weight: bold;font-size: 16px; margin: 7px;">스펠, 시작 아이템 선택</div>
             <div style="width: 90%; height: 2px; background: #2c2c2f;"></div>
-            <div class="row-lo" id="buildComb">
+            <div class="row-lo buildComb">
                     ${generateSpell(spell)}
                     <div style="width: 1px; height: ${heightsize}px; background: #2c2c2f;"></div>
                     ${generateSI(si)}
@@ -614,10 +605,10 @@
                     ${generateShoes(shoes)}
             </div>
           </div>
-          <div class="column-lo" id="buildTab">
+          <div class="column-lo buildTab">
             <div style="width: 90%;text-align: left; font-weight: bold;font-size: 16px; margin: 7px;">코어 아이템 조합 (구매 순서)</div>
             <div style="width: 90%; height: 2px; background: #2c2c2f;"></div>
-            <div class="row-lo" id="buildComb">
+            <div class="row-lo buildComb">
                     ${generateCore(core2,2)}
                     <div style="width: 1px; height: ${heightsize}px; background: #2c2c2f;"></div>
                     ${generateCore(core3,3)}
@@ -625,10 +616,10 @@
                     ${generateCore(core4,4)}
             </div>
           </div>
-          <div class="column-lo" id="buildTab">
+          <div class="column-lo buildTab">
             <div style="width: 90%;text-align: left; font-weight: bold;font-size: 16px; margin: 7px;">룬 조합</div>
             <div style="width: 90%; height: 2px; background: #2c2c2f;"></div>
-            <div class="row-lo" id="buildComb">
+            <div class="row-lo buildComb">
                     ${generateMrComb(mr)}
                     <div style="width: 1px; height: ${heightsize}px; background: #2c2c2f;"></div>
                     ${generateSrComb(sr)}
@@ -639,6 +630,11 @@
 
 
         `;
+
+        // Append the chart element
+        const graphTab = document.getElementById("graphTab");
+        const chartElement = generateGraph(timeS);
+        graphTab.appendChild(chartElement);
       }
     }
 
@@ -731,6 +727,7 @@
       rc.push(`</div>`);
       return rc.join('');
     }
+    //코어 아이템 탭 생성
     function generateCore(cr,count){
       const rc = []
       rc.push(`<div class="column-lo">`);
@@ -758,6 +755,7 @@
       rc.push(`</div>`);
       return rc.join('');
     }
+    //소환사 주문 탭 생성
     function generateSpell(sp){
       const rc = []
       rc.push(`<div class="column-lo">`);
@@ -774,6 +772,7 @@
       rc.push(`</div>`);
       return rc.join('');
     }
+    //시작아이템 탭 생성
     function generateSI(si){
       const rc = []
       rc.push(`<div class="column-lo">`);
@@ -804,21 +803,100 @@
       rc.push(`</div>`);
       return rc.join('');
     }
+    //신발 탭 생성
     function generateShoes(shoes){
       const rc = []
       rc.push(`<div class="column-lo">`);
       for (let i = 0;i<2;i++){
-        rc.push(`
+        if (!isNaN(shoes[i][0])){
+          rc.push(`
           <div class="row-lo">
-            <div><img class="runeImg" src="assets/img/item/${1001}.png"></div>
-            <div style="min-width: 60px; text-align: right; line-height: 36px;">${1} 회</div>
+            <div><img class="runeImg" src="assets/img/item/${shoes[i][0]}.png"></div>
+            <div style="min-width: 60px; text-align: right; line-height: 36px;">${shoes[i][1]} 회</div>
           </div>
         `);
+        }
+
       }
 
       rc.push(`</div>`);
       return rc.join('');
     }
+    //시간대별 승률 그래프 탭 생성
+    function generateGraph(timeS) {
+      const timePoints = timeS.map(([time]) => time);
+      var winRates = [];
+
+      for (let i = 0; i < timeS.length; i++) {
+        const totalGames = timeS[i][1][0] + timeS[i][1][1];
+        const winPercentage = (timeS[i][1][0] / totalGames * 100).toFixed(2);
+
+        const parsedWinRate = parseFloat(winPercentage);
+
+        // Check if the parsedWinRate is a valid number and not equal to 0 or NaN
+        if (!isNaN(parsedWinRate) && parsedWinRate !== 0) {
+          winRates.push(parsedWinRate);
+        }
+      }
+      console.log(timePoints);
+      console.log(winRates);
+
+      // Create canvas element
+      const canvas = document.createElement('canvas');
+      canvas.width = 650;
+      canvas.height = 300;
+
+      // Get canvas context
+      const ctx = canvas.getContext('2d');
+
+      // Plot the chart using Chart.js
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: timePoints,
+          datasets: [{
+            label: '시간대별 승률 그래프',
+            borderColor: 'yellow',
+            data: winRates,
+            fill: false,
+          }]
+        },
+        options: {
+          responsive: false,
+          scales: {
+            x: {
+              title: {
+                display: true,
+                text: '시간대 (분)'
+              },
+              ticks: {
+                color: 'white', // x축 눈금 색상
+              },
+              grid: {
+                color: 'rgba(255, 255, 255, 0.1)' // 추가: 그리드 눈금 색상
+              },
+            },
+            y: {
+              title: {
+                display: true,
+                text: '승률 (%)'
+              },
+              ticks: {
+                color: 'white', // x축 눈금 색상
+              },
+              grid: {
+                color: 'rgba(255, 255, 255, 0.1)' // 추가: 그리드 눈금 색상
+              },
+            }
+          }
+        }
+      });
+
+      // Return the canvas element
+      return canvas;
+    }
+
+
     //이미지 슬라이드 함수
     function slideLeft() {
       if (currentIndex > 5) {
@@ -917,7 +995,6 @@
     function hds(spid) {
       document.getElementById(spid).style.display='none';
     }
-
 
     //소환사 검색 함수
     function highlightInput() {
