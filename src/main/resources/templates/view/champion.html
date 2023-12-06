@@ -608,8 +608,7 @@
       const laneData = await callDataset2(cn,lane)
       updateLaneStyles(lane);
       const lanetab = document.getElementById("laneDataTab");
-      lanetab.innerHTML = "<div class=\"spinner\" id=\"sp1\"></div>";
-      sds("sp1");
+      lanetab.innerHTML = "";
       if (laneData["championName"] == null){
         document.getElementById("noDataTab").style.display = "block";
       }
@@ -649,17 +648,6 @@
 
             <div style="width: 90%; height: 2px; background: #2c2c2f;"></div>
             <div class="row-lo" id="graphTab">
-            </div>
-          </div>
-          <div class="column-lo buildTab">
-            <div style="width: 90%;text-align: left; font-weight: bold;font-size: 16px; margin: 7px;"></div>
-            <div style="width: 90%; height: 2px; background: #2c2c2f;"></div>
-            <div class="row-lo buildComb">
-                    ${generateSpell(spell)}
-                    <div style="width: 1px; height: ${heightsize}px; background: #2c2c2f;"></div>
-                    ${generateSI(si)}
-                    <div style="width: 1px; height: ${heightsize}px; background: #2c2c2f;"></div>
-                    ${generateShoes(shoes)}
             </div>
           </div>
           <div class="column-lo buildTab">
@@ -704,7 +692,6 @@
         const chartElement = generateGraph(timeS);
         graphTab.appendChild(chartElement);
       }
-      hds("sp1");
     }
 
     //스킨 탭 생성
