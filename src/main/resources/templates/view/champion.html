@@ -221,7 +221,6 @@
       height: 40px;
       filter: grayscale(100%);
     }
-
     .dataShowTab{
       background-color: #31313c;
       min-height: 500px;
@@ -274,6 +273,7 @@
       height: 30px;
       margin: 3px;
     }
+
     .buildTab{
       width: 774px;
       margin: 5px;
@@ -299,6 +299,66 @@
       justify-content: center;
       align-items: center;
       margin: 10px;
+    }
+
+    .summaryText{
+      text-align: center;
+      font-size: 13px;
+      color: #ffc030;
+      margin-bottom: 5px;
+      margin-top: 5px;
+    }
+
+    .summaryBottomImg{
+      width: 45px;
+      height: 45px;
+      border-radius: 10px;
+      margin: 3px;
+    }
+
+    .rune-img {
+      width: 33px;
+      height: 33px;
+      overflow: hidden;
+      border-radius: 50%;
+      margin: 2px;
+    }
+    .rune-img2 {
+      width: 28px;
+      height: 28px;
+      overflow: hidden;
+      border-radius: 50%;
+      margin: 2px;
+    }
+    .skillBox{
+      width: 23px;
+      height: 23px;
+      text-align: center;
+      margin: 1px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 3px;
+    }
+    .summaryImg{
+      width: 20px;
+      height: 20px;
+    }
+
+    .evolveBox{
+      width: 46px;
+      height: 46px;
+      text-align: center;
+      margin: 2px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 3px;
+    }
+
+    .evolveImg{
+      width: 42px;
+      height: 42px;
     }
   </style>
 
@@ -357,7 +417,6 @@
 
   </div>
 
-<!--  <div class="spinner" id="sp1"></div>-->
   <script>
     let championsData = [];
     let currentIndex = 5;
@@ -438,8 +497,7 @@
       const championInfo = await callChampionInfo(name);
       const infoData = championInfo['data'][name]
       const dataSet = await callDataset(champName);
-      console.log(infoData)
-      console.log(dataSet)
+
 
       let played = 0;
       let defaultLane = null;
@@ -549,9 +607,8 @@
       const laneData = await callDataset2(cn,lane)
       updateLaneStyles(lane);
       const lanetab = document.getElementById("laneDataTab");
-      lanetab.innerHTML = "";
-      console.log(laneData);
-
+      lanetab.innerHTML = "<div class=\"spinner\" id=\"sp1\"></div>";
+      sds("sp1");
       if (laneData["championName"] == null){
         document.getElementById("noDataTab").style.display = "block";
       }
@@ -567,13 +624,12 @@
         const skev = eval(laneData['skevole']);
         const skill = eval(laneData['skill']);
 
+
         const si = eval(laneData['startItems']);
         const core1 = eval(laneData['core1']);
         const core2 = eval(laneData['core2']);
         const core3 = eval(laneData['core3']);
         const core4 = eval(laneData['core4']);
-
-
 
 
         let heightsize = 30*mr.length;
@@ -582,7 +638,7 @@
 
         lanetab.innerHTML = `
           <div class="column-lo" id="summaryTab">
-
+            ${await generateSummaryTab(mr[0],sr[0],fr[0],skill[0],skev[0],core1,spell[0],shoes[0],si[0],laneData['win'],laneData['lose'],cn)}
           </div>
           <div class="column-lo buildTab">
             <div class="row-lo" style="display: flex;justify-content: space-between; width: 90%">
@@ -592,6 +648,17 @@
 
             <div style="width: 90%; height: 2px; background: #2c2c2f;"></div>
             <div class="row-lo" id="graphTab">
+            </div>
+          </div>
+          <div class="column-lo buildTab">
+            <div style="width: 90%;text-align: left; font-weight: bold;font-size: 16px; margin: 7px;"></div>
+            <div style="width: 90%; height: 2px; background: #2c2c2f;"></div>
+            <div class="row-lo buildComb">
+                    ${generateSpell(spell)}
+                    <div style="width: 1px; height: ${heightsize}px; background: #2c2c2f;"></div>
+                    ${generateSI(si)}
+                    <div style="width: 1px; height: ${heightsize}px; background: #2c2c2f;"></div>
+                    ${generateShoes(shoes)}
             </div>
           </div>
           <div class="column-lo buildTab">
@@ -636,6 +703,7 @@
         const chartElement = generateGraph(timeS);
         graphTab.appendChild(chartElement);
       }
+      hds("sp1");
     }
 
     //스킨 탭 생성
@@ -779,7 +847,6 @@
       for (let i = 0;i<si.length;i++){
 
         var sil = (si[i][0].slice(1,-1)).split(", ");
-        console.log(sil)
 
         rc.push(`
           <div class="row-lo">
@@ -838,8 +905,6 @@
           winRates.push(parsedWinRate);
         }
       }
-      console.log(timePoints);
-      console.log(winRates);
 
       // Create canvas element
       const canvas = document.createElement('canvas');
@@ -895,7 +960,259 @@
       // Return the canvas element
       return canvas;
     }
+    //요약탭 생성
+    async function generateSummaryTab(mr,sr,fr,skill,skev,core1,spell,shoes,si,win,lose,cn) {
 
+      const stat = [5008, 5005, 5007, 5008, 5002, 5003, 5001, 5002, 5003];
+      const runData = await getRuneInfo();
+      var sklist = skill[0].split(', ').map(function(num) {
+        return parseInt(num, 10);
+      });
+      var skevlist;
+      if (skev){
+        skevlist = skev[0].split(', ').map(function(num) {
+          return parseInt(num, 10);
+        });
+      }
+
+      const ci = await callChampionInfo2(cn);
+      const champSpellList = ci['data'][cn]['spells'];
+      var skillImgList =[];
+
+      for(let i =0;i<champSpellList.length;i++){
+        skillImgList.push(champSpellList[i]['image']['full'])
+      }
+
+      var silist = JSON.parse(si[0]);
+      silist.sort((a, b) => (a === 2003) - (b === 2003) || a - b)
+
+      var main = runData.find(function (element) {
+        return element.id === mr[0][0];
+      })
+      var sub = runData.find(function (element) {
+        return element.id === sr[0][0];
+      })
+      const mainR = main['slots']
+      const subR = sub['slots']
+
+
+      const sT = [];
+
+      //mainrune
+      sT.push(`
+        <div class="column-lo buildTab">
+            <div class="row-lo" style="display: flex; justify-content: space-between; width: 95%; margin: 7px;">
+                <div class="row-lo" style="max-width: 315px; max-height: 275px;">
+                    <div class="column-lo" style="margin-right: 15px; display: flex; justify-content: space-between;">
+                        <div class="column-lo summaryText">메인 룬</div>
+                        <div class="column-lo">
+      `)
+      for (let i = 0;i<4;i++){
+        sT.push(`<div class="row-lo" style="min-width: 160px; min-height: 40px; display: flex; justify-content: space-between;align-items: center;">`)
+        for (let j =0;j<mainR[i]['runes'].length;j++){
+          if (mr[0].includes(mainR[i]['runes'][j]['id'])){
+            sT.push(`<img class="rune-img" style="border: 1.5px solid #ffc030;" src="assets/img/runes/${mainR[i]['runes'][j]['id']}.png">`)
+          }else {
+            sT.push(`<img class="rune-img" style="filter: grayscale(100%)" src="assets/img/runes/${mainR[i]['runes'][j]['id']}.png">`)
+          }
+        }
+        sT.push(`</div>`)
+      }
+      sT.push(`
+        </div>
+        <div class="column-lo" style="margin-top: 20px;">
+            <div class="row-lo" style="width: 100%; display:flex; justify-content: space-between;">
+              <div style="color: gray; width: 40%;  text-align: left">승&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;률&nbsp;:&nbsp;</div>
+              <div style="color: #ffc030; width: 60%; text-align: right">${((win / (win + lose)) * 100).toFixed(2)}%</div>
+            </div>
+            <div class="row-lo" style="width: 100%; display:flex; justify-content: space-between;">
+              <div style="color:gray; width: 40%; text-align: left">게임수&nbsp;:&nbsp;</div>
+              <div style="color: #ffc030; width: 60%; text-align: right">${(win+lose).toLocaleString()}회</div>
+            </div>
+        </div>
+        </div>
+        <div class="column-lo">
+            <div class="column-lo summaryText">보조 룬</div>
+                <div class="column-lo">
+        `)
+      for (let i = 1;i<4;i++){
+        sT.push(`<div class="row-lo" style="min-width: 140px; min-height: 35px; display: flex; justify-content: space-between;align-items: center;">`)
+        for (let j =0;j<subR[i]['runes'].length;j++){
+          if (sr[0].includes(subR[i]['runes'][j]['id'])) {
+            sT.push(`<img class="rune-img2" style="border: 1.5px solid #ffc030;" src="assets/img/runes/${subR[i]['runes'][j]['id']}.png">`)
+          }
+          else{
+            sT.push(`<img class="rune-img2" style="filter: grayscale(100%)" src="assets/img/runes/${subR[i]['runes'][j]['id']}.png">`)
+          }
+
+        }
+        sT.push(`</div>`)
+      }
+      sT.push(`</div>
+                <div class="column-lo summaryText">파편</div>`)
+
+      for (let i  =0;i<3;i++){
+        sT.push(`<div class="row-lo" style="width: auto; display: flex;justify-content: space-between;align-items: center;">`);
+        for (let j = 0;j<3;j++){
+          if (fr[0][i] == stat[i*3+j]){
+            sT.push(`<img loading='lazy' style="border: 1.5px solid #ffc030;" decoding='async' src="assets/img/icon/${stat[i*3+j]}.png" class="rune-img2">`);
+          }
+          else {
+            sT.push(`<img loading='lazy' decoding='async' src="assets/img/icon/${stat[i*3+j]}.png" class="rune-img2" style="filter: grayscale(100%)">`);
+          }
+
+        }
+        sT.push(`</div>`);
+      }
+
+      sT.push(`</div></div>`)
+
+
+
+      //toprightbox
+      sT.push(`<div class="column-lo" style="min-width: 400px; height: 275px; display: flex;justify-content: left;align-items: start;">`)
+      //skill  - rate time
+      sT.push(`<div class="row-lo summaryText">스킬 마스터</div>`)
+      sT.push(`<div class="row-lo">`)
+      sT.push(`<div class="column-lo">
+                <div class="skillBox">Q</div>
+                <div class="skillBox">W</div>
+                <div class="skillBox">E</div>
+                <div class="skillBox">R</div>
+            </div>`)
+      //skill
+      for (let i = 0;i<sklist.length;i++) {
+        if (i>14){
+          break;
+        }
+        sT.push(`<div class="column-lo">`)
+        for (let j = 0;j<4;j++){
+          const bgColor = i % 2 === 0 ? shadeColor('#1c1c1f', -2) : shadeColor('#1c1c1f', 2);
+          if (sklist[i] == j+1){
+            sT.push(`<div style="border: 1px solid #ffc030" class="skillBox"><img class="summaryImg" style="background-color: ${bgColor};" src='${ddragon}${version}/img/spell/${skillImgList[j]}'></div>`)
+          }
+          else {
+            sT.push(`<div style="background-color: ${bgColor};" class="skillBox"></div>`)
+          }
+        }
+        sT.push(`</div>`)
+      }
+      sT.push(`</div>`)
+      if (skevlist){
+        sT.push(`<div class="column-lo">
+                 <div class="row-lo summaryText">스킬 진화 순서</div>
+                 <div class="row-lo">`)
+        sT.push(``)
+        for (let i = 0;i<skevlist.length;i++){
+          sT.push(`<div style="border: 2px solid #5f1c1f" class="evolveBox"><img class="evolveImg" src='${ddragon}${version}/img/spell/${skillImgList[i]}'></div>`)
+          if (i!= skevlist.length-1){
+            sT.push(`<div style="display: flex;justify-content: center;align-items: center;"><img style="width: 20px;height: 20px;" src="assets/img/icon/right.png"></div>`)
+          }
+        }
+        sT.push(`</div></div>`)
+
+      }
+
+      sT.push(`</div></div>`)
+
+      sT.push(`<div style="width: 95%; height: 2px; margin: 5px; background: #2c2c2f;"></div>`)
+      //bottombox
+      sT.push(`<div class="row-lo" style="display: flex;justify-content: space-between;align-items: center; width: 80%;height: 100px;">`)
+      //spell
+      sT.push(`
+        <div class="column-lo" style="height: 100px;">
+            <div class="summaryText">추천 스펠</div>
+            <div class="row-lo">
+                <img class="summaryBottomImg" src="assets/img/spell/${spell[0][0]}.png">
+                <img class="summaryBottomImg" src="assets/img/spell/${spell[0][1]}.png">
+            </div>
+        </div>
+      `)
+      //si
+      sT.push(`
+        <div class="column-lo" style="height: 100px;">
+            <div class="summaryText">시작 아이템</div>
+            <div class="row-lo">
+      `)
+
+      for (let i = 0;i<silist.length;i++){
+        sT.push(`<img class="summaryBottomImg" src="assets/img/item/${silist[i]}.png">`)
+      }
+
+      sT.push(`
+
+            </div>
+        </div>
+      `)
+      //shoes
+      sT.push(`
+        <div class="column-lo" style="height: 100px;">
+            <div class="summaryText">신발</div>
+            <img class="summaryBottomImg" src="assets/img/item/${shoes[0]}.png">
+        </div>
+      `)
+      //core
+      sT.push(`
+        <div class="column-lo">
+            <div class="summaryText">1코어 추천</div>
+            <div class="row-lo">
+
+      `)
+      for (let i = 0;i< core1.length;i++){
+          sT.push(`
+              <div class="column-lo">
+                <img class="summaryBottomImg" src="assets/img/item/${core1[i][0]}.png">
+                <div style="font-size: 12px; text-align: center;">${core1[i][1]}회</div>
+              </div>
+        `)
+        if (!(i==core1.length-1)){
+          sT.push(`<div style="text-align: center; line-height: 65px; margin: 5px;">or</div>`)
+        }
+      }
+      sT.push(`
+
+            </div>
+            <div></div>
+        </div>
+        </div>
+        </div>
+      `)
+
+
+
+      return sT.join('');
+    }
+
+/*    for (let i = 0;i<mainRune.length;i++){
+      if(i==0){
+        build.push(`
+                    <div class="row-lo runeTitle"><img loading='lazy' decoding='async' src="assets/img/runes/${targetParticipant.perks.styles[0].style}.png" class="runeImg">&nbsp;${mainRuneInfo[1]}</div>
+                    `);
+      }
+      build.push(`
+                        <div class="row-lo" style="width: auto; display: flex;justify-content: space-between;align-items: center;">
+                `);
+
+      for (let j = 0;j<mainRune[i].runes.length;j++) {
+        if (ppi.includes(mainRune[i].runes[j].id)) {
+          build.push(`
+                        <img loading='lazy' decoding='async' src="assets/img/runes/${mainRune[i].runes[j].id}.png" class="runeImg">
+                        `);
+        }
+        else{
+          build.push(`
+                        <img loading='lazy' decoding='async' src="assets/img/runes/${mainRune[i].runes[j].id}.png" class="runeImg" style="filter: grayscale(1)">
+                        `);
+        }
+
+      }
+      build.push(`
+                    </div>
+                `);
+    }
+    build.push(`
+                    </div>
+            `);*/
 
     //이미지 슬라이드 함수
     function slideLeft() {
@@ -995,6 +1312,14 @@
     function hds(spid) {
       document.getElementById(spid).style.display='none';
     }
+    function shadeColor(color, percent) {
+      const num = parseInt(color.slice(1), 16);
+      const amt = Math.round(2.55 * percent);
+      const R = (num >> 16) + amt;
+      const G = (num >> 8 & 0x00FF) + amt;
+      const B = (num & 0x0000FF) + amt;
+      return `#${(1 << 24 | R << 16 | G << 8 | B).toString(16).slice(1)}`;
+    }
 
     //소환사 검색 함수
     function highlightInput() {
@@ -1022,9 +1347,26 @@
       }
     }
 
-    //챔피언 정보 api요청
+    //챔피언 한글 정보 api요청
     async function callChampionInfo(cname) {
       const jsonUrl = `${ddragon}${version}/data/ko_KR/champion/${cname}.json`;
+
+      try {
+        const response = await fetch(jsonUrl);
+
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        throw error; // Re-throw the error to be caught by the caller, if needed
+      }
+    }
+    //챔피언 영어 정보 api요청
+    async function callChampionInfo2(cname) {
+      const jsonUrl = `${ddragon}${version}/data/en_US/champion/${cname}.json`;
 
       try {
         const response = await fetch(jsonUrl);

@@ -51,7 +51,7 @@ public class ApiService {
             summonerRankInfoDtos.add(dto2);
 
             String riotIdandTag = sn;
-            if (sn.contains("#")) {
+            if (sn.contains("#") || sn.contains(" #")) {
                 riotIdandTag = sn.replace("#", "/");
             }
             else {
