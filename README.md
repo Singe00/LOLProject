@@ -13,9 +13,11 @@
 > 풀스택 개발 (Full Stack)
   <p>Front  : HTML (SSR), JavaScript</p>
   
-  <p>Back   : Java, Spring Boot</p>
+  <p>Back   : Java, Spring Boot, JPA</p>
   
   <p>DB     : MySQL</p>
+
+  <p>etc    : AWS EC2, 가비아 도메인</p>
   <br/>
 
   
