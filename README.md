@@ -2,7 +2,7 @@
 리그 오브 레전드 api를 활용한 전적 게임 및 승률 예측 딥러닝 모델을 활용한 게임 분석 웹 서비스
 <br/>
 
-[lpgg.site](https://lpgg.site)
+[lpgg.site](http://lpgg.site:8080/)
 
 <br/>
 
