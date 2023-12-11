@@ -67,19 +67,18 @@
   <div class="main-box bg-dark">
       <main class="main-box2">
           <div class="column-lo">
-              <div class="column-lo">
+              <div class="column-lo" style="display: flex;align-items: center;justify-content: center;">
                   <div class="loginM">LP.GG 로그인</div>
                   <div class="column-lo">
                       <div class="notice">소셜 로그인</div>
-                      <div class="row-lo">
-                          <div href="/oauth2/authorization/google">1</div>
-                          <div href="/oauth2/authorization/naver">2</div>
-                          <div href="/oauth2/authorization/kakao">3</div>
+                      <div class="row-lo" style="margin: 10px; width: 300px; display:flex; justify-content: space-between;align-items: center;">
+                          <a th:href="@{/oauth2/authorization/google}"><img style="width: 135px; height: auto;" src="assets/img/icon/googleL.png"></a>
+                          <a th:href="@{/oauth2/authorization/naver}"><img style="width: 135px; height: auto;" src="assets/img/icon/naverL.png"></a>
                       </div>
                   </div>
                   <div style='width: 300px; height: 1px; background:lightslategray;'></div>
               </div>
-              <div class="column-lo">
+              <div class="column-lo" style="display: flex; align-items: center;justify-content: center;">
                   <div class="notice">이메일 로그인</div>
                   <div>
                       <div class="inputBox">

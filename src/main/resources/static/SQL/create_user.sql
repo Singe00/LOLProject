@@ -1,9 +1,7 @@
-drop table if exists users CASCADE;
+drop table if exists user CASCADE;
 
-create table users(
-                       user_id int auto_increment,
-                       email varchar(100),
-                       password varchar(300),
-                       activated boolean,
-                       primary key (user_id)
+CREATE TABLE user (
+                      email VARCHAR(100) NOT NULL,
+                      oauth_type VARCHAR(50),
+                      PRIMARY KEY (email)
 );

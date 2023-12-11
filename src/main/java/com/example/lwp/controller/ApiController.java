@@ -2,9 +2,11 @@ package com.example.lwp.controller;
 
 import com.example.lwp.domain.Champion;
 import com.example.lwp.domain.Dataset;
-import com.example.lwp.domain.Ranking;
 import com.example.lwp.dto.*;
 import com.example.lwp.service.ApiService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -117,4 +119,27 @@ public class ApiController {
     public boolean healthCheck() {
         return true;
     }
+
+    @GetMapping("/check-session")
+    public boolean checkSession(@RequestHeader(name = "LPGGCOOKIE") String lpggCookie, HttpSession session, HttpServletResponse response) {
+        // 세션에서 저장된 email 값을 가져옴
+        String storedEmail = (String) session.getAttribute("email");
+
+        if (storedEmail==null){
+            Cookie cookie = new Cookie("LPGGCOOKIE", null);
+            cookie.setMaxAge(0);
+            response.addCookie(cookie);
+
+            return false;
+        }
+
+
+        if (lpggCookie.equals(storedEmail)){
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
 }

@@ -74,6 +74,81 @@
     var ddragon = "https://ddragon.leagueoflegends.com/cdn/"
     // Version
     var version = "13.24.1";
+
+
+    function checkLoginStatus() {
+      const jSessionId = getCookie('LPGGCOOKIE');
+      if (jSessionId) {
+        // AJAX 요청을 통해 서버에 로그인 여부 확인
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', '/api/check-session', true);
+        xhr.setRequestHeader('LPGGCOOKIE', jSessionId);
+
+
+        xhr.onload = function () {
+          if (xhr.status === 200) {
+            const response = JSON.parse(xhr.responseText);
+            if (response) {
+              setLoginStatus(true);
+              document.getElementById("loginBtn").style.display = "none";
+              document.getElementById("logoutBtn").style.display = "block";
+            } else {
+              setLoginStatus(false);
+              document.getElementById("loginBtn").style.display = "block";
+              document.getElementById("logoutBtn").style.display = "none";
+            }
+          } else {
+          }
+        };
+
+        xhr.send();
+      } else {
+        setLoginStatus(false);
+        document.getElementById("loginBtn").style.display = "block";
+        document.getElementById("logoutBtn").style.display = "none";
+      }
+    }
+
+    function getCookie(name) {
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      if (parts.length === 2) return parts.pop().split(';').shift();
+    }
+
+    // 로그인 상태를 쿠키에 저장하는 함수
+    function setLoginStatus(isLoggedIn) {
+      const expirationDate = new Date();
+      expirationDate.setDate(expirationDate.getDate() + 30);
+
+      // 쿠키에 로그인 상태 저장
+      document.cookie = `LPGGisLoggedIn=${isLoggedIn}; expires=${expirationDate.toUTCString()}; path=/`;
+    }
+
+    // 쿠키에서 로그인 상태를 가져오는 함수
+    function getLoginStatus() {
+      const cookies = document.cookie.split(';');
+      for (const cookie of cookies) {
+        const [name, value] = cookie.trim().split('=');
+        if (name === 'LPGGisLoggedIn') {
+          return value === 'true';
+        }
+      }
+      return false;
+    }
+
+    // 초기화 시 로그인 상태에 따라 버튼 표시 설정
+    window.onload = function () {
+
+      checkLoginStatus();
+      const isLoggedIn = getLoginStatus();
+      if (isLoggedIn) {
+        document.getElementById("loginBtn").style.display = "none";
+        document.getElementById("logoutBtn").style.display = "block";
+      } else {
+        document.getElementById("loginBtn").style.display = "block";
+        document.getElementById("logoutBtn").style.display = "none";
+      }
+    };
   </script>
 </th:block>
 

@@ -20,8 +20,11 @@
                 <div class="linkBtn"><a class="nav-link rounded" th:href="@{/community}">커뮤니티</a></div>
             </div>
             <div class="row-lo" style="">
-                <div class="linkBtn" style="margin-right: 20px;">
+                <div class="linkBtn" id="loginBtn" style="margin-right: 20px;">
                     <a class="nav-link rounded" th:href="@{/login}">Login</a>
+                </div>
+                <div class="linkBtn" id="logoutBtn" style="margin-right: 20px; display: none;">
+                    <a class="nav-link rounded" th:href="@{/logout}">Logout</a>
                 </div>
                 <div class="linkBtn">
                     <a class="nav-link rounded" th:href="@{/about}">About</a>
@@ -36,6 +39,4 @@
     </nav>
 
 </div>
-
-
 </html>
