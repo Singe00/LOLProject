@@ -35,6 +35,7 @@ public class ApiService {
     @Autowired
     private final DatasetRepository datasetRepository;
 
+    //소환사 정보 찾기
     public SummonerInfoDto FindSummonerInfo(String sn){
 
         SummonerInfoDto summonerInfoDto = new SummonerInfoDto();
@@ -106,7 +107,7 @@ public class ApiService {
             return null;
         }
     }
-
+    //경기 전적  찾기
     public List<MatchDto> FindMatch(String sn,int index){
 
         try {
@@ -172,7 +173,7 @@ public class ApiService {
             return null;
         }
     }
-
+    //경기 타임라인 데이터 찾기
     public MatchTimelineDto FindMatchTimeline(String sn){
         MatchTimelineDto matchTimelineDto = new MatchTimelineDto();
 
@@ -186,7 +187,7 @@ public class ApiService {
         }
         return matchTimelineDto;
     }
-
+    //소환사 챔피언 숙련도 데이터 찾기
     public List<MasteryDto> FindMastery(String sn){
 
         try {
@@ -223,7 +224,7 @@ public class ApiService {
         }
     }
 
-
+    //챔피언 리스트 반환
     public List<Champion> ReturnChampionList(){
         List<Champion> championList = new ArrayList<>();
 
@@ -240,12 +241,13 @@ public class ApiService {
         return rankings;
     }*/
 
+    //소환사 랭킹 정보
     public List<Object[]> ReturnRankingList(int gametype){
         List<Object[]> rankings = rankingRepository.findData(gametype);
 
         return rankings;
     }
-
+    //챔피언 검색
     public List<Champion> SearchChampionWithOptions(String inputValue, String selectedRole){
         List<Champion> championList;
 
@@ -268,19 +270,19 @@ public class ApiService {
 
         return championList;
     }
-
+    //챔피언 반환
     public List<Champion> ReturnChampions(){
         List<Champion> championList = championRepository.findAll();
 
         return championList;
     }
-
+    //챔피언 별 통계 데이터 반환1
     public List<Dataset> ReturnDataset(String cn){
         List<Dataset> dataList = datasetRepository.findAllByChampionName(cn);
 
         return dataList;
     }
-
+    //챔피언 별 통계 데이터 반환2
     public Dataset ReturnDataset2(String cn, String lane){
 
         Dataset dataSet = datasetRepository.findByChampionNameAndTeamPosition(cn,lane);

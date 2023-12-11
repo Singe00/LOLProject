@@ -12,3 +12,6 @@ CREATE TABLE champion (
 );
 
 
+
+INSERT INTO champion (championId, championName, championNameKr, nickName, rotation, position, initial)
+VALUES (910, 'Hwei', '흐웨이', null, false, 'AM', 'ㅎㅇㅇ');

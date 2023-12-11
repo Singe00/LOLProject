@@ -777,6 +777,7 @@
 
         const arenaMode = match.info.gameMode === "아레나";
 
+        console.log(match)
         for (let i = 0; i < maxPlayers; i++) {
             const participant = match.info.participants[i];
 
@@ -793,7 +794,7 @@
             const participantInfoHtml = `
             <div class="row-lo">
                 ${championImg}
-                <a class="custom-link" href="/info?summonerName=${participantSummonerName}#${participantTagline}" target="_blank">
+                <a class="custom-link" href="/info?summonerName=${participantSummonerName}%23${participantTagline}" target="_blank">
                     ${participantSummonerName}
                 </a>
             </div>
@@ -1060,6 +1061,7 @@
 
         const hsa = Object.values(data);
 
+        console.log(hsa)
         const outline = [];
 
         for (let i =1;i<hsa.length;i++){
@@ -1130,11 +1132,10 @@
                 }
             }
             outline.push(`
-
                     <div class="row-lo" style="display: flex; justify-content: space-between">
                         <div class="row-lo" style="margin-left: 10px">
                             <div><img loading='lazy' decoding='async' src='assets/img/champion/${hsa[i].champion}.png' class="detailChampImg"></div>
-                            <div><a class="custom-link" href="/info?summonerName=${hsa[i].playerName}" target="_blank" style="font-size: 13px;">${hsa[i].playerName}</a></div>
+                            <div><a class="custom-link" href="/info?summonerName=${hsa[i].playerName}%23${hsa[i].playerTag}" target="_blank" style="font-size: 13px;">${hsa[i].playerName}</a></div>
                         </div>
                         <div style="margin-right: 10px;"><img loading='lazy' decoding='async' src="assets/img/position/${hsa[i].teamPosition}.png" class="detailImg"></div>
                     </div>
@@ -1916,20 +1917,21 @@
     //각 정보에 맞는 요소 찾기
     function findHighestStatsPlayer(gameInfo) {
 
+        console.log(gameInfo)
         const highestStats = {
             gameMode: {mode : '' },
-            totalDamageDealt: {id:1,tag:'최다 딜량', value: -1, playerName: '', champion: '',teamPosition:'' },
-            totalDamageTaken: {id:2,tag:'최다 피해량', value: -1, playerName: '', champion: '',teamPosition:'' },
-            goldEarned: {id:3,tag:'최다 골드 획득', value: -1, playerName: '', champion: '',teamPosition:'' },
-            kills: {id:4,tag:'최다 킬', value: -1, playerName: '', champion: '',teamPosition:'' },
-            deaths: {id:5,tag:'최다 데스', value: -1, playerName: '', champion: '',teamPosition:'' },
-            assists: {id:6,tag:'최다 어시스트', value: -1, playerName: '', champion: '',teamPosition:'' },
-            turretKills: {id:7,tag:'철거왕', value: -1,tk: -1,ik: -1, playerName: '', champion: '',teamPosition:'' },
-            save: {id:8,tag:'회복왕', value: -1, playerName: '', champion: '',teamPosition:'' },
-            vision: {id:9,tag:'시야왕', value: -1,dp: -1,wp: -1, playerName: '', champion: '',teamPosition:'' },
-            steal: {id:10,tag:'스틸왕', value: -1, playerName: '', champion: '',teamPosition:'' },
-            wardsKilled: {id:11,tag:'와드 학살자', value: -1, playerName: '', champion: '',teamPosition:'' },
-            totalMinionsKilled: {id:12,tag:'미니언 학살자', value: -1,min:-1, playerName: '', champion: '',teamPosition:'' }
+            totalDamageDealt: {id:1,tag:'최다 딜량', value: -1, playerName: '', champion: '',teamPosition:'', playerTag:'' },
+            totalDamageTaken: {id:2,tag:'최다 피해량', value: -1, playerName: '', champion: '',teamPosition:'', playerTag:''  },
+            goldEarned: {id:3,tag:'최다 골드 획득', value: -1, playerName: '', champion: '',teamPosition:'', playerTag:''  },
+            kills: {id:4,tag:'최다 킬', value: -1, playerName: '', champion: '',teamPosition:'', playerTag:''  },
+            deaths: {id:5,tag:'최다 데스', value: -1, playerName: '', champion: '',teamPosition:'', playerTag:''  },
+            assists: {id:6,tag:'최다 어시스트', value: -1, playerName: '', champion: '',teamPosition:'', playerTag:''  },
+            turretKills: {id:7,tag:'철거왕', value: -1,tk: -1,ik: -1, playerName: '', champion: '',teamPosition:'', playerTag:''  },
+            save: {id:8,tag:'회복왕', value: -1, playerName: '', champion: '',teamPosition:'', playerTag:''  },
+            vision: {id:9,tag:'시야왕', value: -1,dp: -1,wp: -1, playerName: '', champion: '',teamPosition:'', playerTag:''  },
+            steal: {id:10,tag:'스틸왕', value: -1, playerName: '', champion: '',teamPosition:'', playerTag:''  },
+            wardsKilled: {id:11,tag:'와드 학살자', value: -1, playerName: '', champion: '',teamPosition:'', playerTag:''  },
+            totalMinionsKilled: {id:12,tag:'미니언 학살자', value: -1,min:-1, playerName: '', champion: '',teamPosition:'', playerTag:''  }
         };
 
         highestStats.gameMode.mode = gameInfo.gameMode;
@@ -1945,6 +1947,7 @@
                 highestStats.totalDamageDealt.playerName = participant.summonerName;
                 highestStats.totalDamageDealt.champion = participant.championName;
                 highestStats.totalDamageDealt.teamPosition = participant.teamPosition || 'MIDDLE';
+                highestStats.totalDamageDealt.playerTag = participant.riotIdTagline;
             }
             //받은 피해량
             if (participant.totalDamageTaken > highestStats.totalDamageTaken.value) {
@@ -1952,6 +1955,8 @@
                 highestStats.totalDamageTaken.playerName = participant.summonerName;
                 highestStats.totalDamageTaken.champion = participant.championName;
                 highestStats.totalDamageTaken.teamPosition = participant.teamPosition || 'MIDDLE';
+                highestStats.totalDamageTaken.playerTag = participant.riotIdTagline;
+
             }
             //골드 획득량
             if (participant.goldEarned > highestStats.goldEarned.value) {
@@ -1959,6 +1964,7 @@
                 highestStats.goldEarned.playerName = participant.summonerName;
                 highestStats.goldEarned.champion = participant.championName;
                 highestStats.goldEarned.teamPosition = participant.teamPosition || 'MIDDLE';
+                highestStats.goldEarned.playerTag = participant.riotIdTagline;
             }
             //킬
             if (participant.kills > highestStats.kills.value) {
@@ -1966,6 +1972,7 @@
                 highestStats.kills.playerName = participant.summonerName;
                 highestStats.kills.champion = participant.championName;
                 highestStats.kills.teamPosition = participant.teamPosition || 'MIDDLE';
+                highestStats.kills.playerTag = participant.riotIdTagline;
             }
             //데스
             if (participant.deaths > highestStats.deaths.value) {
@@ -1973,6 +1980,7 @@
                 highestStats.deaths.playerName = participant.summonerName;
                 highestStats.deaths.champion = participant.championName;
                 highestStats.deaths.teamPosition = participant.teamPosition || 'MIDDLE';
+                highestStats.deaths.playerTag = participant.riotIdTagline;
             }
             //어시
             if (participant.assists > highestStats.assists.value) {
@@ -1980,6 +1988,7 @@
                 highestStats.assists.playerName = participant.summonerName;
                 highestStats.assists.champion = participant.championName;
                 highestStats.assists.teamPosition = participant.teamPosition || 'MIDDLE';
+                highestStats.assists.playerTag = participant.riotIdTagline;
             }
             //철거
             if (totalstuc > highestStats.turretKills.value) {
@@ -1989,6 +1998,7 @@
                 highestStats.turretKills.playerName = participant.summonerName;
                 highestStats.turretKills.champion = participant.championName;
                 highestStats.turretKills.teamPosition = participant.teamPosition || 'MIDDLE';
+                highestStats.turretKills.playerTag = participant.riotIdTagline;
             }
             //회복
             if (save > highestStats.save.value) {
@@ -1996,6 +2006,7 @@
                 highestStats.save.playerName = participant.summonerName;
                 highestStats.save.champion = participant.championName;
                 highestStats.save.teamPosition = participant.teamPosition || 'MIDDLE';
+                highestStats.save.playerTag = participant.riotIdTagline;
             }
             //시야
             if (participant.visionScore > highestStats.vision.value) {
@@ -2005,6 +2016,7 @@
                 highestStats.vision.playerName = participant.summonerName;
                 highestStats.vision.champion = participant.championName;
                 highestStats.vision.teamPosition = participant.teamPosition || 'MIDDLE';
+                highestStats.vision.playerTag = participant.riotIdTagline;
             }
             //스틸
             if (participant.objectivesStolen > highestStats.steal.value) {
@@ -2012,6 +2024,7 @@
                 highestStats.steal.playerName = participant.summonerName;
                 highestStats.steal.champion = participant.championName;
                 highestStats.steal.teamPosition = participant.teamPosition || 'MIDDLE';
+                highestStats.steal.playerTag = participant.riotIdTagline;
             }
             //와드
             if (participant.wardsKilled > highestStats.wardsKilled.value) {
@@ -2019,6 +2032,7 @@
                 highestStats.wardsKilled.playerName = participant.summonerName;
                 highestStats.wardsKilled.champion = participant.championName;
                 highestStats.wardsKilled.teamPosition = participant.teamPosition || 'MIDDLE';
+                highestStats.wardsKilled.playerTag = participant.riotIdTagline;
             }
             //미니언
             if (participant.totalMinionsKilled > highestStats.totalMinionsKilled.value) {
@@ -2028,6 +2042,7 @@
                 highestStats.totalMinionsKilled.playerName = participant.summonerName;
                 highestStats.totalMinionsKilled.champion = participant.championName;
                 highestStats.totalMinionsKilled.teamPosition = participant.teamPosition || 'MIDDLE';
+                highestStats.totalMinionsKilled.playerTag = participant.riotIdTagline;
             }
 
         });
