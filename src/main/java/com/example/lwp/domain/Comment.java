@@ -11,17 +11,20 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "user")
-public class UserDomain {
-
+@Table(name = "comment")
+public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // 자동 증가 전략을 사용
-    @Column(name = "userid", columnDefinition = "BIGINT", nullable = false)
+    @Column(name = "commentid", columnDefinition = "BIGINT", nullable = false)
+    private Long commentId;
+
+    @Column(name = "text")
+    private String text;
+
+    @Column(name = "userid")
     private Long userId;
 
-    @Column(name = "email", columnDefinition = "VARCHAR(100)",nullable = false)
-    private String email;
+    @Column(name = "postid")
+    private Long postId;
 
-    @Column(name = "oauth_type", columnDefinition = "VARCHAR(50)")
-    private String oauthType;
 }

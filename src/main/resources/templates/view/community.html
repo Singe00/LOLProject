@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/default_layout}">
+
+<th:block layout:fragment="content">
+  <style>
+
+    .innerDiv{
+      width: 1000px;
+      display: flex;
+      align-items: start;
+      min-height: 1000px;
+      padding: 15px;
+    }
+
+    .input-field {
+      flex: 1;
+      padding: 8px;
+      border: none;
+      border-radius: 5px;
+      background-color: #f5f5f5;
+      outline: none;
+      width: 100%;
+      height: 95%;
+      font-size: 15px;
+    }
+    .api-button {
+      background-image: url('/assets/img/icon/icon-search.png');
+      background-position: center;
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-color: transparent;
+      background-size: 25px auto;
+      padding: 15px 15px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .custom-input-box {
+      background-color: #f5f5f5;
+      border: none;
+      border-radius: 13px;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+      display: flex;
+      align-items: center;
+      width: 850px;
+      height: 35px;
+      padding: 10px;
+      border: 3px solid #ccc;
+      transition: border-color 0.3s;
+      margin: 20px;
+    }
+
+    .postSelect {
+      font-size: 17px;
+      color: gray; /* Lighter color for unselected text */
+      cursor: pointer; /* Change cursor to pointer on hover */
+    }
+    .postSelect.selected {
+      color: white; /* Darker color for selected text */
+      font-weight: bold; /* Add bold style to selected text */
+    }
+    #rankOptions{
+      margin: 10px;
+    }
+    .listDiv{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      height: 100%;
+      background: #31313c;
+      border-radius: 10px;
+    }
+    .infoBar{
+      width: 100%;
+      height: 40px;
+      display: flex;
+      justify-content: space-between;
+      background: #2c2c2f;
+      align-items: center;
+      margin: 0px 0px 10px 0px;
+      padding: 0px 40px 0px 40px;
+      font-weight: bold;
+      border-top-right-radius: 10px;
+      border-top-left-radius: 10px;
+    }
+    .custom-link {
+      text-decoration: none; /* 밑줄 제거 */
+      color: white; /* 링크 색상 설정 */
+      cursor: pointer; /* 커서 스타일 변경 (선택 사항) */
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      margin-left: 10px;
+    }
+    .custom-input-box2 {
+      background-color: #f5f5f5;
+      border: none;
+      border-radius: 13px;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+      display: flex;
+      align-items: center;
+      width: 150px;
+      height: 35px;
+      border: 3px solid #ccc;
+      transition: border-color 0.3s;
+    }
+    .postingColumn{
+      padding: 0px 40px 0px 40px;
+    }
+    .listtab{
+      display: flex;
+      align-items: center;
+    }
+
+    .pidN{
+      min-width: 100px;
+      max-width: 100px;
+      font-weight: bold;
+      font-size: 16px;
+      color: gray;
+      text-align: center;
+      line-height: 60px;
+    }
+    .categoryN{
+      min-width: 55px;
+      max-width: 55px;
+      font-weight: bold;
+      font-size: 20px;
+      text-align: center;
+      line-height: 60px;
+    }
+    .titleN{
+      min-width: 350px;
+      max-width: 350px;
+      font-weight: bold;
+      font-size: 20px;
+      text-align: left;
+      line-height: 60px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .lookN{
+      min-width: 100px;
+      max-width: 100px;
+      font-weight: bold;
+      font-size: 20px;
+      text-align: center;
+      line-height: 60px;
+      margin-left: 100px;
+    }
+    .likeN{
+      min-width: 100px;
+      max-width: 100px;
+      font-weight: bold;
+      font-size: 20px;
+      text-align: center;
+      line-height: 60px;
+    }
+
+    .champImg{
+      width: 50px;
+      height: 50px;
+      clip-path: inset(3px);
+      border-radius: 15px;
+      text-align: center;
+      line-height: 60px;
+    }
+    #pagingController{
+      width: 320px;
+      height: auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 20px;
+    }
+    #pageNumbers{
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      min-width: 200px;
+    }
+    #pageNumbers > div {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex: 1; /* 남은 공간을 모두 차지하도록 설정 */
+    }
+
+    .pageLinkBtn{
+      font-size: 20px;
+      text-decoration-line: none;
+      color: gray;
+    }
+    .current-page{
+      color: white;
+    }
+    .moveBtn{
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+
+    .selectBox {
+      width: 130px; /* 선택 상자의 너비를 조정합니다. */
+      margin: 10px; /* 선택 상자 주위의 여백을 조정합니다. */
+      color: ;
+    }
+
+    .select {
+      width: 100%;
+      padding: 8px; /* 선택 상자의 패딩을 조정합니다. */
+      font-size: 14px; /* 글꼴 크기를 조정합니다. */
+      border: 1px solid #ccc; /* 테두리 스타일을 지정합니다. */
+      background-color: #f5f5f5;
+      border-radius: 13px;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    }
+    #searchField{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  </style>
+
+  <div class="main-box bg-dark">
+
+    <div>
+      <label class="custom-input-box">
+        <input type="text" id="inputValue" class="input-field" placeholder="라이엇 ID와 태그를 입력해주세요. ( ex. Hide on bush #KR1 )" onkeydown="handleEnterKey(event)" onclick="highlightInput()">
+        <div onclick="callApi()" class="api-button"></div>
+      </label>
+    </div>
+
+    <div class="column-lo innerDiv">
+      <div><a href="/newPosting">게시글작성</a></div>
+      <div class="row-lo" style="display: flex; justify-content: space-between; width: 100%; height: 45px;">
+        <div class="row-lo" id="rankOptions">
+          <div class="postSelect" id="recentPost">최신순</div>
+          <div>&nbsp;&nbsp;|&nbsp;&nbsp;</div>
+          <div class="postSelect" id="hotPost">인기순</div>
+        </div>
+        <div class="row-lo" id="searchField">
+          <div class="selectBox">
+            <select name="category" class="select" id="searchType">
+              <option value="1">제목</option>
+              <option value="2">제목+내용</option>
+            </select>
+          </div>
+            <div>
+              <label class="custom-input-box2">
+                <input type="text" id="keyword" name="keyword" class="input-field" placeholder="게시물 검색">
+                <div onclick="search()" class="api-button"></div>
+              </label>
+            </div>
+        </div>
+      </div>
+
+      <div class="column-lo listDiv">
+        <div class="row-lo infoBar">
+          <div style="min-width: 100px; text-align: center;">번호</div>
+          <div style="min-width: 55px; text-align: center;">분류</div>
+          <div style="min-width: 350px; text-align: center;">제목</div>
+          <div style="min-width: 100px; text-align: center; margin-left: 100px;">조회</div>
+          <div style="min-width: 100px; text-align: center;">추천</div>
+        </div>
+        <div class="column-lo" id="postingList" style="width: 100%;">
+        </div>
+        <div class="column-lo" style="display: none; width: 90%;" id="noPostingTab">
+          <div style="font-weight: bold;font-size: 20px; margin: 15px; text-align: center;">검색 내용에 일치하는 게시물이 없습니다!</div>
+          <div style="font-weight: bold;font-size: 17px; margin: 10px; text-align: center;">검색 내용을 확인해주세요.</div>
+        </div>
+        <div id="pagingController">
+          <div class="moveBtn" onclick="previousPage()"><img src="assets/img/icon/left.png" style="width: 100%; height: auto"></div>
+          <div id="pageNumbers"></div>
+          <div class="moveBtn" onclick="nextPage()"><img src="assets/img/icon/right.png" style="width: 100%; height: auto"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!--  <div class="spinner" id="sp1"></div>-->
+  <script>
+    let currentPage  = 1;
+    let totalPages;
+    let select = 1;
+    let ppp = 10;
+    let postData;
+
+    // 페이지가 로드되면 실행되는 함수
+    document.addEventListener("DOMContentLoaded", async function() {
+
+      postData = await callPosting(0,"");
+
+      totalPages = Math.ceil(postData.length/ppp);
+
+
+      generatePosting(currentPage);
+      updatePageNumbers();
+    });
+
+    function generatePosting(page) {
+      if (postData.length<1){
+        document.getElementById("noPostingTab").style.display = "block";
+      }else {
+        document.getElementById("noPostingTab").style.display = "none";
+      }
+      document.getElementById("postingList").innerHTML = "";
+      const postingList = document.createElement("div");
+      postingList.classList.add("column-lo")
+      postingList.classList.add("listtab")
+
+
+      postingList.innerHTML=`
+        ${generateList(page)}
+    `;
+
+      document.getElementById("postingList").appendChild(postingList);
+
+    }
+
+    function generateList(page) {
+      const rList = [];
+      const pageSize = 10;  // 페이지당 아이템 수
+      const startIndex = (page - 1) * pageSize;
+      let endIndex = startIndex + pageSize;
+
+      let pageData;
+
+      // 마지막 페이지 처리: 데이터 개수가 pageSize의 배수가 아닐 때
+      if (endIndex > postData.length) {
+        endIndex = postData.length;
+      }
+      pageData = postData.slice(startIndex, endIndex);
+
+      for (let i = 0;i<pageData.length;i++){
+        if (i==0){
+          rList.push(`
+            <div style="width: 85%; height: 1px; margin: 5px; background: gray;"></div>
+        `);
+        }
+
+        let category;
+        if (pageData[i]["category"] == 1){
+          category = "잡담";
+        }
+        else if (pageData[i]["category"] == 2){
+          category = "질문";
+        }
+        rList.push(`
+            <div class="row-lo postingColumn" style="display:flex; justify-content: space-between; width: 100%; height: 60px;">
+                <div class="pidN">${pageData[i]["postId"]}</div>
+                <div class="categoryN">${category}</div>
+                <div class="titleN"><a class="custom-link" href="/post?pid=${pageData[i]["postId"]}">${pageData[i]["title"]}</a></div>
+                <div class="lookN">${pageData[i]["look"]}</div>
+                <div class="likeN">${pageData[i]["like_count"]}</div>
+            </div>
+        `);
+
+          rList.push(`
+            <div style="width: 85%; height: 1px; margin: 5px; background: gray;"></div>
+        `);
+
+      }
+
+      return rList.join('');
+    }
+
+    async function search() {
+      var searchType = document.getElementById("searchType").value;
+      var keyword = document.getElementById("keyword").value;
+
+      // 실제 검색 로직을 여기에 추가하세요.
+      postData = await callPosting(searchType,keyword);
+      if (recentPost.classList.contains("selected")){
+        postData.sort((a, b) => b.postId - a.postId);
+      }
+      else {
+        postData.sort((a, b) => b.like_count - a.like_count);
+      }
+
+      generatePosting(currentPage);
+      totalPages = Math.ceil(postData.length/ppp);
+      updatePageNumbers();
+    }
+
+    //게시글 정보 요청
+    const callPosting = async (category,keyword) => {
+      try {
+        const response = await fetch(apiUrl + "/searchPosting", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ category: category,keyword:keyword})
+        });
+
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        console.error("API Error:", error);
+        throw error;
+      }
+    }
+
+    //페이지 관련 함수
+    function updatePageNumbers() {
+      const pageNumbersElement = document.getElementById("pageNumbers");
+      pageNumbersElement.classList.add("row-lo");
+      pageNumbersElement.classList.add("pageNumbersElement");
+      pageNumbersElement.innerHTML = "";
+
+      console.log(currentPage);
+      console.log(totalPages)
+
+      const startPage = Math.max(1, currentPage - 2);
+      const endPage = Math.min(startPage + 4, totalPages);
+
+      for (let i = startPage; i <= endPage; i++) {
+        const divElement = document.createElement("div");
+
+        const pageNumberLink = document.createElement("a");
+        pageNumberLink.href = "#";
+        pageNumberLink.textContent = i;
+        pageNumberLink.onclick = () => changePage(i);
+        pageNumberLink.classList.add("pageLinkBtn")
+
+
+        if (i === currentPage) {
+          pageNumberLink.classList.add("current-page");
+        }
+
+        // div 안에 링크 추가
+        divElement.appendChild(pageNumberLink);
+
+        // div를 페이지 요소에 추가
+        pageNumbersElement.appendChild(divElement);
+
+      }
+    }
+    function changePage(page) {
+      if (page >= 1 && page <= totalPages) {
+        currentPage = page;
+        const newUrl = window.location.href.split('?')[0] + `?page=${page}`;
+        window.history.pushState({ path: newUrl }, '', newUrl);
+        if (select == 1){
+          generatePosting(page,1);
+        }
+        else if (select == 2){
+          generatePosting(page,2);
+        }
+        updatePageNumbers();
+      }
+    }
+    function previousPage() {
+      if (currentPage > 1) {
+        changePage(currentPage - 1);
+      }
+    }
+    function nextPage() {
+      if (currentPage < totalPages) {
+        changePage(currentPage + 1);
+      }
+    }
+
+    recentPost.classList.add("selected");
+
+    // Event listeners
+    recentPost.addEventListener("click", () => {
+      select =1;
+      currentPage = 1;
+      totalPages = Math.ceil(postData.length/ppp);
+      recentPost.classList.add("selected");
+      hotPost.classList.remove("selected");
+
+      postData.sort((a, b) => b.postId - a.postId);
+      generatePosting(currentPage);
+      updatePageNumbers();
+    });
+    hotPost.addEventListener("click", () => {
+      select =2;
+      currentPage = 1;
+      totalPages = Math.ceil(postData.length/ppp);
+      hotPost.classList.add("selected");
+      recentPost.classList.remove("selected");
+
+      postData.sort((a, b) => b.like_count - a.like_count);
+      generatePosting(currentPage);
+      updatePageNumbers();
+    });
+
+    //소환사 검색 함수
+    function highlightInput() {
+      const inputLabel = document.querySelector('.custom-input-box');
+      inputLabel.style.borderColor = '#007bff';
+    }
+    function handleEnterKey(event) {
+      if (event.key === 'Enter') {
+        callApi();
+      }
+    }
+    document.addEventListener('click', function(event) {
+      const inputLabel = document.querySelector('.custom-input-box');
+      if (!inputLabel.contains(event.target)) {
+        inputLabel.style.borderColor = '#1c1c1f';
+      }
+    });
+
+    //소환사 페이지로 이동
+    function callApi() {
+      const inputValue = document.getElementById('inputValue').value;
+
+      if (inputValue) {
+        // 입력값을 컨트롤러로 전달하고 페이지 이동
+        window.location.href = `/info?summonerName=${encodeURIComponent(inputValue)}`;
+      }
+    }
+  </script>
+
+</th:block>
+
+
+</html>

@@ -52,12 +52,12 @@
       margin: 20px;
     }
 
-    .rankSelect {
+    .postSelect {
       font-size: 17px;
       color: gray; /* Lighter color for unselected text */
       cursor: pointer; /* Change cursor to pointer on hover */
     }
-    .rankSelect.selected {
+    .postSelect.selected {
       color: white; /* Darker color for selected text */
       font-weight: bold; /* Add bold style to selected text */
     }
@@ -148,12 +148,6 @@
       align-items: center;
       min-width: 200px;
     }
-    #pageNumbers > div {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex: 1; /* 남은 공간을 모두 차지하도록 설정 */
-    }
     .pageLinkBtn{
       font-size: 20px;
       text-decoration-line: none;
@@ -182,28 +176,42 @@
     </div>
 
     <div class="column-lo innerDiv">
-
+      <div><a href="/newPosting">게시글작성</a></div>
       <div class="row-lo" style="display: flex; justify-content: space-between; width: 100%; height: 45px;">
         <div class="row-lo" id="rankOptions">
-          <div class="rankSelect" id="soloRank">솔로랭크</div>
+          <div class="postSelect" id="recentPost">최신순</div>
           <div>&nbsp;&nbsp;|&nbsp;&nbsp;</div>
-          <div class="rankSelect" id="flexRank">자유랭크</div>
+          <div class="postSelect" id="hotPost">인기순</div>
         </div>
-        <div style="text-align: center; line-height: 45px">2023 / 10 / 17  20:00 기준</div>
-      </div>
+        <div class="row-lo" style="width: 30%;">
+          <div>
+            <select id="searchType">
+              <option value="1">제목</option>
+              <option value="2">제목+내용</option>
+            </select>
+          </div>
+          <div id="searchField">
+            <label for="keyword">제목:</label>
+            <input type="text" id="keyword" name="keyword">
+          </div>
 
+          <button type="button" onclick="search()">검색</button>
+        </div>
+      </div>
 
       <div class="column-lo listDiv">
         <div class="row-lo infoBar">
-          <div style="">순위</div>
-          <div>소환사</div>
-          <div>티어/점수</div>
-          <div>승률</div>
-          <div>모스트 챔피언</div>
+          <div>번호</div>
+          <div>분류</div>
+          <div>제목</div>
+          <div>조회</div>
+          <div>추천</div>
         </div>
-        <div class="column-lo" id="soloRankingList" style="width: 100%;">
+        <div class="column-lo" id="postingList" style="width: 100%;">
         </div>
-        <div class="column-lo" id="flexRankingList" style="display: none; width: 100%;">
+        <div class="column-lo" style="display: none; width: 90%;" id="noPostingTab">
+          <div>검색 내용에 일치하는 게시물이 없습니다!</div>
+          <div>검색 내용을 확인해주세요.</div>
         </div>
         <div id="pagingController">
           <div class="moveBtn" onclick="previousPage()"><img src="assets/img/icon/left.png" style="width: 100%; height: auto"></div>
@@ -215,134 +223,75 @@
     </div>
   </div>
 
-<!--  <div class="spinner" id="sp1"></div>-->
+  <!--  <div class="spinner" id="sp1"></div>-->
   <script>
     let currentPage  = 1;
     let totalPages;
     let select = 1;
 
-    let soloRankingData;
-    let flexRankingData;
-    let champions;
+    let postData;
 
     // 페이지가 로드되면 실행되는 함수
     document.addEventListener("DOMContentLoaded", async function() {
 
-      soloRankingData = await callRanking(1);
-      flexRankingData = await callRanking(2);
-      champions = await callChampions();
+      postData = await callPosting(0,"");
 
-      totalPages = Math.ceil(soloRankingData.length/50);
+      totalPages = Math.ceil(postData.length/10);
 
-      console.log("soloRankingData : ", soloRankingData);
-      console.log("flexRankingData : ", flexRankingData);
-      console.log("champions : ", champions);
 
-      generateRanking(currentPage,1);
+      generatePosting(currentPage);
       updatePageNumbers();
     });
 
-    function generateRanking(page,gametype) {
-      if (gametype==1){
-        document.getElementById("soloRankingList").innerHTML = "";
-        const rankingList = document.createElement("div");
-        rankingList.classList.add("column-lo")
-
-
-        rankingList.innerHTML=`
-          ${generateList(page,1)}
-      `;
-
-        document.getElementById("soloRankingList").appendChild(rankingList);
+    function generatePosting(page) {
+      if (postData.length<1){
+        document.getElementById("noPostingTab").style.display = "block";
+      }else {
+        document.getElementById("noPostingTab").style.display = "none";
       }
-      else if (gametype ==2){
-        document.getElementById("flexRankingList").innerHTML = "";
-        const rankingList = document.createElement("div");
-        rankingList.classList.add("column-lo")
+      document.getElementById("postingList").innerHTML = "";
+      const rankingList = document.createElement("div");
+      rankingList.classList.add("column-lo")
 
 
-        rankingList.innerHTML=`
-          ${generateList(page,2)}
-      `;
+      rankingList.innerHTML=`
+        ${generateList(page)}
+    `;
 
-        document.getElementById("flexRankingList").appendChild(rankingList);
-      }
+      document.getElementById("postingList").appendChild(rankingList);
 
     }
 
-    function generateList(page,gametype) {
+    function generateList(page) {
       const rList = [];
-      const pageSize = 50;  // 페이지당 아이템 수
+      const pageSize = 10;  // 페이지당 아이템 수
       const startIndex = (page - 1) * pageSize;
       let endIndex = startIndex + pageSize;
 
-      console.log(startIndex);
-      console.log(endIndex);
-
       let pageData;
-      if (gametype == 1){
-        // 마지막 페이지 처리: 데이터 개수가 pageSize의 배수가 아닐 때
-        if (endIndex > soloRankingData.length) {
-          endIndex = soloRankingData.length;
-        }
-        pageData = soloRankingData.slice(startIndex, endIndex);
-      }
-      else if (gametype == 2){
-        // 마지막 페이지 처리: 데이터 개수가 pageSize의 배수가 아닐 때
-        if (endIndex > flexRankingData.length) {
-          endIndex = flexRankingData.length;
-        }
 
-        pageData = flexRankingData.slice(startIndex, endIndex);
+      // 마지막 페이지 처리: 데이터 개수가 pageSize의 배수가 아닐 때
+      if (endIndex > postData.length) {
+        endIndex = postData.length;
       }
+      pageData = postData.slice(startIndex, endIndex);
 
       for (let i = 0;i<pageData.length;i++){
-        const rate = ((pageData[i][1] / (pageData[i][1] + pageData[i][2])) * 100).toFixed(2);
 
-        let ratecolor;
-        if (rate >= 60) {
-          ratecolor = '#4169e1'; // Green color for rate >= 60
-        } else if (rate >= 55) {
-          ratecolor = '#87ceeb'; // Light green color for rate between 55 and 59
-        } else if (rate >= 50) {
-          ratecolor = '#66cc00'; // Yellow-green color for rate between 50 and 54
-        } else if (rate >= 45) {
-          ratecolor = '#ff8c00'; // Yellow color for rate between 45 and 49
-        } else {
-          ratecolor = '#b22222'; // Default color for rate below 40
+        let category;
+        if (pageData[i]["category"] == 1){
+          category = "잡담";
         }
-
+        else if (pageData[i]["category"] == 2){
+          category = "질문";
+        }
         rList.push(`
             <div class="row-lo" style="display:flex; justify-content: space-between; width: 100%; height: 60px;">
-                <div class="rlN">${(page-1)*50+(i+1)}</div>
-                <div class="row-lo rlSm">
-                    <div><img loading='lazy' decoding='async' src='http://ddragon.leagueoflegends.com/cdn/${version}/img/profileicon/${pageData[i][5]}.png' style='width: 50px; height: 50px; border-radius: 10px;'></div>
-                    <a class="custom-link" href="/info?summonerName=${pageData[i][0]}" target="_blank">${pageData[i][0]}</a>
-                </div>
-                <div class="row-lo rlSc">
-                    <div><img src="assets/img/emblem/${pageData[i][3].toUpperCase()}.png" style="width: 50px;height: 50px;"></div>
-                    <div style="margin-left: 5px; font-size: 18px;">${pageData[i][4]}&nbsp;LP</div>
-                </div>
-                <div class="row-lo rlWL" style="line-height: 20px; display:flex; justify-content: space-between;">
-                    <div class="column-lo" style="min-width: 75px;">
-                        <div>${rate}%</div>
-                        <div style="font-size: 15px; color:gray;">${pageData[i][1]+pageData[i][2]}&nbsp;게임</div>
-                    </div>
-                    <div class="column-lo" style="min-width:100px; max-width: 100px; padding-top: 5px;">
-                      <div style="width: 100%; height: 10px; background-color: #10131c; border-radius: 10px;" title="승률">
-                          <div style="width: ${rate}%; height: 100%; background-color: ${ratecolor}; border-radius: 10px;"></div>
-                      </div>
-                      <div class="row-lo" style="display: flex; justify-content: space-between; margin-top: 5px;">
-                        <div style="font-size: 15px; color: gray;">${pageData[i][1]}W</div>
-                        <div style="font-size: 15px; color: gray;">${pageData[i][2]}L</div>
-                      </div>
-                    </div>
-                </div>
-                <div class="row-lo rlCh">
-                    <div title="${pageData[i][6]}"><img class="champImg" src="assets/img/champion/${pageData[i][6]}.png"></div>
-                    <div title="${pageData[i][7]}"><img class="champImg" src="assets/img/champion/${pageData[i][7]}.png"></div>
-                    <div title="${pageData[i][8]}"><img class="champImg" src="assets/img/champion/${pageData[i][8]}.png"></div>
-                </div>
+                <div class="rlN">${pageData[i]["postId"]}</div>
+                <div class="rlN">${category}</div>
+                <div class="rlN"><a href="/post?pid=${pageData[i]["postId"]}">${pageData[i]["title"]}</a></div>
+                <div class="rlN">${pageData[i]["look"]}</div>
+                <div class="rlN">${pageData[i]["like_count"]}</div>
             </div>
         `);
       }
@@ -350,6 +299,45 @@
       return rList.join('');
     }
 
+    async function search() {
+      var searchType = document.getElementById("searchType").value;
+      var keyword = document.getElementById("keyword").value;
+
+      // 실제 검색 로직을 여기에 추가하세요.
+      postData = await callPosting(searchType,keyword);
+      if (recentPost.classList.contains("selected")){
+        postData.sort((a, b) => b.postId - a.postId);
+      }
+      else {
+        postData.sort((a, b) => b.like_count - a.like_count);
+      }
+
+      generatePosting(currentPage);
+      updatePageNumbers();
+    }
+
+    //게시글 정보 요청
+    const callPosting = async (category,keyword) => {
+      try {
+        const response = await fetch(apiUrl + "/searchPosting", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ category: category,keyword:keyword})
+        });
+
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        console.error("API Error:", error);
+        throw error;
+      }
+    }
 
     //페이지 관련 함수
     function updatePageNumbers() {
@@ -387,10 +375,10 @@
         const newUrl = window.location.href.split('?')[0] + `?page=${page}`;
         window.history.pushState({ path: newUrl }, '', newUrl);
         if (select == 1){
-          generateRanking(page,1);
+          generatePosting(page,1);
         }
         else if (select == 2){
-          generateRanking(page,2);
+          generatePosting(page,2);
         }
         updatePageNumbers();
       }
@@ -406,34 +394,30 @@
       }
     }
 
-    soloRank.classList.add("selected");
+    recentPost.classList.add("selected");
 
     // Event listeners
-    soloRank.addEventListener("click", () => {
+    recentPost.addEventListener("click", () => {
       select =1;
       currentPage = 1;
-      totalPages = Math.ceil(soloRankingData.length/50);
-      console.log(totalPages);
-      soloRank.classList.add("selected");
-      flexRank.classList.remove("selected");
-      document.getElementById("flexRankingList").style.display = "none";
-      document.getElementById("soloRankingList").style.display = "block";
+      totalPages = Math.ceil(postData.length/50) -1;
+      recentPost.classList.add("selected");
+      hotPost.classList.remove("selected");
 
+      postData.sort((a, b) => b.postId - a.postId);
       updatePageNumbers();
-      generateRanking(currentPage,1);
+      generatePosting(currentPage);
     });
-    flexRank.addEventListener("click", () => {
+    hotPost.addEventListener("click", () => {
       select =2;
       currentPage = 1;
-      totalPages = Math.ceil(flexRankingData.length/50);
-      console.log(totalPages);
-      flexRank.classList.add("selected");
-      soloRank.classList.remove("selected");
-      document.getElementById("soloRankingList").style.display = "none";
-      document.getElementById("flexRankingList").style.display = "block";
+      totalPages = Math.ceil(postData.length/50) -1;
+      hotPost.classList.add("selected");
+      recentPost.classList.remove("selected");
 
+      postData.sort((a, b) => b.like_count - a.like_count);
       updatePageNumbers();
-      generateRanking(currentPage,2);
+      generatePosting(currentPage);
     });
 
     //소환사 검색 함수
@@ -462,52 +446,6 @@
         window.location.href = `/info?summonerName=${encodeURIComponent(inputValue)}`;
       }
     }
-    //랭크 랭킹 정보 요청
-    const callRanking = async (gametype) => {
-      try {
-        const response = await fetch(apiUrl + "/ranking", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({ gametype: gametype})
-        });
-
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-
-        const data = await response.json();
-        return data;
-      } catch (error) {
-        console.error("API Error:", error);
-        throw error;
-      }
-    }
-    //챔피언 정보 요청
-    const callChampions = async () => {
-      try {
-        const response = await fetch(apiUrl + "/champion3", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify()
-        });
-
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-
-        const data = await response.json();
-        return data;
-      } catch (error) {
-        console.error("API Error:", error);
-        throw error;
-      }
-    }
-
-
   </script>
 
 </th:block>
