@@ -263,6 +263,12 @@
       font-weight: bold;
       min-height: 150px;
       border-radius: 10px;
+      justify-content: center;
+    }
+    .navFont{
+      font-size: 22px;
+      font-weight: bold;
+      cursor: pointer;
     }
   </style>
 
@@ -287,16 +293,14 @@
           <img src="assets/img/icon/post.png" style="filter: invert(100%); width: 25px;">
           <div class="custom-link" style="font-size: 20px; margin-left: 15px;">글쓰기</div>
         </div>
-        <div class="navInner column-lo">
-          <div onclick="categorySearch(1)">
-            잡담
-          </div>
-          <div onclick="categorySearch(2)">
-            질문
-          </div>
-          <div onclick="categorySearch(3)">
-            공략
-          </div>
+        <div class="navInner column-lo" style="margin-bottom: 5px;">
+          <div style="margin: 10px; width: 70%"></div>
+          <div class="navFont" onclick="categorySearch(1)">잡담</div>
+          <div style="border: 2px solid gray; margin: 10px; width: 70%"></div>
+          <div class="navFont" onclick="categorySearch(2)">질문</div>
+          <div style="border: 2px solid gray; margin: 10px; width: 70%"></div>
+          <div class="navFont" onclick="categorySearch(3)">공략</div>
+          <div style="margin: 10px; width: 70%"></div>
         </div>
 
       </div>

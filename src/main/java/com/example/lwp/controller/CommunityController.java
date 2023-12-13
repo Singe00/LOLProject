@@ -6,12 +6,11 @@ import com.example.lwp.service.CommunityService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 @RestController
 @Slf4j
@@ -47,5 +46,14 @@ public class CommunityController {
         }else {
             return Collections.emptyList();
         }
+    }
+
+    @PostMapping("/getPost")
+    @ResponseBody
+    public Optional<Object[]> getPost(@RequestBody PostingDto request) {
+
+        Optional<Object[]> post = communityService.findPost(request.getPid());
+
+        return post;
     }
 }

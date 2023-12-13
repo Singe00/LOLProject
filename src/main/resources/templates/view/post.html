@@ -7,11 +7,12 @@
   <style>
 
     .innerDiv{
-      width: 1000px;
+      width: 900px;
       display: flex;
-      align-items: start;
+      align-items: center;
       min-height: 1000px;
       padding: 15px;
+      justify-content: center;
     }
 
     .input-field {
@@ -61,8 +62,9 @@
       color: white; /* Darker color for selected text */
       font-weight: bold; /* Add bold style to selected text */
     }
-    #rankOptions{
+    #selectOptions{
       margin: 10px;
+
     }
     .listDiv{
       display: flex;
@@ -81,11 +83,10 @@
       background: #2c2c2f;
       align-items: center;
       margin: 0px 0px 10px 0px;
-      padding: 0px 50px 0px 40px;
+      padding: 0px 40px 0px 40px;
       font-weight: bold;
       border-top-right-radius: 10px;
       border-top-left-radius: 10px;
-
     }
     .custom-link {
       text-decoration: none; /* 밑줄 제거 */
@@ -96,44 +97,72 @@
       white-space: nowrap;
       margin-left: 10px;
     }
-    .rlN{
-      min-width: 45px;
-      margin-left: 30px;
+    .custom-input-box2 {
+      background-color: #f5f5f5;
+      border: none;
+      border-radius: 13px;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+      display: flex;
+      align-items: center;
+      width: 150px;
+      height: 35px;
+      border: 3px solid #ccc;
+      transition: border-color 0.3s;
+    }
+    .postingColumn{
+      padding: 0px 40px 0px 40px;
+    }
+    .listtab{
+      display: flex;
+      align-items: center;
+      min-height: 721px;
+    }
+
+    .pidN{
+      min-width: 100px;
+      max-width: 100px;
+      font-weight: bold;
+      font-size: 16px;
+      color: gray;
+      text-align: center;
+      line-height: 60px;
+    }
+    .categoryN{
+      min-width: 55px;
+      max-width: 55px;
+      font-weight: bold;
+      font-size: 18px;
+      text-align: center;
+      line-height: 60px;
+    }
+    .titleN{
+      min-width: 350px;
+      max-width: 350px;
+      font-weight: bold;
+      font-size: 20px;
+      text-align: left;
+      line-height: 60px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .lookN{
+      min-width: 100px;
+      max-width: 100px;
+      font-weight: bold;
+      font-size: 20px;
+      text-align: center;
+      line-height: 60px;
+      margin-left: 100px;
+    }
+    .likeN{
+      min-width: 100px;
+      max-width: 100px;
       font-weight: bold;
       font-size: 20px;
       text-align: center;
       line-height: 60px;
     }
-    .rlSm{
-      min-width: 200px;
-      max-width: 200px;
-      text-align: center;
-      line-height: 60px;
-    }
-    .rlSc{
-      min-width:130px;
-      text-align: center;
-      line-height: 60px;
-    }
-    .rlCh{
-      min-width: 170px;
-      text-align: center;
-      line-height: 60px;
-    }
-    .rlWL{
-      min-width:180px;
-      text-align: center;
-      line-height: 60px;
-      align-items: center;
-    }
-    .champImg{
-      width: 50px;
-      height: 50px;
-      clip-path: inset(3px);
-      border-radius: 15px;
-      text-align: center;
-      line-height: 60px;
-    }
+
     #pagingController{
       width: 320px;
       height: auto;
@@ -148,6 +177,13 @@
       align-items: center;
       min-width: 200px;
     }
+    #pageNumbers > div {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex: 1; /* 남은 공간을 모두 차지하도록 설정 */
+    }
+
     .pageLinkBtn{
       font-size: 20px;
       text-decoration-line: none;
@@ -164,6 +200,94 @@
       justify-content: center;
       cursor: pointer;
     }
+
+
+    .selectBox {
+      width: 130px; /* 선택 상자의 너비를 조정합니다. */
+      margin: 10px; /* 선택 상자 주위의 여백을 조정합니다. */
+    }
+
+
+    .select {
+      width: 100%;
+      padding: 8px; /* 선택 상자의 패딩을 조정합니다. */
+      font-size: 14px; /* 글꼴 크기를 조정합니다. */
+      border: 1px solid #ccc; /* 테두리 스타일을 지정합니다. */
+      background-color: #f5f5f5;
+      border-radius: 13px;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    }
+    .select:hover{
+      cursor: pointer;
+    }
+    #searchField{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .writeBtn{
+      border: white solid 2px;
+      border-radius: 5px;
+      padding: 5px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      float: right;
+    }
+    .writeBtn:hover{
+      cursor: pointer;
+      scale: 1.05;
+    }
+
+    .postingBox{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      border: 2px solid #DADFD7;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      padding: 15px 0 15px 0;
+    }
+    .postingBox>div{
+      width: 90%;
+    }
+    #infoCategory{
+      border: 2px solid steelblue;
+      border-radius: 3px;
+      padding: 3px;
+    }
+    .titleBox{
+      font-weight: bold;
+      font-size: 26px;
+      align-items: center;
+      text-align: left;
+      margin: 10px 0 10px 0;
+    }
+    .infoBox{
+      display: flex;
+      align-items: center;
+      justify-content: left;
+      margin: 15px;
+    }
+    .infoImg{
+      width: 30px;
+      filter: invert(80%);
+      margin-right: 7px;
+    }
+    .infoText{
+      color: lightgray;
+      font-size: 20px;
+    }
+    .contentBox{
+      margin: 20px;
+    }
+    .likeBox{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
   </style>
 
   <div class="main-box bg-dark">
@@ -175,73 +299,171 @@
       </label>
     </div>
 
-    <div class="column-lo innerDiv">
-      <div><a href="/newPosting">게시글작성</a></div>
-      <div class="row-lo" style="display: flex; justify-content: space-between; width: 100%; height: 45px;">
-        <div class="row-lo" id="rankOptions">
-          <div class="postSelect" id="recentPost">최신순</div>
-          <div>&nbsp;&nbsp;|&nbsp;&nbsp;</div>
-          <div class="postSelect" id="hotPost">인기순</div>
+    <div class="row-lo innerDiv">
+      <div class="column-lo">
+        <div class="row-lo" style="display: flex; justify-content: space-between; width: 100%; height: 45px; margin-bottom: 5px;">
+          <div class="row-lo" id="selectOptions">
+            <div class="postSelect" id="recentPost">최신순</div>
+            <div>&nbsp;&nbsp;|&nbsp;&nbsp;</div>
+            <div class="postSelect" id="hotPost">인기순</div>
+          </div>
+          <div class="row-lo" id="searchField">
+            <div class="selectBox">
+              <select name="category" class="select" id="searchType">
+                <option value="1">제목</option>
+                <option value="2">제목+내용</option>
+              </select>
+            </div>
+            <div>
+              <label class="custom-input-box2">
+                <input type="text" id="keyword" name="keyword" class="input-field" placeholder="게시물 검색">
+                <div onclick="search()" class="api-button"></div>
+              </label>
+            </div>
+          </div>
         </div>
-        <div class="row-lo" style="width: 30%;">
-          <div>
-            <select id="searchType">
-              <option value="1">제목</option>
-              <option value="2">제목+내용</option>
-            </select>
-          </div>
-          <div id="searchField">
-            <label for="keyword">제목:</label>
-            <input type="text" id="keyword" name="keyword">
-          </div>
 
-          <button type="button" onclick="search()">검색</button>
+        <div>
+          <div class="column-lo postingBox">
+            <div class="titleBox" id="titleBox"></div>
+            <div class="row-lo infoBox">
+              <div style="color: steelblue" id="infoCategory"></div>
+              <div class="infoText" id="infoWriter" style="margin-left: 10px;"></div>
+              <div class="row-lo" style="margin-left: 10px;">
+                <img style="width: 30px; filter: invert(90%); margin-right: 7px;" src="assets/img/icon/look.png">
+                <div class="infoText" id="infoLook"></div>
+              </div>
+              <div class="row-lo" style="margin-left: 10px;">
+                <img class="infoImg" src="assets/img/icon/comment.png">
+                <div class="infoText" id="infoComment"></div>
+              </div>
+              <div class="row-lo" style="margin-left: 10px;">
+                <img class="infoImg" src="assets/img/icon/like.png">
+                <div class="infoText" id="infoLike"></div>
+              </div>
+            </div>
+            <div style="border: 1px solid #212f3c; height: 1px;"></div>
+            <div class="contentBox" id="contentBox"></div>
+            <div style="border: 1px solid #212f3c; height: 1px;"></div>
+            <div class="row-lo likeBox">
+              <div class="row-lo" style="border: 3px solid #3254CE; border-radius: 5px; padding: 7px; margin: 10px;">
+                <div><img style="width: 40px;" src="assets/img/icon/likeBtn.png"></div>
+                <div style="font-size: 30px; margin-left: 10px;" id="likeCount"></div>
+              </div>
+            </div>
+          </div>
+          <div class="column-lo commentBox"></div>
+          <div class="column-lo listDiv">
+            <div class="row-lo infoBar">
+              <div style="min-width: 100px; text-align: center;">번호</div>
+              <div style="min-width: 55px; text-align: center;">분류</div>
+              <div style="min-width: 350px; text-align: center;">제목</div>
+              <div style="min-width: 100px; text-align: center; margin-left: 100px;">조회</div>
+              <div style="min-width: 100px; text-align: center;">추천</div>
+            </div>
+            <div class="column-lo" style="display: none; position: absolute; width: 90%;" id="noPostingTab">
+              <div style="font-weight: bold;font-size: 20px; margin: 15px; text-align: center;">검색 내용에 일치하는 게시물이 없습니다!</div>
+              <div style="font-weight: bold;font-size: 17px; margin: 10px; text-align: center;">검색 내용을 확인해주세요.</div>
+            </div>
+            <div class="column-lo" id="postingList" style="width: 100%;">
+            </div>
+            <div class="row-lo" style="display: flex;justify-content: space-between;align-items: center; width: 90%;">
+              <div style="width: 107.5px;"></div>
+              <div id="pagingController">
+                <div class="moveBtn" onclick="previousPage()"><img src="assets/img/icon/left.png" style="width: 100%; height: auto"></div>
+                <div id="pageNumbers"></div>
+                <div class="moveBtn" onclick="nextPage()"><img src="assets/img/icon/right.png" style="width: 100%; height: auto"></div>
+              </div>
+              <div class="row-lo writeBtn" onclick="window.location.href='/newPosting'">
+                <img src="assets/img/icon/post.png" style="filter: invert(100%); width: 25px;">
+                <div class="custom-link" style="font-size: 20px;">글쓰기</div>
+              </div>
+            </div>
+          </div>
         </div>
+
       </div>
 
-      <div class="column-lo listDiv">
-        <div class="row-lo infoBar">
-          <div>번호</div>
-          <div>분류</div>
-          <div>제목</div>
-          <div>조회</div>
-          <div>추천</div>
-        </div>
-        <div class="column-lo" id="postingList" style="width: 100%;">
-        </div>
-        <div class="column-lo" style="display: none; width: 90%;" id="noPostingTab">
-          <div>검색 내용에 일치하는 게시물이 없습니다!</div>
-          <div>검색 내용을 확인해주세요.</div>
-        </div>
-        <div id="pagingController">
-          <div class="moveBtn" onclick="previousPage()"><img src="assets/img/icon/left.png" style="width: 100%; height: auto"></div>
-          <div id="pageNumbers"></div>
-          <div class="moveBtn" onclick="nextPage()"><img src="assets/img/icon/right.png" style="width: 100%; height: auto"></div>
-        </div>
-      </div>
 
     </div>
   </div>
 
-  <!--  <div class="spinner" id="sp1"></div>-->
+
   <script>
     let currentPage  = 1;
     let totalPages;
     let select = 1;
-
+    let ppp = 10;
     let postData;
+    let posting;
 
     // 페이지가 로드되면 실행되는 함수
     document.addEventListener("DOMContentLoaded", async function() {
 
-      postData = await callPosting(0,"");
+      // 현재 URL 가져오기
+      var posturl = window.location.href;
 
-      totalPages = Math.ceil(postData.length/10);
+      // URL에서 pid 값 추출
+      var pidIndex = posturl.indexOf('pid=');
+      var pid = null;
+
+      if (pidIndex !== -1) {
+        // 'pid='이 발견되면 값을 추출
+        pid = posturl.substring(pidIndex + 4);
+
+        var data = await getPost(pid);
+        posting = data[0]
+        inputPostingData()
+
+
+
+      } else {
+        console.log('URL에서 pid 값을 찾을 수 없습니다.');
+      }
+
+      postData = await callPosting(0,"");
+      totalPages = Math.ceil(postData.length/ppp);
 
 
       generatePosting(currentPage);
       updatePageNumbers();
     });
+
+    function inputPostingData(){
+      console.log(posting[0])
+      var title = document.getElementById("titleBox");
+      title.innerText = posting[0]["title"];
+
+      var category = document.getElementById("infoCategory");
+      if (posting[0]["category"] == 1){
+        category.innerText = "잡담"
+      }else if (posting["category"] == 2){
+        category.innerText = "질문"
+      }else if (posting["category"] == 3){
+        category.innerText = "공략"
+      }
+      var infoWriter = document.getElementById("infoWriter");
+      infoWriter.innerText = posting[1]["email"];
+
+      var infoLook = document.getElementById("infoLook");
+      infoLook.innerText = posting[0]["look"];
+      infoLook.src = "assets/img/icon/look.png";
+
+      var infoComment = document.getElementById("infoComment");
+      infoComment.innerText = posting[0]["title"];
+      infoLook.src = "assets/img/icon/comment.png";
+
+      var infoLike = document.getElementById("infoLike");
+      infoLike.innerText = posting[0]["like_count"];
+      infoLook.src = "assets/img/icon/like.png";
+
+      var likeCount = document.getElementById("likeCount");
+      likeCount.innerText = posting[0]["like_count"];
+
+      var content = document.getElementById("contentBox");
+      content.innerText = posting[0]['content'];
+
+    }
 
     function generatePosting(page) {
       if (postData.length<1){
@@ -250,15 +472,16 @@
         document.getElementById("noPostingTab").style.display = "none";
       }
       document.getElementById("postingList").innerHTML = "";
-      const rankingList = document.createElement("div");
-      rankingList.classList.add("column-lo")
+      const postingList = document.createElement("div");
+      postingList.classList.add("column-lo")
+      postingList.classList.add("listtab")
 
 
-      rankingList.innerHTML=`
+      postingList.innerHTML=`
         ${generateList(page)}
     `;
 
-      document.getElementById("postingList").appendChild(rankingList);
+      document.getElementById("postingList").appendChild(postingList);
 
     }
 
@@ -277,6 +500,11 @@
       pageData = postData.slice(startIndex, endIndex);
 
       for (let i = 0;i<pageData.length;i++){
+        if (i==0){
+          rList.push(`
+            <div style="width: 90%; height: 1px; margin: 5px; background: gray;"></div>
+        `);
+        }
 
         let category;
         if (pageData[i]["category"] == 1){
@@ -285,15 +513,23 @@
         else if (pageData[i]["category"] == 2){
           category = "질문";
         }
+        else if (pageData[i]["category"] == 3){
+          category = "공략";
+        }
         rList.push(`
-            <div class="row-lo" style="display:flex; justify-content: space-between; width: 100%; height: 60px;">
-                <div class="rlN">${pageData[i]["postId"]}</div>
-                <div class="rlN">${category}</div>
-                <div class="rlN"><a href="/post?pid=${pageData[i]["postId"]}">${pageData[i]["title"]}</a></div>
-                <div class="rlN">${pageData[i]["look"]}</div>
-                <div class="rlN">${pageData[i]["like_count"]}</div>
+            <div class="row-lo postingColumn" style="display:flex; justify-content: space-between; width: 100%; height: 60px;">
+                <div class="pidN">${pageData[i]["postId"]}</div>
+                <div class="categoryN">${category}</div>
+                <div class="titleN"><a class="custom-link" href="/post?pid=${pageData[i]["postId"]}">${pageData[i]["title"]}</a></div>
+                <div class="lookN">${pageData[i]["look"]}</div>
+                <div class="likeN">${pageData[i]["like_count"]}</div>
             </div>
         `);
+
+        rList.push(`
+            <div style="width: 90%; height: 1px; margin: 5px; background: gray;"></div>
+        `);
+
       }
 
       return rList.join('');
@@ -313,9 +549,32 @@
       }
 
       generatePosting(currentPage);
+      totalPages = Math.ceil(postData.length/ppp);
       updatePageNumbers();
     }
 
+
+    const getPost = async (pid) => {
+      try {
+        const response = await fetch(apiUrl + "/getPost", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ pid: pid})
+        });
+
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        console.error("API Error:", error);
+        throw error;
+      }
+    }
     //게시글 정보 요청
     const callPosting = async (category,keyword) => {
       try {
@@ -342,7 +601,10 @@
     //페이지 관련 함수
     function updatePageNumbers() {
       const pageNumbersElement = document.getElementById("pageNumbers");
+      pageNumbersElement.classList.add("row-lo");
+      pageNumbersElement.classList.add("pageNumbersElement");
       pageNumbersElement.innerHTML = "";
+
 
       const startPage = Math.max(1, currentPage - 2);
       const endPage = Math.min(startPage + 4, totalPages);
@@ -400,24 +662,24 @@
     recentPost.addEventListener("click", () => {
       select =1;
       currentPage = 1;
-      totalPages = Math.ceil(postData.length/50) -1;
+      totalPages = Math.ceil(postData.length/ppp);
       recentPost.classList.add("selected");
       hotPost.classList.remove("selected");
 
       postData.sort((a, b) => b.postId - a.postId);
-      updatePageNumbers();
       generatePosting(currentPage);
+      updatePageNumbers();
     });
     hotPost.addEventListener("click", () => {
       select =2;
       currentPage = 1;
-      totalPages = Math.ceil(postData.length/50) -1;
+      totalPages = Math.ceil(postData.length/ppp);
       hotPost.classList.add("selected");
       recentPost.classList.remove("selected");
 
       postData.sort((a, b) => b.like_count - a.like_count);
-      updatePageNumbers();
       generatePosting(currentPage);
+      updatePageNumbers();
     });
 
     //소환사 검색 함수

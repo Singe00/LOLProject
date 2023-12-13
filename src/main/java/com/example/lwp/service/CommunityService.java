@@ -9,11 +9,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -73,8 +74,8 @@ public class CommunityService {
         }
     }
 
-    public Post findPost(Long requset){
-        Post post = postRepository.findByPostId(requset);
+    public Optional<Object[]> findPost(Long requset){
+        Optional<Object[]> post = postRepository.findPostAndUserByPostId(requset);
 
         return post;
     }
