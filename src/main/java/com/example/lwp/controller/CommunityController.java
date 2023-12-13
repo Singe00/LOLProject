@@ -6,8 +6,10 @@ import com.example.lwp.service.CommunityService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -33,7 +35,13 @@ public class CommunityController {
     @PostMapping("/searchPosting")
     @ResponseBody
     public List<Post> searchPosting(@RequestBody PostingDto request) {
-        List<Post> posts = communityService.searchPosting(request);
+        List<Post> posts;
+        if (request.getKeyword().equals("categorySearching")){
+            posts = communityService.searchCategory(request);
+        }else {
+            posts = communityService.searchPosting(request);
+        }
+
         if (posts != null && !posts.isEmpty()){
             return posts;
         }else {

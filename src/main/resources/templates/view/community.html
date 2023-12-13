@@ -7,11 +7,12 @@
   <style>
 
     .innerDiv{
-      width: 1000px;
+      width: 1150px;
       display: flex;
       align-items: start;
       min-height: 1000px;
       padding: 15px;
+      justify-content: space-between;
     }
 
     .input-field {
@@ -61,8 +62,9 @@
       color: white; /* Darker color for selected text */
       font-weight: bold; /* Add bold style to selected text */
     }
-    #rankOptions{
+    #selectOptions{
       margin: 10px;
+
     }
     .listDiv{
       display: flex;
@@ -113,6 +115,7 @@
     .listtab{
       display: flex;
       align-items: center;
+      min-height: 721px;
     }
 
     .pidN{
@@ -128,7 +131,7 @@
       min-width: 55px;
       max-width: 55px;
       font-weight: bold;
-      font-size: 20px;
+      font-size: 18px;
       text-align: center;
       line-height: 60px;
     }
@@ -210,8 +213,8 @@
     .selectBox {
       width: 130px; /* 선택 상자의 너비를 조정합니다. */
       margin: 10px; /* 선택 상자 주위의 여백을 조정합니다. */
-      color: ;
     }
+
 
     .select {
       width: 100%;
@@ -222,10 +225,44 @@
       border-radius: 13px;
       box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
     }
+    .select:hover{
+      cursor: pointer;
+    }
     #searchField{
       display: flex;
       justify-content: center;
       align-items: center;
+    }
+
+    .writeBtn{
+      border: white solid 2px;
+      border-radius: 5px;
+      padding: 5px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      float: right;
+    }
+    .writeBtn:hover{
+      cursor: pointer;
+      scale: 1.05;
+    }
+    .categoryBox{
+      width: 200px;
+      background-color: #31313c;
+      display: flex;
+      align-items: center;
+      border-radius: 10px;
+      margin-top: 50px;
+    }
+    .navInner{
+      width: 90%;
+      display: flex;
+      background: #2c2c2f;
+      align-items: center;
+      font-weight: bold;
+      min-height: 150px;
+      border-radius: 10px;
     }
   </style>
 
@@ -238,50 +275,83 @@
       </label>
     </div>
 
-    <div class="column-lo innerDiv">
-      <div><a href="/newPosting">게시글작성</a></div>
-      <div class="row-lo" style="display: flex; justify-content: space-between; width: 100%; height: 45px;">
-        <div class="row-lo" id="rankOptions">
-          <div class="postSelect" id="recentPost">최신순</div>
-          <div>&nbsp;&nbsp;|&nbsp;&nbsp;</div>
-          <div class="postSelect" id="hotPost">인기순</div>
+    <div class="row-lo innerDiv">
+<!--      <div style="width: 100%; display: flex;align-items: center; justify-content: right;">
+        <div class="row-lo writeBtn" onclick="window.location.href='/newPosting'">
+          <img src="assets/img/icon/post.png" style="filter: invert(100%); width: 25px;">
+          <div class="custom-link" style="font-size: 20px;">글쓰기</div>
         </div>
-        <div class="row-lo" id="searchField">
-          <div class="selectBox">
-            <select name="category" class="select" id="searchType">
-              <option value="1">제목</option>
-              <option value="2">제목+내용</option>
-            </select>
+      </div>-->
+      <div class="column-lo categoryBox">
+        <div class="row-lo writeBtn" style="width: 90%; margin: 5px;" onclick="window.location.href='/newPosting'">
+          <img src="assets/img/icon/post.png" style="filter: invert(100%); width: 25px;">
+          <div class="custom-link" style="font-size: 20px; margin-left: 15px;">글쓰기</div>
+        </div>
+        <div class="navInner column-lo">
+          <div onclick="categorySearch(1)">
+            잡담
           </div>
+          <div onclick="categorySearch(2)">
+            질문
+          </div>
+          <div onclick="categorySearch(3)">
+            공략
+          </div>
+        </div>
+
+      </div>
+      <div class="column-lo">
+        <div class="row-lo" style="display: flex; justify-content: space-between; width: 100%; height: 45px; margin-bottom: 5px;">
+          <div class="row-lo" id="selectOptions">
+            <div class="postSelect" id="recentPost">최신순</div>
+            <div>&nbsp;&nbsp;|&nbsp;&nbsp;</div>
+            <div class="postSelect" id="hotPost">인기순</div>
+          </div>
+          <div class="row-lo" id="searchField">
+            <div class="selectBox">
+              <select name="category" class="select" id="searchType">
+                <option value="1">제목</option>
+                <option value="2">제목+내용</option>
+              </select>
+            </div>
             <div>
               <label class="custom-input-box2">
                 <input type="text" id="keyword" name="keyword" class="input-field" placeholder="게시물 검색">
                 <div onclick="search()" class="api-button"></div>
               </label>
             </div>
+          </div>
+        </div>
+
+        <div class="column-lo listDiv">
+          <div class="row-lo infoBar">
+            <div style="min-width: 100px; text-align: center;">번호</div>
+            <div style="min-width: 55px; text-align: center;">분류</div>
+            <div style="min-width: 350px; text-align: center;">제목</div>
+            <div style="min-width: 100px; text-align: center; margin-left: 100px;">조회</div>
+            <div style="min-width: 100px; text-align: center;">추천</div>
+          </div>
+          <div class="column-lo" style="display: none; position: absolute; width: 90%;" id="noPostingTab">
+            <div style="font-weight: bold;font-size: 20px; margin: 15px; text-align: center;">검색 내용에 일치하는 게시물이 없습니다!</div>
+            <div style="font-weight: bold;font-size: 17px; margin: 10px; text-align: center;">검색 내용을 확인해주세요.</div>
+          </div>
+          <div class="column-lo" id="postingList" style="width: 100%;">
+          </div>
+          <div class="row-lo" style="display: flex;justify-content: space-between;align-items: center; width: 90%;">
+            <div style="width: 107.5px;"></div>
+            <div id="pagingController">
+              <div class="moveBtn" onclick="previousPage()"><img src="assets/img/icon/left.png" style="width: 100%; height: auto"></div>
+              <div id="pageNumbers"></div>
+              <div class="moveBtn" onclick="nextPage()"><img src="assets/img/icon/right.png" style="width: 100%; height: auto"></div>
+            </div>
+            <div class="row-lo writeBtn" onclick="window.location.href='/newPosting'">
+              <img src="assets/img/icon/post.png" style="filter: invert(100%); width: 25px;">
+              <div class="custom-link" style="font-size: 20px;">글쓰기</div>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div class="column-lo listDiv">
-        <div class="row-lo infoBar">
-          <div style="min-width: 100px; text-align: center;">번호</div>
-          <div style="min-width: 55px; text-align: center;">분류</div>
-          <div style="min-width: 350px; text-align: center;">제목</div>
-          <div style="min-width: 100px; text-align: center; margin-left: 100px;">조회</div>
-          <div style="min-width: 100px; text-align: center;">추천</div>
-        </div>
-        <div class="column-lo" id="postingList" style="width: 100%;">
-        </div>
-        <div class="column-lo" style="display: none; width: 90%;" id="noPostingTab">
-          <div style="font-weight: bold;font-size: 20px; margin: 15px; text-align: center;">검색 내용에 일치하는 게시물이 없습니다!</div>
-          <div style="font-weight: bold;font-size: 17px; margin: 10px; text-align: center;">검색 내용을 확인해주세요.</div>
-        </div>
-        <div id="pagingController">
-          <div class="moveBtn" onclick="previousPage()"><img src="assets/img/icon/left.png" style="width: 100%; height: auto"></div>
-          <div id="pageNumbers"></div>
-          <div class="moveBtn" onclick="nextPage()"><img src="assets/img/icon/right.png" style="width: 100%; height: auto"></div>
-        </div>
-      </div>
 
     </div>
   </div>
@@ -343,7 +413,7 @@
       for (let i = 0;i<pageData.length;i++){
         if (i==0){
           rList.push(`
-            <div style="width: 85%; height: 1px; margin: 5px; background: gray;"></div>
+            <div style="width: 90%; height: 1px; margin: 5px; background: gray;"></div>
         `);
         }
 
@@ -353,6 +423,9 @@
         }
         else if (pageData[i]["category"] == 2){
           category = "질문";
+        }
+        else if (pageData[i]["category"] == 3){
+          category = "공략";
         }
         rList.push(`
             <div class="row-lo postingColumn" style="display:flex; justify-content: space-between; width: 100%; height: 60px;">
@@ -365,7 +438,7 @@
         `);
 
           rList.push(`
-            <div style="width: 85%; height: 1px; margin: 5px; background: gray;"></div>
+            <div style="width: 90%; height: 1px; margin: 5px; background: gray;"></div>
         `);
 
       }
@@ -379,6 +452,22 @@
 
       // 실제 검색 로직을 여기에 추가하세요.
       postData = await callPosting(searchType,keyword);
+      if (recentPost.classList.contains("selected")){
+        postData.sort((a, b) => b.postId - a.postId);
+      }
+      else {
+        postData.sort((a, b) => b.like_count - a.like_count);
+      }
+
+      generatePosting(currentPage);
+      totalPages = Math.ceil(postData.length/ppp);
+      updatePageNumbers();
+    }
+
+    async function categorySearch(categoryType) {
+
+      // 실제 검색 로직을 여기에 추가하세요.
+      postData = await callPosting(categoryType,"categorySearching");
       if (recentPost.classList.contains("selected")){
         postData.sort((a, b) => b.postId - a.postId);
       }

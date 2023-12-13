@@ -61,6 +61,17 @@ public class CommunityService {
             return Collections.emptyList();
         }
     }
+    public List<Post> searchCategory(PostingDto requset){
+        List<Post> posts = postRepository.findAllByCategory(requset.getCategory());
+
+        if (!posts.isEmpty()){
+            return posts;
+
+        }
+        else {
+            return Collections.emptyList();
+        }
+    }
 
     public Post findPost(Long requset){
         Post post = postRepository.findByPostId(requset);
