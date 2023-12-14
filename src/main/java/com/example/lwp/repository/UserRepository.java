@@ -11,4 +11,6 @@ public interface UserRepository extends JpaRepository<UserDomain,Long> {
     Optional<UserDomain> findByEmailAndOauthType(String email, String oauthType);
 
     UserDomain findByEmail(String email);
+
+    UserDomain findByUserId(Long uid);
 }

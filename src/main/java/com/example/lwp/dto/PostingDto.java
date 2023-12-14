@@ -14,4 +14,5 @@ public class PostingDto {
     private String value;
     private String keyword;
     private long pid;
+    private String email;
 }

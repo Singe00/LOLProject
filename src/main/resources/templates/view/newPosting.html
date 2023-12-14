@@ -52,6 +52,85 @@
       margin: 20px;
     }
 
+    .postBox{
+      border-radius: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      background: #2c2c2f;
+    }
+    .selectBox {
+      width: 130px; /* 선택 상자의 너비를 조정합니다. */
+      margin: 10px; /* 선택 상자 주위의 여백을 조정합니다. */
+      height: 35px;
+    }
+
+
+    .select {
+      width: 100%;
+      padding: 8px; /* 선택 상자의 패딩을 조정합니다. */
+      font-size: 14px; /* 글꼴 크기를 조정합니다. */
+      border: 1px solid #ccc; /* 테두리 스타일을 지정합니다. */
+      background-color: #f5f5f5;
+      border-radius: 13px;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    }
+    .select:hover{
+      cursor: pointer;
+    }
+
+    .settingTab{
+      width: 90%;
+      display: flex;
+      justify-content: start;
+      align-items: center;
+    }
+    #textTab{
+      width: 90%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .titleinput{
+      width: 98%;
+      height: 98%;
+      border-radius: 10px;
+      border: none;
+    }
+    .titleField{
+      display: flex;
+      flex-grow: 1;
+      height: 35px;
+      justify-content: center;
+      align-items: center;
+      margin-left: 30px;
+      background: white;
+      border-radius: 10px;
+      max-height: 35px;
+      margin: 10px;
+    }
+
+    #content{
+      width: 100%;
+      height: 400px;
+      border-radius: 10px;
+      margin: 10px;
+      padding: 15px;
+    }
+
+    .postingBtn{
+      cursor: pointer;
+      width: 80px;
+      height: 30px;
+      color: cornflowerblue;
+      font-weight: bold;
+      background: rgba(46, 82, 180, 0.7);;
+      border-radius: 5px;
+      font-size: 20px;
+      text-align: center;
+      margin: 20px 60px 20px auto;
+    }
   </style>
 
   <div class="main-box bg-dark">
@@ -63,26 +142,34 @@
       </label>
     </div>
 
-    <div class="column-lo innerDiv">
-      <div class="column-lo" style="display: flex; justify-content: space-between; width: 100%; background: #2c2c2f;">
 
-        <div class="row-lo" id="settingTab">
-          <div id="searchForm">
-            <select id="categoryType">
+    <div class="column-lo innerDiv">
+      <div class="column-lo postBox">
+
+        <div class="column-lo" style="width: 100%; display: flex;justify-content: center; align-items: center; padding: 20px;">
+          <div style="font-size: 20px; margin-right: auto; margin-left: 55px;">게시글 작성</div>
+          <div style="border: 2px solid gray; width: 90%; height: 2px; margin: 10px;"></div>
+        </div>
+
+        <div class="row-lo settingTab" id="settingTab">
+          <div class="selectBox" id="searchForm">
+            <select id="categoryType" class="select">
               <option value="0">탭</option>
               <option value="1">잡담</option>
               <option value="2">질문</option>
               <option value="3">공략</option>
             </select>
           </div>
-          <div id="titleField">
-            <input type="text" id="title" name="title">
+          <div id="titleField" class="titleField">
+            <input class="titleinput" type="text" id="title" name="title" maxlength="40" placeholder="제목을 입력해주세요.">
           </div>
         </div>
+
         <div class="row-lo" id="textTab">
           <textarea id="content" name="content" required></textarea>
         </div>
-        <div onclick="writePosing()">등록</div>
+
+        <div class="postingBtn" onclick="writePosing()">등록</div>
       </div>
 
 
@@ -92,13 +179,31 @@
   <!--  <div class="spinner" id="sp1"></div>-->
   <script>
 
+    document.addEventListener('DOMContentLoaded', async function () {
+      // URL에서 pid 파라미터 가져오기
+      const urlParams = new URLSearchParams(window.location.search);
+      const pid = urlParams.get('pid');
+
+      // pid가 존재하면 데이터를 불러오는 코드 실행
+      if (pid) {
+        var editData = await callPosting(pid);
+
+        var select = document.getElementById("categoryType");
+        select.value = editData["category"];
+
+        var title = document.getElementById("title");
+        title.value = editData["title"];
+
+        var content = document.getElementById("content");
+        content.innerText = editData["content"]
+      }
+    });
+
     async function writePosing() {
       var categoryType = document.getElementById("categoryType").value;
       var titleValue = document.getElementById("title").value;
       var contentValue = document.getElementById("content").value;
-      console.log(categoryType);
-      console.log(titleValue);
-      console.log(contentValue);
+
 
       if (categoryType == 0){
         alert("게시판 분류를 선택해주세요!")
@@ -111,11 +216,25 @@
       }
       else {
         var value = getCookie("LPGGCOOKIE");
-        console.log(value)
-        if (await uploadPosting(categoryType,titleValue,contentValue,value)){
-          window.location.href = "/community";
-        }else {
-          alert("업로드 중 오류가 발생했습니다!")
+
+        // URL에서 pid 파라미터 가져오기
+        const urlParams = new URLSearchParams(window.location.search);
+        const pid = urlParams.get('pid');
+
+        if (pid) {
+          if (await editPosting(categoryType,titleValue,contentValue,value,pid)){
+
+            window.location.href = "/post?pid="+pid;
+          }else {
+            alert("업로드 중 오류가 발생했습니다!")
+          }
+        } else{
+          if (await uploadPosting(categoryType,titleValue,contentValue,value)){
+
+            window.location.href = "/community";
+          }else {
+            alert("업로드 중 오류가 발생했습니다!")
+          }
         }
       }
     }
@@ -128,6 +247,49 @@
             "Content-Type": "application/json"
           },
           body: JSON.stringify({ category: categoryType,title:titleValue,content:contentValue,value:value})
+        });
+
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        console.error("API Error:", error);
+        throw error;
+      }
+    }
+
+    const editPosting = async (categoryType,titleValue,contentValue,value,pid) => {
+      try {
+        const response = await fetch(apiUrl + "/editPosting", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ category: categoryType,title:titleValue,content:contentValue,value:value,pid:pid})
+        });
+
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        console.error("API Error:", error);
+        throw error;
+      }
+    }
+    const callPosting = async (pid) => {
+      try {
+        const response = await fetch(apiUrl + "/callPosting", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ pid:pid})
         });
 
         if (!response.ok) {

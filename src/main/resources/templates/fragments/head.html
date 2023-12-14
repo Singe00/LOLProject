@@ -136,6 +136,29 @@
       return false;
     }
 
+    function getLoginUser() {
+      const cookies = document.cookie.split(';');
+      for (const cookie of cookies) {
+        const [name, encodedValue] = cookie.trim().split('=');
+        if (name === 'LPGGCOOKIE') {
+          const value = decodeURIComponent(encodedValue);
+          return value;
+        }
+      }
+      return false;
+    }
+
+    //로그인 확인
+    function checkLogin() {
+      // 사용자가 확인을 누르면 true 반환, 취소하면 false 반환
+      var shouldLogin = window.confirm("로그인이 필요합니다.\n로그인하시겠습니까?");
+
+      // 사용자가 확인을 눌렀을 때
+      if (shouldLogin) {
+        window.location.href = '/login';
+      }
+    }
+
     // 초기화 시 로그인 상태에 따라 버튼 표시 설정
     window.onload = function () {
 

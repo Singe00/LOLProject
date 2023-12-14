@@ -110,7 +110,10 @@
       transition: border-color 0.3s;
     }
     .postingColumn{
-      padding: 0px 40px 0px 40px;
+      max-width: 805px;
+    }
+    .postingColumn:hover{
+      background-color: #363640;
     }
     .listtab{
       display: flex;
@@ -138,12 +141,15 @@
     .titleN{
       min-width: 350px;
       max-width: 350px;
+    }
+    .titleNText{
       font-weight: bold;
       font-size: 20px;
       text-align: left;
       line-height: 60px;
       overflow: hidden;
       text-overflow: ellipsis;
+      cursor: pointer;
     }
     .lookN{
       min-width: 100px;
@@ -282,12 +288,70 @@
     }
     .contentBox{
       margin: 20px;
+      font-size: 23px;
     }
     .likeBox{
       display: flex;
       justify-content: center;
       align-items: center;
+      cursor: pointer;
     }
+    .cIpunt{
+      border: 3px solid #343536;
+      border-radius: 10px;
+      background-color: #2c2d30;
+      align-items: center;
+    }
+    .commentInput {
+      border: none;
+      background: transparent;
+      outline: none;
+      width: 95%;
+      height: 80px;
+      margin: 10px;
+      text-indent: 0;
+      color: white;
+    }
+    .commentEditBox {
+      border: none;
+      background: transparent;
+      outline: none;
+      color: white;
+      font-size: 18px;
+      resize: none;
+    }
+    .commentEditBox2 {
+      color: black;
+      font-size: 18px;
+      resize: none;
+    }
+    .commentBtn{
+      cursor: pointer;
+      width: 80px;
+      height: 30px;
+      color: cornflowerblue;
+      font-weight: bold;
+      background: rgba(46, 82, 180, 0.7);;
+      border-radius: 5px;
+      font-size: 20px;
+      text-align: center;
+      margin: 5px;
+    }
+    .commentCounter{
+      margin-left: 15px;
+    }
+    .commentBox{
+      display: flex;
+      width: 100%;
+      justify-content: center;
+      align-items: center;
+      margin-top: 25px;
+      margin-bottom: 50px;
+    }
+    .optBtn{
+      background: #1c1c1f;
+    }
+
   </style>
 
   <div class="main-box bg-dark">
@@ -301,28 +365,6 @@
 
     <div class="row-lo innerDiv">
       <div class="column-lo">
-        <div class="row-lo" style="display: flex; justify-content: space-between; width: 100%; height: 45px; margin-bottom: 5px;">
-          <div class="row-lo" id="selectOptions">
-            <div class="postSelect" id="recentPost">최신순</div>
-            <div>&nbsp;&nbsp;|&nbsp;&nbsp;</div>
-            <div class="postSelect" id="hotPost">인기순</div>
-          </div>
-          <div class="row-lo" id="searchField">
-            <div class="selectBox">
-              <select name="category" class="select" id="searchType">
-                <option value="1">제목</option>
-                <option value="2">제목+내용</option>
-              </select>
-            </div>
-            <div>
-              <label class="custom-input-box2">
-                <input type="text" id="keyword" name="keyword" class="input-field" placeholder="게시물 검색">
-                <div onclick="search()" class="api-button"></div>
-              </label>
-            </div>
-          </div>
-        </div>
-
         <div>
           <div class="column-lo postingBox">
             <div class="titleBox" id="titleBox"></div>
@@ -341,18 +383,61 @@
                 <img class="infoImg" src="assets/img/icon/like.png">
                 <div class="infoText" id="infoLike"></div>
               </div>
+              <div style="cursor: pointer; margin-left: auto;" onclick="commentOption(event,0,0,'post')"><img style="width: 25px;" src="assets/img/icon/option.png"></div>
             </div>
             <div style="border: 1px solid #212f3c; height: 1px;"></div>
             <div class="contentBox" id="contentBox"></div>
             <div style="border: 1px solid #212f3c; height: 1px;"></div>
             <div class="row-lo likeBox">
-              <div class="row-lo" style="border: 3px solid #3254CE; border-radius: 5px; padding: 7px; margin: 10px;">
+              <div class="row-lo" style="border: 3px solid #3254CE; border-radius: 5px; padding: 7px; margin: 10px;" onclick="likeBtn()">
                 <div><img style="width: 40px;" src="assets/img/icon/likeBtn.png"></div>
                 <div style="font-size: 30px; margin-left: 10px;" id="likeCount"></div>
               </div>
             </div>
           </div>
-          <div class="column-lo commentBox"></div>
+          <div class="column-lo cIpunt" id="commentInputT">
+            <div style="width: 100%; display: flex; justify-content: center; align-items: center">
+              <textarea class="commentInput" id="commentText" placeholder="댓글을 입력하세요." oninput="checkLength()"></textarea>
+            </div>
+            <div style="width: 100%; display: flex; justify-content: space-between; align-items: center">
+              <div class="commentCounter" id="commentCounter">0 / 255</div>
+              <div class="commentBtn" onclick="uploadComment()">
+                등록
+              </div>
+            </div>
+
+
+          </div>
+          <div class="column-lo cIpunt" id="commentInputF" onclick="checkLogin()">
+            <div style="width: 100%; display: flex; justify-content: center; align-items: center">
+              <textarea class="commentInput" placeholder="로그인이 필요합니다." readonly></textarea>
+            </div>
+          </div>
+
+          <div class="column-lo commentBox" id="commentListBox"></div>
+
+
+          <div class="row-lo" style="display: flex; justify-content: space-between; width: 100%; height: 45px; margin-bottom: 5px;">
+            <div class="row-lo" id="selectOptions">
+              <div class="postSelect" id="recentPost">최신순</div>
+              <div>&nbsp;&nbsp;|&nbsp;&nbsp;</div>
+              <div class="postSelect" id="hotPost">인기순</div>
+            </div>
+            <div class="row-lo" id="searchField">
+              <div class="selectBox">
+                <select name="category" class="select" id="searchType">
+                  <option value="1">제목</option>
+                  <option value="2">제목+내용</option>
+                </select>
+              </div>
+              <div>
+                <label class="custom-input-box2">
+                  <input type="text" id="keyword" name="keyword" class="input-field" placeholder="게시물 검색">
+                  <div onclick="search()" class="api-button"></div>
+                </label>
+              </div>
+            </div>
+          </div>
           <div class="column-lo listDiv">
             <div class="row-lo infoBar">
               <div style="min-width: 100px; text-align: center;">번호</div>
@@ -374,7 +459,7 @@
                 <div id="pageNumbers"></div>
                 <div class="moveBtn" onclick="nextPage()"><img src="assets/img/icon/right.png" style="width: 100%; height: auto"></div>
               </div>
-              <div class="row-lo writeBtn" onclick="window.location.href='/newPosting'">
+              <div class="row-lo writeBtn" onclick="newPosting()">
                 <img src="assets/img/icon/post.png" style="filter: invert(100%); width: 25px;">
                 <div class="custom-link" style="font-size: 20px;">글쓰기</div>
               </div>
@@ -396,41 +481,48 @@
     let ppp = 10;
     let postData;
     let posting;
+    let thisPid = null;
+    let commentLen;
 
     // 페이지가 로드되면 실행되는 함수
     document.addEventListener("DOMContentLoaded", async function() {
+
+      if (getLoginStatus()){
+        document.getElementById("commentInputT").style.display = "block";
+        document.getElementById("commentInputF").style.display = "none";
+      }else {
+        document.getElementById("commentInputT").style.display = "none";
+        document.getElementById("commentInputF").style.display = "block";
+      }
 
       // 현재 URL 가져오기
       var posturl = window.location.href;
 
       // URL에서 pid 값 추출
       var pidIndex = posturl.indexOf('pid=');
-      var pid = null;
 
       if (pidIndex !== -1) {
         // 'pid='이 발견되면 값을 추출
-        pid = posturl.substring(pidIndex + 4);
+        thisPid = posturl.substring(pidIndex + 4);
 
-        var data = await getPost(pid);
+        var data = await getPost(thisPid);
         posting = data[0]
-        inputPostingData()
-
-
 
       } else {
         console.log('URL에서 pid 값을 찾을 수 없습니다.');
       }
 
       postData = await callPosting(0,"");
+      await generateComment();
+      inputPostingData()
       totalPages = Math.ceil(postData.length/ppp);
 
 
-      generatePosting(currentPage);
+      await generatePosting(currentPage);
       updatePageNumbers();
     });
 
     function inputPostingData(){
-      console.log(posting[0])
       var title = document.getElementById("titleBox");
       title.innerText = posting[0]["title"];
 
@@ -447,15 +539,12 @@
 
       var infoLook = document.getElementById("infoLook");
       infoLook.innerText = posting[0]["look"];
-      infoLook.src = "assets/img/icon/look.png";
 
       var infoComment = document.getElementById("infoComment");
-      infoComment.innerText = posting[0]["title"];
-      infoLook.src = "assets/img/icon/comment.png";
+      infoComment.innerText = commentLen;
 
       var infoLike = document.getElementById("infoLike");
       infoLike.innerText = posting[0]["like_count"];
-      infoLook.src = "assets/img/icon/like.png";
 
       var likeCount = document.getElementById("likeCount");
       likeCount.innerText = posting[0]["like_count"];
@@ -465,7 +554,446 @@
 
     }
 
-    function generatePosting(page) {
+
+
+    //조회수 증가
+    function titleBtn(pid){
+      if(lookCounting(pid)){
+        window.location.href = `/post?pid=${pid}`;
+      }
+      else{
+        alert("오류가 발생했습니다!\n다시 시도해주세요");
+      }
+    }
+    const lookCounting = async (pid) => {
+      try {
+        const response = await fetch(apiUrl + "/lookCount", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ pid: pid})
+        });
+
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        console.error("API Error:", error);
+        throw error;
+      }
+    }
+    //좋아요 업데이트
+    async function likeBtn() {
+      var userEmail = getLoginUser();
+      if (userEmail) {
+        try {
+          var likeCount = await likeCounting(thisPid, userEmail);
+
+          if (likeCount !== undefined) {
+            var infoLike = document.getElementById("infoLike");
+            infoLike.innerText = likeCount;
+
+            var likeCountElement = document.getElementById("likeCount");
+            likeCountElement.innerText = likeCount;
+          } else {
+            alert("오류가 발생했습니다!\n다시 시도해주세요");
+          }
+        } catch (error) {
+          console.error("Error:", error);
+          alert("오류가 발생했습니다!\n다시 시도해주세요");
+        }
+      } else {
+        checkLogin();
+      }
+    }
+    const likeCounting = async (pid,email) => {
+      try {
+        const response = await fetch(apiUrl + "/likeCount", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ pid: pid,email:email})
+        });
+
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        console.error("API Error:", error);
+        throw error;
+      }
+    }
+    //댓글 입력
+    const uploadCommenttoServer = async (text,userEmail,pid) => {
+      try {
+        const response = await fetch(apiUrl + "/uploadCommenttoServer", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ text: text,email:userEmail,pid:pid})
+        });
+
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        console.error("API Error:", error);
+        throw error;
+      }
+    }
+
+    //댓글 생성
+    async function generateComment(){
+      var data = await getComment(thisPid);
+      var commentListBox = document.getElementById("commentListBox");
+      commentLen = data.length;
+
+      const comments = [];
+
+      for (let i = 0; i < data.length; i++) {
+        if (i === 0) {
+          comments.push(`<div style="border: 1px solid #212f3c; height: 1px; width: 100%;"></div>`);
+        }
+
+        comments.push(`
+          <div class="column-lo" style="width: 100%; padding: 20px;">
+            <div class="row-lo" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px;">
+              <div class="row-lo">
+                <div style="font-weight: bold; font-size: 15px;">${data[i][1]["email"]}</div>
+              </div>
+              <div style="cursor: pointer;" onclick="commentOption(event,'${data[i][0]['commentId']}', '${data[i][1]['email']}','comment')"><img style="width: 25px;" src="assets/img/icon/option.png"></div>
+            </div>
+            <div class="column-lo">
+              <textarea class="commentEditBox" id="commentEditBox${data[i][0]['commentId']}" readonly oninput="checkLength2(${data[i][0]['commentId']})">${data[i][0]["text"]}</textarea>
+            </div>
+            <div style="width: 100%; display: none; justify-content: space-between; align-items: center;" id="editInfo">
+              <div class="commentCounter" id="commentCounter${data[i][0]['commentId']}">0 / 255</div>
+              <div class="commentBtn" onclick="uploadEditComment(${data[i][0]['commentId']})">
+                등록
+              </div>
+            </div>
+          </div>
+          <div style="border: 1px solid #212f3c; height: 1px; width: 100%;"></div>
+        `);
+      }
+
+      // Now you can append the generated HTML to the commentListBox or any other element
+      commentListBox.innerHTML = comments.join('');
+    }
+    //댓글 작성 길이 제한
+    function checkLength() {
+      var textarea = document.querySelector('.commentInput');
+      var counter = document.getElementById('commentCounter');
+
+      var maxLength = 255;
+      var currentLength = textarea.value.length;
+
+      if (currentLength > maxLength) {
+        // Trim the text if it exceeds the limit
+        textarea.value = textarea.value.substring(0, maxLength);
+        currentLength = maxLength;
+      }
+
+      counter.textContent = currentLength + ' / ' + maxLength;
+    }
+    function checkLength2(cid) {
+      var textarea = document.getElementById(`commentEditBox${cid}`);
+      var counter = document.getElementById(`commentCounter${cid}`);
+
+      var maxLength = 255;
+      var currentLength = textarea.value.length;
+
+      if (currentLength > maxLength) {
+        // Trim the text if it exceeds the limit
+        textarea.value = textarea.value.substring(0, maxLength);
+        currentLength = maxLength;
+      }
+
+      counter.textContent = currentLength + ' / ' + maxLength;
+    }
+    //댓글 입력
+    const getComment = async (pid) => {
+      try {
+        const response = await fetch(apiUrl + "/getComment", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({pid:pid})
+        });
+
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        console.error("API Error:", error);
+        throw error;
+      }
+    }
+    //옵션창 생성
+    function commentOption(event,cid,email,optDiv) {
+      const mX = event.clientX;
+      const mY = event.clientY;
+
+      const opt = document.createElement("div");
+      if (optDiv == "comment"){
+        opt.innerHTML = `
+            <div class="row-lo optBtn" style="width: 120px; display:flex; align-items: center; justify-content: center; border-radius: 10px; border: 2px solid gray">
+                <div style="margin: 5px; cursor: pointer;" class="option-btn" onclick="editComment('${cid}','${email}')">수정</div>
+                <div style="margin: 5px">|</div>
+                <div style="margin: 5px; cursor: pointer" class="option-btn" onclick="deleteComment('${cid}','${email}')">삭제</div>
+            </div>
+        `;
+      }
+      else if (optDiv == "post"){
+        opt.innerHTML = `
+            <div class="row-lo optBtn" style="width: 120px; display:flex; align-items: center; justify-content: center; border-radius: 10px; border: 2px solid gray">
+                <div style="margin: 5px; cursor: pointer;" class="option-btn" onclick="editPost()">수정</div>
+                <div style="margin: 5px">|</div>
+                <div style="margin: 5px; cursor: pointer" class="option-btn" onclick="deletePost()">삭제</div>
+            </div>
+        `;
+      }
+
+      // Set the position of the speech bubble
+      opt.style.position = "absolute";
+      opt.style.left = mX + "px";
+      opt.style.top = mY + "px";
+
+
+      document.body.appendChild(opt);
+
+      setTimeout(() => {
+        // Add a click event listener to the document
+        const clickOutsideListener = function (e) {
+          // Check if the clicked element is not the option bubble or its child
+          if (e.target !== opt && !opt.contains(e.target)) {
+            // Remove the option bubble
+            document.body.removeChild(opt);
+
+            // Remove the click event listener after the option bubble is removed
+            document.removeEventListener("click", clickOutsideListener);
+          }
+        };
+
+        // Add the click event listener to the document
+        document.addEventListener("click", clickOutsideListener);
+      }, 0);
+    }
+    //댓글 수정
+    function editComment(cid, email){
+      var userEmail = getLoginUser()
+
+      if (!userEmail){
+        checkLogin();
+      }
+      else{
+        if (userEmail == email){
+          // 사용자가 확인을 누르면 true 반환, 취소하면 false 반환
+          var shouldEdit = window.confirm("댓글을 수정하시겠습니까?");
+
+          // 사용자가 확인을 눌렀을 때
+          if (shouldEdit) {
+            document.getElementById("editInfo").style.display = "flex";
+            var textArea = document.getElementById(`commentEditBox${cid}`);
+            textArea.removeAttribute("readonly");
+            textArea.classList.remove("commentEditBox");
+            textArea.classList.add("commentEditBox2");
+            checkLength2(cid);
+          }
+        }else {
+          alert("작성자만 수정할 수 있습니다!")
+        }
+      }
+    }
+    function uploadEditComment(cid){
+      var text = document.getElementById(`commentEditBox${cid}`).value;
+      if (callEditComment(cid,text)){
+        window.location.href = window.location.href;
+      }else {
+        alert("오류가 발생했습니다.\n다시 시도해주세요.")
+      }
+
+    }
+    const callEditComment = async (cid,text) => {
+      try {
+        const response = await fetch(apiUrl + "/editComment", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ cid: cid,text:text})
+        });
+
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        console.error("API Error:", error);
+        throw error;
+      }
+    }
+    //댓글 삭제
+    function deleteComment(cid, email){
+      var userEmail = getLoginUser()
+
+      if (!userEmail){
+        checkLogin();
+      }else{
+        if (userEmail == email){
+          // 사용자가 확인을 누르면 true 반환, 취소하면 false 반환
+          var shouldDelete = window.confirm("댓글을 삭제하시겠습니까?\n이 작업은 취소할 수 없습니다.");
+
+          // 사용자가 확인을 눌렀을 때
+          if (shouldDelete) {
+            if (callDeleteComment(cid,userEmail)){
+              window.location.href = window.location.href;
+            }else {
+              alert("오류가 발생했습니다.\n다시 시도해주세요.")
+            }
+
+          }
+        }else {
+          alert("작성자만 삭제할 수 있습니다!")
+        }
+      }
+    }
+    const callDeleteComment = async (cid,email) => {
+      try {
+        const response = await fetch(apiUrl + "/deleteComment", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ cid: cid,email:email})
+        });
+
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        console.error("API Error:", error);
+        throw error;
+      }
+    }
+    //댓글 수
+    const getCommentcount = async (pid) => {
+      try {
+        const response = await fetch(apiUrl + "/getCommentcount", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ pid: pid})
+        });
+
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        console.error("API Error:", error);
+        throw error;
+      }
+    }
+
+    //게시글 수정
+    async function editPost(){
+      var userEmail = getLoginUser();
+
+      if (!userEmail){
+        checkLogin();
+      }
+      else{
+        var shouldEdit = window.confirm("게시글을 수정하시겠습니까?");
+
+        // 사용자가 확인을 눌렀을 때
+        if (shouldEdit) {
+          var check = await callWriter(thisPid);
+          console.log(check)
+
+          if (check==userEmail){
+            var newUrl = "/newPosting?pid="+thisPid;
+            window.location.href = newUrl;
+          }else if(check=="false"){
+            alert("오류가 발생햇습니다!\n다시 시도해주세요.")
+          }else if (check!=userEmail){
+            alert("작성자만 수정할 수 있습니다!")
+          }
+        }
+      }
+    }
+    //게시글 삭제
+    async function deletePost(){
+      var userEmail = getLoginUser()
+      if (!userEmail){
+        checkLogin();
+      }else {
+        var shouldEdit = window.confirm("게시글을 삭제하시겠습니까?");
+
+        // 사용자가 확인을 눌렀을 때
+        if (shouldEdit) {
+          var result = await callDeletePost(thisPid,userEmail);
+
+          console.log(result);
+          if (result=="true"){
+            alert("삭제를 완료하였습니다!")
+            window.location.href = "/community";
+          }else if (result=="false"){
+            alert("오류가 발생했습니다.\n다시 시도해주세요.")
+          }else if (result=="false2"){
+            alert("작성자만 삭제할 수 있습니다!")
+          }
+        }
+
+      }
+    }
+    const callDeletePost = async (pid,email) => {
+      try {
+        const response = await fetch(apiUrl + "/deletePost", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ pid: pid,email:email})
+        });
+
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+
+        const data = await response.text();
+        return data;
+      } catch (error) {
+        console.error("API Error:", error);
+        throw error;
+      }
+    }
+
+    async function generatePosting(page) {
       if (postData.length<1){
         document.getElementById("noPostingTab").style.display = "block";
       }else {
@@ -478,14 +1006,13 @@
 
 
       postingList.innerHTML=`
-        ${generateList(page)}
+        ${await generateList(page)}
     `;
 
       document.getElementById("postingList").appendChild(postingList);
 
     }
-
-    function generateList(page) {
+    async function generateList(page) {
       const rList = [];
       const pageSize = 10;  // 페이지당 아이템 수
       const startIndex = (page - 1) * pageSize;
@@ -500,6 +1027,8 @@
       pageData = postData.slice(startIndex, endIndex);
 
       for (let i = 0;i<pageData.length;i++){
+
+        var commentCount = await getCommentcount(pageData[i]["postId"])
         if (i==0){
           rList.push(`
             <div style="width: 90%; height: 1px; margin: 5px; background: gray;"></div>
@@ -520,7 +1049,10 @@
             <div class="row-lo postingColumn" style="display:flex; justify-content: space-between; width: 100%; height: 60px;">
                 <div class="pidN">${pageData[i]["postId"]}</div>
                 <div class="categoryN">${category}</div>
-                <div class="titleN"><a class="custom-link" href="/post?pid=${pageData[i]["postId"]}">${pageData[i]["title"]}</a></div>
+                <div class="row-lo titleN" onclick="titleBtn(${pageData[i]['postId']})">
+                    <div class="titleNText" style="max-width: 250px;">${pageData[i]["title"]}</div>
+                    <div class="titleNText" style="margin-left: 20px; color: lightskyblue">(&nbsp;${commentCount}&nbsp;)</div>
+                </div>
                 <div class="lookN">${pageData[i]["look"]}</div>
                 <div class="likeN">${pageData[i]["like_count"]}</div>
             </div>
@@ -534,7 +1066,6 @@
 
       return rList.join('');
     }
-
     async function search() {
       var searchType = document.getElementById("searchType").value;
       var keyword = document.getElementById("keyword").value;
@@ -552,7 +1083,6 @@
       totalPages = Math.ceil(postData.length/ppp);
       updatePageNumbers();
     }
-
 
     const getPost = async (pid) => {
       try {
@@ -598,6 +1128,30 @@
       }
     }
 
+    function uploadComment(){
+      var text = document.getElementById("commentText").value;
+      var userEmail = getLoginUser()
+      if (!userEmail){
+        checkLogin();
+      }else {
+        if (uploadCommenttoServer(text,userEmail,thisPid)){
+          window.location.href = window.location.href;
+        }else{
+          alert("오류가 발생했습니다.\n다시 시도해주세요.")
+        }
+      }
+
+    }
+
+    function newPosting(){
+      var user = getLoginUser();
+
+      if (!user){
+        checkLogin();
+      }else{
+        window.location.href = "/newPosting"
+      }
+    }
     //페이지 관련 함수
     function updatePageNumbers() {
       const pageNumbersElement = document.getElementById("pageNumbers");
@@ -699,6 +1253,27 @@
       }
     });
 
+    const callWriter = async (pid) => {
+      try {
+        const response = await fetch(apiUrl + "/checkWriter", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ pid: pid})
+        });
+
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+
+        const data = await response.text();
+        return data;
+      } catch (error) {
+        console.error("API Error:", error);
+        throw error;
+      }
+    }
     //소환사 페이지로 이동
     function callApi() {
       const inputValue = document.getElementById('inputValue').value;
