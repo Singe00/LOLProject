@@ -422,6 +422,7 @@
 
       for (let i = 0;i<pageData.length;i++){
 
+        var count = await likeCounting(pageData[i]["postId"]);
         var commentCount = await getCommentcount(pageData[i]["postId"])
         if (i==0){
           rList.push(`
@@ -448,7 +449,7 @@
                     <div class="titleNText" style="margin-left: 20px; color: lightskyblue">(&nbsp;${commentCount}&nbsp;)</div>
                 </div>
                 <div class="lookN">${pageData[i]["look"]}</div>
-                <div class="likeN">${pageData[i]["like_count"]}</div>
+                <div class="likeN">${count}</div>
             </div>
         `);
 

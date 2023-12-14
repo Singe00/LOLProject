@@ -159,6 +159,29 @@
       }
     }
 
+    const likeCounting = async (pid) => {
+      try {
+        const response = await fetch(apiUrl + "/likeCount", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Cache-Control": "no-cache"
+          },
+          body: JSON.stringify({ pid: pid})
+        });
+
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+
+        const data = await response.text();
+        return data;
+      } catch (error) {
+        console.error("API Error:", error);
+        throw error;
+      }
+    }
+
     // 초기화 시 로그인 상태에 따라 버튼 표시 설정
     window.onload = function () {
 

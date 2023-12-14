@@ -117,28 +117,30 @@ public class CommunityService {
         postRepository.save(post);
         return true;
     }
-    public int likeCount(CommentDto request) {
-        List<Likepost> likeposts = likepostRepository.findAllByPostId(request.getPid());
+    public int likeUpdate(CommentDto request) {
 
         UserDomain userDomain = userRepository.findByEmail(request.getEmail());
         Long userIdToCheck = userDomain.getUserId();
 
-        Optional<Likepost> existingLike = likeposts.stream()
-                .filter(likepost -> likepost.getUserId().equals(userIdToCheck))
-                .findFirst();
+        Likepost lp = likepostRepository.findByPostIdAndUserId(request.getPid(), userIdToCheck);
 
-        if (existingLike.isPresent()) {
-            likepostRepository.delete(existingLike.get());
+        if (lp!=null) {
+            likepostRepository.delete(lp);
+            int count = likepostRepository.countByPostId(request.getPid());
+            return count;
         } else {
             Likepost newLike = new Likepost();
             newLike.setUserId(userIdToCheck);
             newLike.setPostId(request.getPid());
             likepostRepository.save(newLike);
+            int count = likepostRepository.countByPostId(request.getPid());
+            return count;
         }
 
-        // Now, calculate and return the updated like count
-        int updatedLikeCount = likepostRepository.countByPostId(request.getPid());
-        return updatedLikeCount;
+    }
+    public int likeCount(PostingDto request){
+        int count = likepostRepository.countByPostId(request.getPid());
+        return count;
     }
     public int getCommentcount(PostingDto request) {
         int commentCount = commentRepository.countByPostId(request.getPid());

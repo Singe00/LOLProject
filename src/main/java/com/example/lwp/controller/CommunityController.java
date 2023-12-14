@@ -80,13 +80,17 @@ public class CommunityController {
 
     }
 
-    @PostMapping("/likeCount")
+    @PostMapping("/likeUpdate")
     @ResponseBody
-    public int likeCount(@RequestBody CommentDto request) {
-        int count = communityService.likeCount(request);
-        return count;
+    public int likeUpdate(@RequestBody CommentDto request) {
+        return communityService.likeUpdate(request);
     }
 
+    @PostMapping("/likeCount")
+    @ResponseBody
+    public int likeCount(@RequestBody PostingDto request) {
+        return communityService.likeCount(request);
+    }
     @PostMapping("/getCommentcount")
     @ResponseBody
     public int getCommentcount(@RequestBody PostingDto request) {

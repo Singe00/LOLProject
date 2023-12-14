@@ -514,7 +514,7 @@
 
       postData = await callPosting(0,"");
       await generateComment();
-      inputPostingData()
+      await inputPostingData()
       totalPages = Math.ceil(postData.length/ppp);
 
 
@@ -522,7 +522,8 @@
       updatePageNumbers();
     });
 
-    function inputPostingData(){
+    async function inputPostingData(){
+      var count = await likeCounting(thisPid);
       var title = document.getElementById("titleBox");
       title.innerText = posting[0]["title"];
 
@@ -544,10 +545,10 @@
       infoComment.innerText = commentLen;
 
       var infoLike = document.getElementById("infoLike");
-      infoLike.innerText = posting[0]["like_count"];
+      infoLike.innerText = count;
 
       var likeCount = document.getElementById("likeCount");
-      likeCount.innerText = posting[0]["like_count"];
+      likeCount.innerText = count;
 
       var content = document.getElementById("contentBox");
       content.innerText = posting[0]['content'];
@@ -589,33 +590,26 @@
     //좋아요 업데이트
     async function likeBtn() {
       var userEmail = getLoginUser();
-      if (userEmail) {
-        try {
-          var likeCount = await likeCounting(thisPid, userEmail);
 
-          if (likeCount !== undefined) {
-            var infoLike = document.getElementById("infoLike");
-            infoLike.innerText = likeCount;
-
-            var likeCountElement = document.getElementById("likeCount");
-            likeCountElement.innerText = likeCount;
-          } else {
-            alert("오류가 발생했습니다!\n다시 시도해주세요");
-          }
-        } catch (error) {
-          console.error("Error:", error);
-          alert("오류가 발생했습니다!\n다시 시도해주세요");
-        }
-      } else {
+      if (!userEmail){
         checkLogin();
+      }else {
+        var count = await likeUpdate(thisPid, userEmail);
+
+        var infoLike = document.getElementById("infoLike");
+        infoLike.innerText = count;
+
+        var likeCount = document.getElementById("likeCount");
+        likeCount.innerText = count;
       }
     }
-    const likeCounting = async (pid,email) => {
+    const likeUpdate = async (pid,email) => {
       try {
-        const response = await fetch(apiUrl + "/likeCount", {
+        const response = await fetch(apiUrl + "/likeUpdate", {
           method: "POST",
           headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "Cache-Control": "no-cache"
           },
           body: JSON.stringify({ pid: pid,email:email})
         });
@@ -624,13 +618,14 @@
           throw new Error('Network response was not ok');
         }
 
-        const data = await response.json();
+        const data = await response.text();
         return data;
       } catch (error) {
         console.error("API Error:", error);
         throw error;
       }
     }
+
     //댓글 입력
     const uploadCommenttoServer = async (text,userEmail,pid) => {
       try {

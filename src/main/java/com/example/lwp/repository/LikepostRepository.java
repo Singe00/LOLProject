@@ -11,5 +11,7 @@ import java.util.List;
 public interface LikepostRepository extends JpaRepository<Likepost,Long> {
     List<Likepost> findAllByPostId(Long pid);
 
+    Likepost findByPostIdAndUserId(Long pid, Long uid);
+
     int countByPostId(Long pid);
 }
