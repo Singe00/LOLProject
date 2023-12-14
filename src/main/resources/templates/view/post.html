@@ -747,8 +747,8 @@
     }
     //옵션창 생성
     function commentOption(event,cid,email,optDiv) {
-      const mX = event.clientX;
-      const mY = event.clientY;
+      const mX = event.clientX + window.pageXOffset;
+      const mY = event.clientY + window.pageYOffset;
 
       const opt = document.createElement("div");
       if (optDiv == "comment"){
