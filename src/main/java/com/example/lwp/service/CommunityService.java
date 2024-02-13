@@ -134,6 +134,10 @@ public class CommunityService {
             newLike.setPostId(request.getPid());
             likepostRepository.save(newLike);
             int count = likepostRepository.countByPostId(request.getPid());
+
+            Post post = postRepository.findByPostId(request.getPid());
+            post.setLike_count( (long) count);
+            postRepository.save(post);
             return count;
         }
 
