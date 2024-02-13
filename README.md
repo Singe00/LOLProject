@@ -68,6 +68,15 @@
   <p align="left">
     <img loading='lazy' decoding='async' src="https://github.com/Singe00/LOLProject/assets/103260185/a471f77f-de9b-40f8-b00b-b8d1173a6807.png" width="650" height="350">
   </p>
+  <p align="left">
+    <img loading='lazy' decoding='async' src="https://github.com/Singe00/LOLProject/assets/103260185/e8b598ae-0c6c-46ca-ad6c-e2e3e0e3742a.png" width="650" height="350">
+  </p>
+  <p align="left">
+    <img loading='lazy' decoding='async' src="https://github.com/Singe00/LOLProject/assets/103260185/d98c130b-6af4-4525-b979-08472c04d125.png" width="650" height="350">
+  </p>
+  <p align="left">
+    <img loading='lazy' decoding='async' src="https://github.com/Singe00/LOLProject/assets/103260185/d6b41180-95c4-4fa9-b534-6af49a784525.png" width="650" height="350">
+  </p>
 
 
 <br/>
