@@ -57,7 +57,16 @@
     <img loading='lazy' decoding='async' src="https://user-images.githubusercontent.com/103260185/285489857-0cf4ce12-f946-4ea7-a33d-5e7f1621c5f6.png" width="650"
   </p>
   <p align="left">
-    <img loading='lazy' decoding='async' src="[https://user-images.githubusercontent.com/103260185/276583769-5fcdbad1-08b8-4662-8cad-9f2ed009241b.png](https://private-user-images.githubusercontent.com/103260185/304272363-72758df1-2a0d-435c-b323-177459e9321f.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3MDc3ODk1MjksIm5iZiI6MTcwNzc4OTIyOSwicGF0aCI6Ii8xMDMyNjAxODUvMzA0MjcyMzYzLTcyNzU4ZGYxLTJhMGQtNDM1Yy1iMzIzLTE3NzQ1OWU5MzIxZi5wbmc_WC1BbXotQWxnb3JpdGhtPUFXUzQtSE1BQy1TSEEyNTYmWC1BbXotQ3JlZGVudGlhbD1BS0lBVkNPRFlMU0E1M1BRSzRaQSUyRjIwMjQwMjEzJTJGdXMtZWFzdC0xJTJGczMlMkZhd3M0X3JlcXVlc3QmWC1BbXotRGF0ZT0yMDI0MDIxM1QwMTUzNDlaJlgtQW16LUV4cGlyZXM9MzAwJlgtQW16LVNpZ25hdHVyZT1lNDI2NjczMjdhZTljNGNhMDQ4OTYwOTc5ZDY5MjcwYTBiZmI0Y2E3M2RkNzA1MDhlY2M3N2QyMjMwMzlkNTlmJlgtQW16LVNpZ25lZEhlYWRlcnM9aG9zdCZhY3Rvcl9pZD0wJmtleV9pZD0wJnJlcG9faWQ9MCJ9.Fx1QOfuxRWm5Cs94Jei_9PfAMzTVV_BjDtfyYx8Rya4)" width="650" height="350">
+    <img loading='lazy' decoding='async' src="https://github.com/Singe00/LOLProject/assets/103260185/c0de04e7-e357-46bd-9915-1f53351d36ff.png" width="650" height="350">
+  </p>
+  <p align="left">
+    <img loading='lazy' decoding='async' src="https://github.com/Singe00/LOLProject/assets/103260185/6c1e63a7-a040-4872-9ea7-92be72535e05.png" width="650" height="350">
+  </p>
+  <p align="left">
+    <img loading='lazy' decoding='async' src="https://github.com/Singe00/LOLProject/assets/103260185/0b61f03d-63c9-4426-8f8c-5cd9f97e6ab0.png" width="650" height="350">
+  </p>
+  <p align="left">
+    <img loading='lazy' decoding='async' src="https://github.com/Singe00/LOLProject/assets/103260185/a471f77f-de9b-40f8-b00b-b8d1173a6807.png" width="650" height="350">
   </p>
 
 
