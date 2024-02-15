@@ -15,12 +15,16 @@ import java.util.*;
 
 @RestController
 @Slf4j
-@RequiredArgsConstructor
 @CrossOrigin
 @RequestMapping("/api")
 public class CommunityController {
-    @Autowired
+
     private final CommunityService communityService;
+
+    @Autowired
+    public CommunityController(CommunityService communityService){
+        this.communityService = communityService;
+    }
 
     @PostMapping("/uploadPosting")
     @ResponseBody

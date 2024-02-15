@@ -9,10 +9,18 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.swing.text.View;
+
 @Controller
 public class ViewController {
+
+    private final CommunityService communityService;
+
+
     @Autowired
-    private CommunityService communityService;
+    public ViewController(CommunityService communityService){
+        this.communityService = communityService;
+    }
 
     @GetMapping("/")
     public String main(){

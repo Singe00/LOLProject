@@ -17,13 +17,16 @@ import java.util.List;
 
 @RestController
 @Slf4j
-@RequiredArgsConstructor
 @CrossOrigin
 @RequestMapping("/api")
 public class ApiController {
 
-    @Autowired
     private final ApiService apiService;
+
+    @Autowired
+    public ApiController(ApiService apiService){
+        this.apiService = apiService;
+    }
 
     @PostMapping("/user")
     @ResponseBody
