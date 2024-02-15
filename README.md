@@ -17,7 +17,7 @@
   
   <p>DB     : MySQL</p>
 
-  <p>etc    : AWS EC2, 가비아 도메인</p>
+  <p>etc    : AWS EC2, AWS RDS, 가비아 도메인</p>
   <br/>
 
   
