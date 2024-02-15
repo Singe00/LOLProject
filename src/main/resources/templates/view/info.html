@@ -1478,6 +1478,7 @@
     async function generateBuild(matchId,tp) {
         const decodedTp = decodeURIComponent(tp);
         const targetParticipant = JSON.parse(decodedTp);
+
         const tpid = targetParticipant.puuid;
         const cn = targetParticipant.championName;
         const build = [];
@@ -1485,7 +1486,7 @@
         const skillList = [];
         const evolveList = [];
         const skill = [];
-        const stat = [5008, 5005, 5007, 5008, 5002, 5003, 5001, 5002, 5003];
+        const stat = [5008, 5005, 5007, 5008, 5010, 5001, 5011, 5013, 5001];
         const primaryStyle = targetParticipant.perks.styles[0].selections;
         const subStyle = targetParticipant.perks.styles[1].selections;
         const ppi = primaryStyle.map(style => style.perk);
@@ -1775,8 +1776,8 @@
             `);
 
             /*5008 5005 5007
-              5008 5002 5003
-              5001 5002 5003*/
+              5008 5010 5001
+              5011 5013 5001*/
 
             build.push(`
                     <div class="column-lo" style="min-width: 140px; height: auto;">
@@ -1917,7 +1918,6 @@
     //각 정보에 맞는 요소 찾기
     function findHighestStatsPlayer(gameInfo) {
 
-        console.log(gameInfo)
         const highestStats = {
             gameMode: {mode : '' },
             totalDamageDealt: {id:1,tag:'최다 딜량', value: -1, playerName: '', champion: '',teamPosition:'', playerTag:'' },
@@ -2216,6 +2216,7 @@
                 if (response.ok) {
                     const md = await response.json();
                     matchData.push(...md);
+
                 } else {
                     throw new Error("MatchData Error: " + response.statusText);
                 }

@@ -950,8 +950,7 @@
     }
     //요약탭 생성
     async function generateSummaryTab(mr,sr,fr,skill,skev,core1,spell,shoes,si,win,lose,cn) {
-
-      const stat = [5008, 5005, 5007, 5008, 5002, 5003, 5001, 5002, 5003];
+      const stat = [5008, 5005, 5007, 5008, 5010, 5001, 5011, 5013, 5001];
       const runData = await getRuneInfo();
       var sklist = skill[0].split(', ').map(function(num) {
         return parseInt(num, 10);
