@@ -1,5 +1,5 @@
 # LOL Project
-리그 오브 레전드 api를 활용한 전적 게임 및 승률 예측 딥러닝 모델을 활용한 게임 분석 웹 서비스
+리그 오브 레전드 api를 활용한 전적 검색 및 게임 분석 웹 서비스
 <br/>
 
 [lpgg.site](https://lpgg.site/)
@@ -17,7 +17,7 @@
   
   <p>DB     : MySQL</p>
 
-  <p>etc    : AWS EC2, 가비아 도메인</p>
+  <p>etc    : AWS EC2, AWS RDS, 가비아 도메인</p>
   <br/>
 
   
@@ -55,6 +55,27 @@
   </p>
   <p align="left">
     <img loading='lazy' decoding='async' src="https://user-images.githubusercontent.com/103260185/285489857-0cf4ce12-f946-4ea7-a33d-5e7f1621c5f6.png" width="650"
+  </p>
+  <p align="left">
+    <img loading='lazy' decoding='async' src="https://github.com/Singe00/LOLProject/assets/103260185/c0de04e7-e357-46bd-9915-1f53351d36ff.png" width="650" height="350">
+  </p>
+  <p align="left">
+    <img loading='lazy' decoding='async' src="https://github.com/Singe00/LOLProject/assets/103260185/6c1e63a7-a040-4872-9ea7-92be72535e05.png" width="650" height="350">
+  </p>
+  <p align="left">
+    <img loading='lazy' decoding='async' src="https://github.com/Singe00/LOLProject/assets/103260185/0b61f03d-63c9-4426-8f8c-5cd9f97e6ab0.png" width="650" height="350">
+  </p>
+  <p align="left">
+    <img loading='lazy' decoding='async' src="https://github.com/Singe00/LOLProject/assets/103260185/a471f77f-de9b-40f8-b00b-b8d1173a6807.png" width="650" height="350">
+  </p>
+  <p align="left">
+    <img loading='lazy' decoding='async' src="https://github.com/Singe00/LOLProject/assets/103260185/e8b598ae-0c6c-46ca-ad6c-e2e3e0e3742a.png" width="650" height="350">
+  </p>
+  <p align="left">
+    <img loading='lazy' decoding='async' src="https://github.com/Singe00/LOLProject/assets/103260185/d98c130b-6af4-4525-b979-08472c04d125.png" width="650" height="350">
+  </p>
+  <p align="left">
+    <img loading='lazy' decoding='async' src="https://github.com/Singe00/LOLProject/assets/103260185/d6b41180-95c4-4fa9-b534-6af49a784525.png" width="650" height="350">
   </p>
 
 
@@ -108,6 +129,8 @@
   AWS EC2 프리티어의 cpu, ram 가용량 한계로 인해 서버다운이 주기적으로 발생함<br/>
 - 2023.11.22(수)<br/>
   Riot Games의 리그 오브 레전드 '소환사명' → 'RiotId + tagLine' 정책으로 인해 소환사 명 검색 기능 수정 (Front 디자인, API설계)<br/>
+  소환사 랭킹 관련 API에서는 아직 정책이 반영되지 않아 클릭 시 없는 소환사 페이지로 넘어간다.<br/>
+  해당 이슈를 해결하기 위해서 클릭한 소환사명에 대해 다시 api검색을 진행해야 하나 API호출 횟수 제한으로 인해 구현이 어려워 개발 보류하였다.<br/>
 - 2023.12.09(토)<br/>
   lpgg.site 도메인 등록 완료
   
