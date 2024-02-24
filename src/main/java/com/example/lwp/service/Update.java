@@ -18,8 +18,13 @@ import java.util.List;
 @Component
 public class Update {
 
+    private final ChampionRepository championRepository;
+
     @Autowired
-    private ChampionRepository championRepository;
+    public Update(ChampionRepository championRepository){
+        this.championRepository = championRepository;
+    }
+
     // 매주 화요일 5시에 실행
     @Scheduled(cron = "0 0 4 ? * 2")
     public void updateChampionRotation() {
